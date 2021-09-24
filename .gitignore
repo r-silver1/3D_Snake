@@ -1,0 +1,46 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+threejs-ng-snake/dist
+threejs-ng-snake/tmp
+threejs-ng-snake/out-tsc
+# Only exists if Bazel was run
+/threejs-ng-snake/bazel-out
+
+# dependencies
+/threejs-ng-snake/node_modules
+
+# profiling files
+/threejs-ng-snake/chrome-profiler-events*.json
+/threejs-ng-snake/speed-measure-plugin*.json
+
+# IDEs and editors
+/threejs-ng-snake/.idea
+/threejs-ng-snake/.project
+/threejs-ng-snake/.classpath
+/threejs-ng-snake/.c9/
+/threejs-ng-snake/*.launch
+/threejs-ng-snake/.settings/
+/threejs-ng-snake/*.sublime-workspace
+
+# IDE - VSCode
+/threejs-ng-snake/.vscode/*
+/threejs-ng-snake/!.vscode/settings.json
+/threejs-ng-snake/!.vscode/tasks.json
+/threejs-ng-snake/!.vscode/launch.json
+/threejs-ng-snake/!.vscode/extensions.json
+/threejs-ng-snake/.history/*
+
+# misc
+/threejs-ng-snake/.sass-cache
+/threejs-ng-snake/connect.lock
+/threejs-ng-snake/coverage
+/threejs-ng-snake/libpeerconnection.log
+/threejs-ng-snake/npm-debug.log
+/threejs-ng-snake/yarn-error.log
+/threejs-ng-snake/testem.log
+/threejs-ng-snake/typings
+
+# System Files
+/threejs-ng-snake/.DS_Store
+/threejs-ng-snake/Thumbs.db
