@@ -23,6 +23,8 @@ export class CanvasCompComponent implements OnInit {
     this.scene = new THREE.Scene();
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
     this.mesh = new THREE.Mesh(this.geometry);
+    this.mesh.position.y = 1
+    this.mesh.name = 'test_box';
     this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
     this.start = -1;
     this.animate = this.animate.bind(this);
@@ -64,6 +66,19 @@ export class CanvasCompComponent implements OnInit {
     }
     const elapsed = timestamp - this.start;
     // console.log('elapsed:' + elapsed);
+    const testCube = this.scene.getObjectByName('test_box');
+    let signFlip: any;
+    if (elapsed % 5000 > 2500){
+      signFlip = 1;
+    }else{
+      signFlip = -1;
+    }
+    // @ts-ignore
+    testCube.position.x += signFlip * .01;
+    // @ts-ignore
+    testCube.position.y += signFlip * .01;
+    // @ts-ignore
+    testCube.rotation.y += .01;
     this.render_all()
     requestAnimationFrame(this.animate);
   }
