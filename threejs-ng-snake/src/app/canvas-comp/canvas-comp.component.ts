@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as THREE from 'three';
+import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
 @Component({
   selector: 'app-canvas-comp',
@@ -17,9 +18,9 @@ export class CanvasCompComponent implements OnInit {
   public camera: THREE.PerspectiveCamera;
   public renderer: any;
   public start: any;
+  public controls: any;
 
   constructor() {
-
     this.scene = new THREE.Scene();
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
     this.mesh = new THREE.Mesh(this.geometry);
@@ -27,6 +28,7 @@ export class CanvasCompComponent implements OnInit {
     this.mesh.name = 'test_box';
     this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
     this.start = -1;
+    // necessary to enable "this" keyword to work correctly inside animate
     this.animate = this.animate.bind(this);
   }
 
@@ -36,6 +38,8 @@ export class CanvasCompComponent implements OnInit {
     this.camera.position.z = 3;
     this.camera.position.x = .5;
     this.camera.position.y = 1;
+    const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement
+    this.controls = new OrbitControls(this.camera, domElement)
     this.scene.add(this.camera);
   }
 
