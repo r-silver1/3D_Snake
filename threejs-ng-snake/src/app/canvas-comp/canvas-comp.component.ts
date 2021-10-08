@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as THREE from 'three';
-import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
 @Component({
   selector: 'app-canvas-comp',
