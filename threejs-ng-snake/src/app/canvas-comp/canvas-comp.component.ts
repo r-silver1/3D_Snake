@@ -15,6 +15,7 @@ export class CanvasCompComponent implements OnInit {
   public scene: THREE.Scene;
   public geometry: THREE.BoxGeometry;
   public mesh: THREE.Mesh;
+  public material: THREE.MeshPhongMaterial;
   public camera: THREE.PerspectiveCamera;
   public renderer: any;
   public start: any;
@@ -22,8 +23,36 @@ export class CanvasCompComponent implements OnInit {
 
   constructor() {
     this.scene = new THREE.Scene();
+    // light
+    {
+      const colorAmb = 0xFFFFFF;
+      const intensity = .6;
+      const ambLight = new THREE.AmbientLight(colorAmb, intensity);
+      this.scene.add(ambLight);
+    }
+
+    // light 2
+    {
+      const colorDir = new THREE.Color('rgba(0, 0, 100)');
+      const intensityDir = 1;
+      const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
+      lightDir.position.set(0, 1, -1);
+      this.scene.add(lightDir);
+    }
+
+
+    // fog
+    {
+      const color = new THREE.Color('rgba(200, 200, 200)')
+      const near = 1;
+      const far = 4;
+      this.scene.fog = new THREE.Fog(color, near, far);
+      this.scene.background = new THREE.Color('rgb(1,59,58)');
+    }
+    // geometry
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
-    this.mesh = new THREE.Mesh(this.geometry);
+    this.material = new THREE.MeshPhongMaterial({color: new THREE.Color('rgb(205,164,226)')})
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.position.y = 1
     this.mesh.name = 'test_box';
     this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
@@ -93,6 +122,8 @@ export class CanvasCompComponent implements OnInit {
       canvas: document.querySelector('canvas.draw') as HTMLCanvasElement
       // canvas: <HTMLCanvasElement> document.querySelector('canvas.draw') (bad form)
     });
+    // @ts-ignore
+    this.renderer.setClearColor(this.scene.fog.color)
     this.init_cameras();
     this.window_set_size();
     this.window_size_listener();
