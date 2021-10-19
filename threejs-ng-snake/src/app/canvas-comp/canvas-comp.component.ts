@@ -29,8 +29,8 @@ export class CanvasCompComponent implements OnInit {
     this.scene = new THREE.Scene();
     // light
     {
-      const colorAmb = new THREE.Color('rgb(252,255,174)');
-      const intensity = .6;
+      const colorAmb = new THREE.Color('rgb(247,255,246)');
+      const intensity = .1;
       const ambLight = new THREE.AmbientLight(colorAmb, intensity);
       this.scene.add(ambLight);
     }
@@ -38,19 +38,23 @@ export class CanvasCompComponent implements OnInit {
     // light 2
     // todo make class variables?
     {
-      const colorDir = new THREE.Color('rgba(0, 0, 100)');
-      const intensityDir = .7;
+      const colorDir = new THREE.Color('rgb(191,208,212)');
+      const intensityDir = 1;
       const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
-      lightDir.position.set(0, 1, -1);
+      lightDir.position.set(1, 1, 3);
+      lightDir.target.position.set(0, 0, -1);
       this.scene.add(lightDir);
+      const lightDirHelper = new THREE.DirectionalLightHelper(lightDir)
+      this.scene.add(lightDirHelper);
     }
     // fog
     {
-      const color = new THREE.Color('rgb(200,196,183)')
+      const color = new THREE.Color('rgb(54,52,70)')
       const near = 1;
-      const far = 20;
+      const far = 15;
       this.scene.fog = new THREE.Fog(color, near, far);
-      this.scene.background = new THREE.Color('rgba(170,139,134,0.62)');
+      // this.scene.fog = new THREE.FogExp2('#787570', .1);
+      this.scene.background = color;
     }
     // geometry
     this.geometry = new THREE.BoxGeometry(1, 1, 1);
