@@ -60,11 +60,10 @@ export class CanvasCompComponent implements OnInit {
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
         in console log*/
         if (elapsed % 180 == 0 && textObj!=undefined){
-            console.log(elapsed)
-                //       console.log(textObj)
-                //       this.scene.children.forEach(obj => {
-                //           console.log(obj)
-                //       })
+            //       console.log(textObj)
+            //       this.scene.children.forEach(obj => {
+            //           console.log(obj)
+            //       })
             this.getWordApi()
 
             if(this.wordGet!=undefined){
@@ -116,7 +115,7 @@ export class CanvasCompComponent implements OnInit {
             });
 //             const message = 'Hello\nWorld';
             const message = msg
-            const shape = font.generateShapes(message, .5);
+            const shape = font.generateShapes(message, .2);
             //         const shape = font.generateShapes(this.wordGet, 1);
             const textGeo = new THREE.ShapeGeometry(shape);
             textGeo.computeBoundingBox();
@@ -124,7 +123,8 @@ export class CanvasCompComponent implements OnInit {
             const text = new THREE.Mesh(textGeo, matLite);
             text.name = 'wordName'
             text.position.z = 1
-            text.position.x = -1
+            text.position.y = .5
+            text.position.x = -.5
             this.scene.add(text);
         });
     }
