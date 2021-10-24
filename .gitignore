@@ -44,3 +44,4 @@ threejs-ng-snake/out-tsc
 # System Files
 /threejs-ng-snake/.DS_Store
 /threejs-ng-snake/Thumbs.db
+threejs-flask-backend/venv/
