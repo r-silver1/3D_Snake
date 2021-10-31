@@ -14,12 +14,18 @@ def hello_world():
     """hello_world: a fun endpoint for home that greets you"""
     return 'hello there'
 
-
-# https://www.geeksforgeeks.org/how-to-return-a-json-response-form-a-flask-api/
 @app.route('/word-api', methods=['GET', 'POST'])
 @cross_origin()
 def word_api():
-    """word_api: endpoint of get-word, manage the word on screen for the ThreeJS canvas, should handle get or post
+    if request.method == "POST":
+        pass
+
+
+# https://www.geeksforgeeks.org/how-to-return-a-json-response-form-a-flask-api/
+@app.route('/time-api', methods=['GET', 'POST'])
+@cross_origin()
+def time_api():
+    """time_api: endpoint of get-word, manage the word on screen for the ThreeJS canvas, should handle get or post
        eventually
     """
     if request.method == "GET":
