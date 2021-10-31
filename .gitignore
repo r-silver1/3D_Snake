@@ -45,3 +45,4 @@ threejs-ng-snake/out-tsc
 /threejs-ng-snake/.DS_Store
 /threejs-ng-snake/Thumbs.db
 threejs-flask-backend/venv/
+threejs-flask-backend/in_a.pickle
