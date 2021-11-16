@@ -12,5 +12,9 @@ export class WordApiService {
     return this.httpClient.get('http://localhost:5000/word-api');
   }
 
+//   public postWord(wordChoice){
+//     return this.httpClient.post('http://localhost:5000/word-api', form=)
+//   }
+
 }
 
