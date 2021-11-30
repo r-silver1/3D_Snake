@@ -11,9 +11,6 @@ export class WordApiService {
 
   constructor(private httpClient: HttpClient) { }
 
-//   public getWord(){
-//     return this.httpClient.get('http://localhost:5000/word-api');
-//   }
   public getWord(){
       return this.httpClient.get('http://localhost:5000/word-api', {
           withCredentials: true,
@@ -24,9 +21,6 @@ export class WordApiService {
       });
   }
 
-//   public postWord(wordChoice){
-//     return this.httpClient.post('http://localhost:5000/word-api', form=)
-//   }
 
 }
 

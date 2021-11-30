@@ -14,9 +14,9 @@ import { WordApiService } from '../word-api.service';
 })
 
 
+
 export class CanvasCompComponent implements OnInit {
     public word_form: any;
-
     public scene: THREE.Scene;
     public geometry: THREE.BoxGeometry;
     public mesh: THREE.Mesh;
@@ -29,16 +29,16 @@ export class CanvasCompComponent implements OnInit {
     public wordGet: any;
 
 //     constructor(private wordService: WordApiService, private fb:FormBuilder) {
-       constructor(private wordService: WordApiService) {
 //         this.word_form = this.fb.group({
 //             word: ['']
 //         })
-
+    constructor(private wordService: WordApiService) {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
         this.start = -1;
         this.initLights()
         this.initFog()
+
         //for font
         this.loader = new FontLoader();
         this.addFont("Hello\nWorld")
@@ -213,19 +213,20 @@ export class CanvasCompComponent implements OnInit {
     }
 
 
-  ngOnInit(): void {
-    this.scene.add(this.mesh);
-    this.renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector('canvas.draw') as HTMLCanvasElement
-      // canvas: <HTMLCanvasElement> document.querySelector('canvas.draw') (bad form)
-    });
+    ngOnInit(): void {
+        this.scene.add(this.mesh);
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            logarithmicDepthBuffer: true,
+            canvas: document.querySelector('canvas.draw') as HTMLCanvasElement
+
+        });
     // @ts-ignore
-    this.renderer.setClearColor(this.scene.fog.color)
-    this.init_cameras();
-    this.window_set_size();
-    this.window_size_listener();
-    requestAnimationFrame(this.animate);
-    // this.renderer.render(this.scene, this.camera);
+        this.renderer.setClearColor(this.scene.fog.color)
+        this.init_cameras();
+        this.window_set_size();
+        this.window_size_listener();
+        requestAnimationFrame(this.animate);
   }
 
 }
