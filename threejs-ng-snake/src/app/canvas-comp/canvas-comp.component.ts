@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FontLoader } from 'three/src/loaders/FontLoader';
 import { WordApiService } from '../word-api.service';
+// import { FormBuilder } from '@angular/forms'
 
 
 @Component({
@@ -14,6 +15,7 @@ import { WordApiService } from '../word-api.service';
 
 
 export class CanvasCompComponent implements OnInit {
+    public word_form: any;
 
     public scene: THREE.Scene;
     public geometry: THREE.BoxGeometry;
@@ -26,7 +28,12 @@ export class CanvasCompComponent implements OnInit {
     public loader: FontLoader;
     public wordGet: any;
 
-    constructor(private wordService: WordApiService) {
+//     constructor(private wordService: WordApiService, private fb:FormBuilder) {
+       constructor(private wordService: WordApiService) {
+//         this.word_form = this.fb.group({
+//             word: ['']
+//         })
+
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
         this.start = -1;
@@ -47,6 +54,14 @@ export class CanvasCompComponent implements OnInit {
         this.animate = this.animate.bind(this);
     }
 
+//     sendWord(): void{
+//         let wordChoice = this.word_form.value.word_in
+//         this.wordService.postWord(wordChoice).subscribe(data=>{
+//             console.log("put word" + data)
+//         })
+//
+//     }
+
     // @ts-ignore
     animate(timestamp): FrameRequestCallback {
         if (this.start === -1){
@@ -59,17 +74,19 @@ export class CanvasCompComponent implements OnInit {
         const textObj = this.scene.getObjectByName('wordName');
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
         in console log*/
-        if (elapsed % 180 == 0 && textObj!=undefined){
+//         if (elapsed % 180 == 0 && textObj!=undefined){
+            if (elapsed % 3000 == 0 && textObj!=undefined){
             //       console.log(textObj)
             //       this.scene.children.forEach(obj => {
             //           console.log(obj)
             //       })
-            this.getWordApi()
+                console.log("in elapsed")
+                this.getWordApi()
 
-            if(this.wordGet!=undefined){
-                this.scene.remove(textObj)
-                this.addFont(this.wordGet)
-            }
+                if(this.wordGet!=undefined){
+                    this.scene.remove(textObj)
+                    this.addFont(this.wordGet)
+                }
 
         }
 
@@ -95,8 +112,10 @@ export class CanvasCompComponent implements OnInit {
         this.wordService.getWord().subscribe(data => {
             let jsonPickleStr = JSON.stringify(data);
             let jsonPickle = JSON.parse(jsonPickleStr);
-            let pickleDate = new Date(jsonPickle.pickle_time);
-            this.wordGet = pickleDate.toLocaleTimeString();
+//             let pickleDate = new Date(jsonPickle.pickle_time);
+            let pickleWord = jsonPickle.pickle_time
+//             this.wordGet = pickleDate.toLocaleTimeString();
+            this.wordGet = pickleWord
         })
     }
 
