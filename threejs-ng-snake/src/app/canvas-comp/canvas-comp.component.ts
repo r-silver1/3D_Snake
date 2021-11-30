@@ -49,7 +49,6 @@ export class CanvasCompComponent implements OnInit {
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.y = 1
         this.mesh.name = 'test_box';
-
         // necessary to enable "this" keyword to work correctly inside animate
         this.animate = this.animate.bind(this);
     }
@@ -221,6 +220,7 @@ export class CanvasCompComponent implements OnInit {
             canvas: document.querySelector('canvas.draw') as HTMLCanvasElement
 
         });
+        this.renderer.shadowMap.enabled = true
     // @ts-ignore
         this.renderer.setClearColor(this.scene.fog.color)
         this.init_cameras();
