@@ -18,9 +18,10 @@ import { WordApiService } from '../word-api.service';
 export class CanvasCompComponent implements OnInit {
     public word_form: any;
     public scene: THREE.Scene;
-    public geometry: THREE.BoxGeometry;
-    public mesh: THREE.Mesh;
-    public material: THREE.MeshPhongMaterial;
+//     public geometry: THREE.BoxGeometry;
+    public shapesArray: any = []
+//     public mesh: THREE.Mesh;
+//     public material: THREE.MeshPhongMaterial;
     public camera: THREE.PerspectiveCamera;
     public renderer: any;
     public start: any;
@@ -28,10 +29,6 @@ export class CanvasCompComponent implements OnInit {
     public loader: FontLoader;
     public wordGet: any;
 
-//     constructor(private wordService: WordApiService, private fb:FormBuilder) {
-//         this.word_form = this.fb.group({
-//             word: ['']
-//         })
     constructor(private wordService: WordApiService) {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
@@ -44,111 +41,18 @@ export class CanvasCompComponent implements OnInit {
         this.addFont("Hello\nWorld")
 
         // geometry
-        this.geometry = new THREE.BoxGeometry(1, 1, 1);
-        this.material = new THREE.MeshPhongMaterial({color: new THREE.Color('rgb(159,226,221)')})
-        this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.mesh.position.y = 1
-        this.mesh.name = 'test_box';
+//         this.geometry = new THREE.BoxGeometry(1, 1, 1);
+//         this.material = new THREE.MeshPhongMaterial({color: new THREE.Color('rgb(159,226,221)')})
+//         this.mesh = new THREE.Mesh(this.geometry, this.material);
+//         this.mesh.position.y = 1
+//         this.mesh.name = 'test_box';
+
         // necessary to enable "this" keyword to work correctly inside animate
         this.animate = this.animate.bind(this);
     }
 
-//     sendWord(): void{
-//         let wordChoice = this.word_form.value.word_in
-//         this.wordService.postWord(wordChoice).subscribe(data=>{
-//             console.log("put word" + data)
-//         })
-//
-//     }
-
-    // @ts-ignore
-    animate(timestamp): FrameRequestCallback {
-        if (this.start === -1){
-            this.start = timestamp;
-        }
-        const elapsed = timestamp - this.start;
-        // console.log('elapsed:' + elapsed);
-        const testCube = this.scene.getObjectByName('test_box');
-        //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
-        const textObj = this.scene.getObjectByName('wordName');
-        /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
-        in console log*/
-//         if (elapsed % 180 == 0 && textObj!=undefined){
-            if (elapsed % 3000 == 0 && textObj!=undefined){
-            //       console.log(textObj)
-            //       this.scene.children.forEach(obj => {
-            //           console.log(obj)
-            //       })
-                console.log("in elapsed")
-                this.getWordApi()
-
-                if(this.wordGet!=undefined){
-                    this.scene.remove(textObj)
-                    this.addFont(this.wordGet)
-                }
-
-        }
-
-        // let signFlip: any;
-        // if (elapsed % 5000 > 2500){
-        //   signFlip = 1;
-        // }else{
-        //   signFlip = -1;
-        // }
-        // @ts-ignore
-        // testCube.position.x += signFlip * .01;
-        // // @ts-ignore
-        // testCube.position.y += signFlip * .01;
-        // @ts-ignore
-        testCube.rotation.y += .01;
-        // @ts-ignore
-        testCube.rotation.z += .005;
-        this.render_all()
-        requestAnimationFrame(this.animate);
-    }
-
-    getWordApi() : void {
-        this.wordService.getWord().subscribe(data => {
-            let jsonPickleStr = JSON.stringify(data);
-            let jsonPickle = JSON.parse(jsonPickleStr);
-//             let pickleDate = new Date(jsonPickle.pickle_time);
-            let pickleWord = jsonPickle.pickle_time
-//             this.wordGet = pickleDate.toLocaleTimeString();
-            this.wordGet = pickleWord
-        })
-    }
-
-    addFont(msg: string) : void {
-        // text
-        // https://threejs.org/examples/?q=text#webgl_geometry_text_shapes
-        // https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_text_shapes.html
-        const fontUri = '..\\assets\\helvetiker_regular.typeface.json'
-        this.loader.load(fontUri, font => {
-            const fontColor = new THREE.Color('rgb(0, 255, 0)');
-            const matLite = new THREE.MeshBasicMaterial({
-                color: fontColor,
-                transparent: true,
-                opacity: .5,
-                side: THREE.DoubleSide
-            });
-//             const message = 'Hello\nWorld';
-            const message = msg
-            const shape = font.generateShapes(message, .2);
-            //         const shape = font.generateShapes(this.wordGet, 1);
-            const textGeo = new THREE.ShapeGeometry(shape);
-            textGeo.computeBoundingBox();
-            // do some logic for move center of text using bounding box
-            const text = new THREE.Mesh(textGeo, matLite);
-            text.name = 'wordName'
-            text.position.z = 1
-            text.position.y = .5
-            text.position.x = -.5
-            this.scene.add(text);
-        });
-    }
-
     initLights() : void {
-    // light
+        // light
         {
             const colorAmb = new THREE.Color('rgb(247,255,246)');
             const intensity = .4;
@@ -157,7 +61,7 @@ export class CanvasCompComponent implements OnInit {
         }
 
         // light 2
-        // todo make class variables?
+        // todo make class variables or add names?
         {
             const colorDir = new THREE.Color('rgb(191,208,212)');
             const intensityDir = 1;
@@ -191,6 +95,112 @@ export class CanvasCompComponent implements OnInit {
         this.scene.add(this.camera);
     }
 
+    addFont(msg: string) : void {
+        // text
+        // https://threejs.org/examples/?q=text#webgl_geometry_text_shapes
+        // https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_text_shapes.html
+        const fontUri = '..\\assets\\helvetiker_regular.typeface.json'
+        this.loader.load(fontUri, font => {
+            const fontColor = new THREE.Color('rgb(0, 255, 0)');
+            const matLite = new THREE.MeshBasicMaterial({
+                color: fontColor,
+                transparent: true,
+                opacity: .5,
+                side: THREE.DoubleSide
+            });
+            const message = msg
+            const shape = font.generateShapes(message, .2);
+            const textGeo = new THREE.ShapeGeometry(shape);
+            textGeo.computeBoundingBox();
+            // do some logic for move center of text using bounding box
+            const text = new THREE.Mesh(textGeo, matLite);
+            text.name = 'wordName';
+            text.position.z = 1;
+            text.position.y = .5;
+            text.position.x = -.5;
+            this.scene.add(text);
+        });
+    }
+
+
+    initBoxes(): void {
+//         for(let i = 0; i<100){
+//         }
+        let boxGeo = new THREE.BoxGeometry(1, 1, 1);
+        let material = new THREE.MeshPhongMaterial({
+            color: new THREE.Color('rgb(159,226,221)')
+        })
+        let pos = [0, 1, 0]
+        let boxShape = this.makeInstance(boxGeo, material, pos)
+        this.shapesArray.push(boxShape)
+
+    }
+
+    makeInstance(geometry: any, material: any, vertices: any[]): THREE.Mesh{
+        const shape = new THREE.Mesh(geometry, material);
+        shape.castShadow = true;
+        shape.receiveShadow = true;
+        //add to g_scene to be rendered
+        this.scene.add(shape);
+        //set position of shape
+        shape.position.x = vertices[0];
+        shape.position.y = vertices[1];
+        shape.position.z = vertices[2];
+        return shape;
+    }
+
+    // @ts-ignore
+    animate(timestamp): FrameRequestCallback {
+        if (this.start === -1){
+            this.start = timestamp;
+        }
+        const elapsed = timestamp - this.start;
+//         const testCube = this.scene.getObjectByName('test_box');
+        //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
+        const textObj = this.scene.getObjectByName('wordName');
+        /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
+        in console log*/
+//         if (elapsed % 180 == 0 && textObj!=undefined){
+        if (elapsed % 3000 == 0 && textObj!=undefined){
+            //       console.log(textObj)
+            //       this.scene.children.forEach(obj => {
+            //           console.log(obj)
+            //       })
+            console.log("in elapsed")
+            this.getWordApi()
+            // todo this shouldn't be a global probably
+            if(this.wordGet!=undefined){
+                this.scene.remove(textObj)
+                this.addFont(this.wordGet)
+            }
+
+        }
+
+//         testCube.rotation.y += .01;
+//         // @ts-ignore
+//         testCube.rotation.z += .005;
+        this.shapesArray.forEach((cube:any, ndx:any) => {
+            console.log("NDX: \n"+ndx)
+            let speed = 1 + ndx * .1
+            let rotation = speed * elapsed/1500
+            cube.rotation.y = rotation
+            cube.rotation.z = rotation/10
+        })
+        this.render_all()
+        requestAnimationFrame(this.animate);
+    }
+
+    getWordApi() : void {
+        this.wordService.getWord().subscribe(data => {
+            let jsonPickleStr = JSON.stringify(data);
+            let jsonPickle = JSON.parse(jsonPickleStr);
+//             let pickleDate = new Date(jsonPickle.pickle_time);
+            let pickleWord = jsonPickle.pickle_time
+//             this.wordGet = pickleDate.toLocaleTimeString();
+            this.wordGet = pickleWord
+        })
+    }
+
     window_set_size(): void {
         // @ts-ignore
         const HEIGHT = document.getElementById('mainCanvas').clientHeight;
@@ -213,7 +223,7 @@ export class CanvasCompComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.scene.add(this.mesh);
+//         this.scene.add(this.mesh);
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             logarithmicDepthBuffer: true,
@@ -226,6 +236,8 @@ export class CanvasCompComponent implements OnInit {
         this.init_cameras();
         this.window_set_size();
         this.window_size_listener();
+        this.initBoxes();
+
         requestAnimationFrame(this.animate);
   }
 
