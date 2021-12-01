@@ -18,10 +18,7 @@ import { WordApiService } from '../word-api.service';
 export class CanvasCompComponent implements OnInit {
     public word_form: any;
     public scene: THREE.Scene;
-//     public geometry: THREE.BoxGeometry;
     public shapesArray: any = []
-//     public mesh: THREE.Mesh;
-//     public material: THREE.MeshPhongMaterial;
     public camera: THREE.PerspectiveCamera;
     public renderer: any;
     public start: any;
@@ -35,18 +32,9 @@ export class CanvasCompComponent implements OnInit {
         this.start = -1;
         this.initLights()
         this.initFog()
-
         //for font
         this.loader = new FontLoader();
         this.addFont("Hello\nWorld")
-
-        // geometry
-//         this.geometry = new THREE.BoxGeometry(1, 1, 1);
-//         this.material = new THREE.MeshPhongMaterial({color: new THREE.Color('rgb(159,226,221)')})
-//         this.mesh = new THREE.Mesh(this.geometry, this.material);
-//         this.mesh.position.y = 1
-//         this.mesh.name = 'test_box';
-
         // necessary to enable "this" keyword to work correctly inside animate
         this.animate = this.animate.bind(this);
     }
@@ -123,16 +111,37 @@ export class CanvasCompComponent implements OnInit {
     }
 
 
+    norm_range(a:number, b:number, min:number, max:number, x:number): number {
+        return a + ((x-min)/(max-min))*(b-a)
+    }
+
     initBoxes(): void {
-//         for(let i = 0; i<100){
-//         }
-        let boxGeo = new THREE.BoxGeometry(1, 1, 1);
+        const min_diam = .025
+        const max_diam = .6
+        const min_val = 0;
+        const max_val = 99;
+        // todo add some color variation
         let material = new THREE.MeshPhongMaterial({
-            color: new THREE.Color('rgb(159,226,221)')
-        })
-        let pos = [0, 1, 0]
-        let boxShape = this.makeInstance(boxGeo, material, pos)
-        this.shapesArray.push(boxShape)
+                        color: new THREE.Color('rgb(159,226,221)')
+                    })
+        for(let i = min_val; i<max_val+1; i++){
+            let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
+            let newGeo = new THREE.BoxGeometry(box_rad, box_rad, box_rad)
+            let min_bound = max_diam*4
+            let horzAngle = Math.random()*360.0
+            let vertAngle = Math.random()*360.0
+            let ranVec = new THREE.Vector3(min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), min_bound*Math.sin(horzAngle))
+            let pos = [ranVec.x, ranVec.y, ranVec.z]
+            let box_temp = this.makeInstance(newGeo, material, pos)
+            this.shapesArray.push(box_temp)
+        }
+//         let boxGeo = new THREE.BoxGeometry(.2, .2, .2);
+//         let material = new THREE.MeshPhongMaterial({
+//             color: new THREE.Color('rgb(159,226,221)')
+//         })
+//         let pos = [0, 0, 0]
+//         let boxShape = this.makeInstance(boxGeo, material, pos)
+//         this.shapesArray.push(boxShape)
 
     }
 
@@ -162,10 +171,6 @@ export class CanvasCompComponent implements OnInit {
         in console log*/
 //         if (elapsed % 180 == 0 && textObj!=undefined){
         if (elapsed % 3000 == 0 && textObj!=undefined){
-            //       console.log(textObj)
-            //       this.scene.children.forEach(obj => {
-            //           console.log(obj)
-            //       })
             console.log("in elapsed")
             this.getWordApi()
             // todo this shouldn't be a global probably
@@ -176,13 +181,11 @@ export class CanvasCompComponent implements OnInit {
 
         }
 
-//         testCube.rotation.y += .01;
-//         // @ts-ignore
-//         testCube.rotation.z += .005;
-        this.shapesArray.forEach((cube:any, ndx:any) => {
-            console.log("NDX: \n"+ndx)
-            let speed = 1 + ndx * .1
-            let rotation = speed * elapsed/1500
+        this.shapesArray.forEach((cube:any, index:any) => {
+            console.log("index: \n"+index)
+//             let speed = 1 + index * .1
+//             let rotation = speed * elapsed/1500
+            let rotation = elapsed/2000
             cube.rotation.y = rotation
             cube.rotation.z = rotation/10
         })
@@ -194,9 +197,7 @@ export class CanvasCompComponent implements OnInit {
         this.wordService.getWord().subscribe(data => {
             let jsonPickleStr = JSON.stringify(data);
             let jsonPickle = JSON.parse(jsonPickleStr);
-//             let pickleDate = new Date(jsonPickle.pickle_time);
             let pickleWord = jsonPickle.pickle_time
-//             this.wordGet = pickleDate.toLocaleTimeString();
             this.wordGet = pickleWord
         })
     }
