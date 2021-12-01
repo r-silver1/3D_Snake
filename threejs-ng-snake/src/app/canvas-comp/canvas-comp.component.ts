@@ -75,9 +75,9 @@ export class CanvasCompComponent implements OnInit {
     }
 
     init_cameras(): void {
-        this.camera.position.z = 3;
-        this.camera.position.x = .5;
-        this.camera.position.y = 1;
+        this.camera.position.z = 6;
+        this.camera.position.x = -2.5;
+        this.camera.position.y = 4;
         const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement
         this.controls = new OrbitControls(this.camera, domElement)
         this.scene.add(this.camera);
@@ -185,7 +185,8 @@ export class CanvasCompComponent implements OnInit {
             console.log("index: \n"+index)
 //             let speed = 1 + index * .1
 //             let rotation = speed * elapsed/1500
-            let rotation = elapsed/2000
+//             let rotation = elapsed/2000
+            let rotation = elapsed/(50*index)
             cube.rotation.y = rotation
             cube.rotation.z = rotation/10
         })
