@@ -96,6 +96,7 @@ export class CanvasCompComponent implements OnInit {
 //         https://threejs.org/docs/#examples/en/controls/OrbitControls
         this.controls = new OrbitControls(this.camera, domElement);
         // disable right click pan
+        // note: target updates with pan
         this.controls.enablePan = false;
         // constrain zoom
         this.controls.minDistance = 2;
@@ -191,6 +192,7 @@ export class CanvasCompComponent implements OnInit {
     animate(timestamp): FrameRequestCallback {
         // controls update: necessary for damping orbit controls
         this.controls.update()
+//         console.log(this.controls.target)
         if (this.start === -1){
             this.start = timestamp;
         }
