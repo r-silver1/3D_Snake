@@ -137,9 +137,12 @@ export class CanvasCompComponent implements OnInit {
 //                         color: new THREE.Color('rgb(159,226,221)')
 //                     })
         for(let i = min_val; i<max_val+1; i++){
-            console.log(this.norm_range(200, 255, min_val, max_val, i))
+            console.log(this.norm_range(200, 255, min_val, max_val, i));
+            const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
+            const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
             let material = new THREE.MeshPhongMaterial({
-                                    color: new THREE.Color('rgb(159,226,'+Math.floor(this.norm_range(200, 255, min_val, max_val, i))+')')
+//                                     color: new THREE.Color('rgb(159,226,'+Math.floor(this.norm_range(120, 255, min_val, max_val, i))+')')
+                                       color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')')
                                 })
             let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
             let newGeo = new THREE.BoxGeometry(box_rad, box_rad, box_rad)
