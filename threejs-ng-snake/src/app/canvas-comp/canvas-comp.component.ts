@@ -25,9 +25,21 @@ export class CanvasCompComponent implements OnInit {
     public controls: any;
     public loader: FontLoader;
     public wordGet: any;
+    public axesHelper: THREE.AxesHelper;
+    public gridHelper: THREE.GridHelper;
 
     constructor(private wordService: WordApiService) {
         this.scene = new THREE.Scene();
+        // todo new logic axes and grid; could be modularized
+        const axesSize = 10
+        this.axesHelper = new THREE.AxesHelper(axesSize)
+        const centerColor = new THREE.Color('rgb(0, 0, 255)')
+        const zColor = new THREE.Color('rgb(0, 50, 100)')
+        this.axesHelper.setColors(centerColor, zColor, centerColor)
+        this.gridHelper = new THREE.GridHelper(axesSize, axesSize, centerColor);
+        this.scene.add(this.axesHelper)
+        this.scene.add(this.gridHelper)
+
         this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
         this.start = -1;
         this.initLights()
