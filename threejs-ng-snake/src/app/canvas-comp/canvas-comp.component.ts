@@ -121,10 +121,14 @@ export class CanvasCompComponent implements OnInit {
         const min_val = 0;
         const max_val = 99;
         // todo add some color variation
-        let material = new THREE.MeshPhongMaterial({
-                        color: new THREE.Color('rgb(159,226,221)')
-                    })
+//         let material = new THREE.MeshPhongMaterial({
+//                         color: new THREE.Color('rgb(159,226,221)')
+//                     })
         for(let i = min_val; i<max_val+1; i++){
+            console.log(this.norm_range(200, 255, min_val, max_val, i))
+            let material = new THREE.MeshPhongMaterial({
+                                    color: new THREE.Color('rgb(159,226,'+Math.floor(this.norm_range(200, 255, min_val, max_val, i))+')')
+                                })
             let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
             let newGeo = new THREE.BoxGeometry(box_rad, box_rad, box_rad)
             let min_bound = max_diam*4
