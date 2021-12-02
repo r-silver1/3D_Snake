@@ -31,6 +31,7 @@ export class CanvasCompComponent implements OnInit {
     constructor(private wordService: WordApiService) {
         this.scene = new THREE.Scene();
         // todo new logic axes and grid; could be modularized
+//         https://danni-three.blogspot.com/2013/09/threejs-helpers.html
         const axesSize = 10
         this.axesHelper = new THREE.AxesHelper(axesSize)
         const centerColor = new THREE.Color('rgb(0, 0, 255)')
@@ -90,8 +91,18 @@ export class CanvasCompComponent implements OnInit {
         this.camera.position.z = 6;
         this.camera.position.x = -2.5;
         this.camera.position.y = 4;
-        const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement
-        this.controls = new OrbitControls(this.camera, domElement)
+        const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement;
+//         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
+//         https://threejs.org/docs/#examples/en/controls/OrbitControls
+        this.controls = new OrbitControls(this.camera, domElement);
+        // disable right click pan
+        this.controls.enablePan = false;
+        // constrain zoom
+        this.controls.minDistance = 2;
+        this.controls.maxDistance = 10;
+        // damping to make it feel better
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = .01;
         this.scene.add(this.camera);
     }
 
@@ -137,7 +148,6 @@ export class CanvasCompComponent implements OnInit {
 //                         color: new THREE.Color('rgb(159,226,221)')
 //                     })
         for(let i = min_val; i<max_val+1; i++){
-            console.log(this.norm_range(200, 255, min_val, max_val, i));
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
             let material = new THREE.MeshPhongMaterial({
@@ -179,6 +189,8 @@ export class CanvasCompComponent implements OnInit {
 
     // @ts-ignore
     animate(timestamp): FrameRequestCallback {
+        // controls update: necessary for damping orbit controls
+        this.controls.update()
         if (this.start === -1){
             this.start = timestamp;
         }
@@ -190,7 +202,6 @@ export class CanvasCompComponent implements OnInit {
         in console log*/
 //         if (elapsed % 180 == 0 && textObj!=undefined){
         if (elapsed % 3000 == 0 && textObj!=undefined){
-            console.log("in elapsed")
             this.getWordApi()
             // todo this shouldn't be a global probably
             if(this.wordGet!=undefined){
@@ -201,7 +212,6 @@ export class CanvasCompComponent implements OnInit {
         }
 
         this.shapesArray.forEach((cube:any, index:any) => {
-            console.log("index: \n"+index)
 //             let speed = 1 + index * .1
 //             let rotation = speed * elapsed/1500
 //             let rotation = elapsed/2000
