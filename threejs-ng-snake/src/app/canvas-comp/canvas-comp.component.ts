@@ -59,60 +59,7 @@ export class CanvasCompComponent implements OnInit {
         this.animate = this.animate.bind(this);
     }
 
-//     initLights() : void {
-//         // light
-//         {
-//             const colorAmb = new THREE.Color('rgb(247,255,246)');
-//             const intensity = .4;
-//             const ambLight = new THREE.AmbientLight(colorAmb, intensity);
-//             this.scene.add(ambLight);
-//         }
-//
-//         // light 2
-//         // todo make class variables or add names?
-//         {
-//             const colorDir = new THREE.Color('rgb(191,208,212)');
-//             const intensityDir = 1;
-//             const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
-//             lightDir.position.set(3, 2, 3);
-//             lightDir.target.position.set(0, 0, 0);
-//             this.scene.add(lightDir);
-//             const lightDirHelper = new THREE.DirectionalLightHelper(lightDir)
-//             this.scene.add(lightDirHelper);
-//         }
-//     }
-//
-//     initFog() : void {
-//         // fog
-//         {
-//             const color = new THREE.Color('rgb(54,52,70)')
-//             const near = 1;
-//             const far = 15;
-//             this.scene.fog = new THREE.Fog(color, near, far);
-//             // this.scene.fog = new THREE.FogExp2('#787570', .1);
-//             this.scene.background = color;
-//         }
-//     }
-//
-//     init_cameras(): void {
-//         this.camera.position.z = 6;
-//         this.camera.position.x = -2.5;
-//         this.camera.position.y = 4;
-//         const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement;
-// //         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
-// //         https://threejs.org/docs/#examples/en/controls/OrbitControls
-//         this.controls = new OrbitControls(this.camera, domElement);
-//         // disable right click pan
-//         // note: target updates with pan
-//         this.controls.enablePan = false;
-//         // constrain zoom
-//         this.controls.minDistance = 2;
-//         this.controls.maxDistance = 10;
-//         // damping to make it feel better
-//         this.controls.enableDamping = true;
-//         this.controls.dampingFactor = .01;
-//         this.scene.add(this.camera);
-//     }
+
 
     addFont(msg: string) : void {
         // text
@@ -141,59 +88,6 @@ export class CanvasCompComponent implements OnInit {
         });
     }
 
-
-//     norm_range(a:number, b:number, min:number, max:number, x:number): number {
-//         return a + ((x-min)/(max-min))*(b-a)
-//     }
-
-//     initBoxes(): void {
-//         const min_diam = .025
-//         const max_diam = .6
-//         const min_val = 0;
-//         const max_val = 99;
-//         // todo add some color variation
-// //         let material = new THREE.MeshPhongMaterial({
-// //                         color: new THREE.Color('rgb(159,226,221)')
-// //                     })
-//         for(let i = min_val; i<max_val+1; i++){
-//             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
-//             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
-//             let material = new THREE.MeshPhongMaterial({
-// //                                     color: new THREE.Color('rgb(159,226,'+Math.floor(this.norm_range(120, 255, min_val, max_val, i))+')')
-//                                        color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')')
-//                                 })
-//             let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
-//             let newGeo = new THREE.BoxGeometry(box_rad, box_rad, box_rad)
-//             let min_bound = max_diam*4
-//             let horzAngle = Math.random()*360.0
-//             let vertAngle = Math.random()*360.0
-//             let ranVec = new THREE.Vector3(min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), min_bound*Math.sin(horzAngle))
-//             let pos = [ranVec.x, ranVec.y, ranVec.z]
-//             let box_temp = this.makeInstance(newGeo, material, pos)
-//             this.shapesArray.push(box_temp)
-//         }
-// //         let boxGeo = new THREE.BoxGeometry(.2, .2, .2);
-// //         let material = new THREE.MeshPhongMaterial({
-// //             color: new THREE.Color('rgb(159,226,221)')
-// //         })
-// //         let pos = [0, 0, 0]
-// //         let boxShape = this.makeInstance(boxGeo, material, pos)
-// //         this.shapesArray.push(boxShape)
-//
-//     }
-//
-//     makeInstance(geometry: any, material: any, vertices: any[]): THREE.Mesh{
-//         const shape = new THREE.Mesh(geometry, material);
-//         shape.castShadow = true;
-//         shape.receiveShadow = true;
-//         //add to g_scene to be rendered
-//         this.scene.add(shape);
-//         //set position of shape
-//         shape.position.x = vertices[0];
-//         shape.position.y = vertices[1];
-//         shape.position.z = vertices[2];
-//         return shape;
-//     }
 
     // @ts-ignore
     animate(timestamp): FrameRequestCallback {
