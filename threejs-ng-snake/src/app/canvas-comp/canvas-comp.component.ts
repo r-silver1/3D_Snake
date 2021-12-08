@@ -5,6 +5,7 @@ import { FontLoader } from 'three/src/loaders/FontLoader';
 import { WordApiService } from '../word-api.service';
 // import { FormBuilder } from '@angular/forms'
 import { ObjBuilderService } from '../services/obj-builder.service'
+import { SceneHelperService } from '../services/scene-helper.service'
 
 @Component({
     selector: 'app-canvas-comp',
@@ -22,13 +23,17 @@ export class CanvasCompComponent implements OnInit {
     public camera: THREE.PerspectiveCamera;
     public renderer: any;
     public start: any;
+//     public controls: any;
     public controls: any;
     public loader: FontLoader;
     public wordGet: any;
     public axesHelper: THREE.AxesHelper;
     public gridHelper: THREE.GridHelper;
 
-    constructor(private wordService: WordApiService, private builderService: ObjBuilderService) {
+    constructor(private wordService: WordApiService,
+                private builderService: ObjBuilderService,
+                private sceneService: SceneHelperService
+                ) {
         this.scene = new THREE.Scene();
         // todo new logic axes and grid; could be modularized
 //         https://danni-three.blogspot.com/2013/09/threejs-helpers.html
@@ -43,8 +48,10 @@ export class CanvasCompComponent implements OnInit {
 
         this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
         this.start = -1;
-        this.initLights()
-        this.initFog()
+//         this.initLights()
+        this.sceneService.initLights(this.scene)
+//         this.initFog()
+        this.sceneService.initFog(this.scene)
         //for font
         this.loader = new FontLoader();
         this.addFont("Hello\nWorld")
@@ -52,60 +59,60 @@ export class CanvasCompComponent implements OnInit {
         this.animate = this.animate.bind(this);
     }
 
-    initLights() : void {
-        // light
-        {
-            const colorAmb = new THREE.Color('rgb(247,255,246)');
-            const intensity = .4;
-            const ambLight = new THREE.AmbientLight(colorAmb, intensity);
-            this.scene.add(ambLight);
-        }
-
-        // light 2
-        // todo make class variables or add names?
-        {
-            const colorDir = new THREE.Color('rgb(191,208,212)');
-            const intensityDir = 1;
-            const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
-            lightDir.position.set(3, 2, 3);
-            lightDir.target.position.set(0, 0, 0);
-            this.scene.add(lightDir);
-            const lightDirHelper = new THREE.DirectionalLightHelper(lightDir)
-            this.scene.add(lightDirHelper);
-        }
-    }
-
-    initFog() : void {
-        // fog
-        {
-            const color = new THREE.Color('rgb(54,52,70)')
-            const near = 1;
-            const far = 15;
-            this.scene.fog = new THREE.Fog(color, near, far);
-            // this.scene.fog = new THREE.FogExp2('#787570', .1);
-            this.scene.background = color;
-        }
-    }
-
-    init_cameras(): void {
-        this.camera.position.z = 6;
-        this.camera.position.x = -2.5;
-        this.camera.position.y = 4;
-        const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement;
-//         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
-//         https://threejs.org/docs/#examples/en/controls/OrbitControls
-        this.controls = new OrbitControls(this.camera, domElement);
-        // disable right click pan
-        // note: target updates with pan
-        this.controls.enablePan = false;
-        // constrain zoom
-        this.controls.minDistance = 2;
-        this.controls.maxDistance = 10;
-        // damping to make it feel better
-        this.controls.enableDamping = true;
-        this.controls.dampingFactor = .01;
-        this.scene.add(this.camera);
-    }
+//     initLights() : void {
+//         // light
+//         {
+//             const colorAmb = new THREE.Color('rgb(247,255,246)');
+//             const intensity = .4;
+//             const ambLight = new THREE.AmbientLight(colorAmb, intensity);
+//             this.scene.add(ambLight);
+//         }
+//
+//         // light 2
+//         // todo make class variables or add names?
+//         {
+//             const colorDir = new THREE.Color('rgb(191,208,212)');
+//             const intensityDir = 1;
+//             const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
+//             lightDir.position.set(3, 2, 3);
+//             lightDir.target.position.set(0, 0, 0);
+//             this.scene.add(lightDir);
+//             const lightDirHelper = new THREE.DirectionalLightHelper(lightDir)
+//             this.scene.add(lightDirHelper);
+//         }
+//     }
+//
+//     initFog() : void {
+//         // fog
+//         {
+//             const color = new THREE.Color('rgb(54,52,70)')
+//             const near = 1;
+//             const far = 15;
+//             this.scene.fog = new THREE.Fog(color, near, far);
+//             // this.scene.fog = new THREE.FogExp2('#787570', .1);
+//             this.scene.background = color;
+//         }
+//     }
+//
+//     init_cameras(): void {
+//         this.camera.position.z = 6;
+//         this.camera.position.x = -2.5;
+//         this.camera.position.y = 4;
+//         const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement;
+// //         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
+// //         https://threejs.org/docs/#examples/en/controls/OrbitControls
+//         this.controls = new OrbitControls(this.camera, domElement);
+//         // disable right click pan
+//         // note: target updates with pan
+//         this.controls.enablePan = false;
+//         // constrain zoom
+//         this.controls.minDistance = 2;
+//         this.controls.maxDistance = 10;
+//         // damping to make it feel better
+//         this.controls.enableDamping = true;
+//         this.controls.dampingFactor = .01;
+//         this.scene.add(this.camera);
+//     }
 
     addFont(msg: string) : void {
         // text
@@ -263,7 +270,9 @@ export class CanvasCompComponent implements OnInit {
         this.renderer.shadowMap.enabled = true
     // @ts-ignore
         this.renderer.setClearColor(this.scene.fog.color)
-        this.init_cameras();
+//         this.init_cameras();
+        this.sceneService.initCameras(this.scene, this.camera)
+        this.controls = this.sceneService.initControls(this.scene, this.camera)
         this.window_set_size();
         this.window_size_listener();
 //         this.initBoxes();
