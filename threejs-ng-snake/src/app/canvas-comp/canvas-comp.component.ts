@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FontLoader } from 'three/src/loaders/FontLoader';
 import { WordApiService } from '../word-api.service';
 // import { FormBuilder } from '@angular/forms'
-
+import { ObjBuilderService } from '../services/obj-builder.service'
 
 @Component({
     selector: 'app-canvas-comp',
@@ -28,7 +28,7 @@ export class CanvasCompComponent implements OnInit {
     public axesHelper: THREE.AxesHelper;
     public gridHelper: THREE.GridHelper;
 
-    constructor(private wordService: WordApiService) {
+    constructor(private wordService: WordApiService, private builderService: ObjBuilderService) {
         this.scene = new THREE.Scene();
         // todo new logic axes and grid; could be modularized
 //         https://danni-three.blogspot.com/2013/09/threejs-helpers.html
@@ -135,58 +135,58 @@ export class CanvasCompComponent implements OnInit {
     }
 
 
-    norm_range(a:number, b:number, min:number, max:number, x:number): number {
-        return a + ((x-min)/(max-min))*(b-a)
-    }
+//     norm_range(a:number, b:number, min:number, max:number, x:number): number {
+//         return a + ((x-min)/(max-min))*(b-a)
+//     }
 
-    initBoxes(): void {
-        const min_diam = .025
-        const max_diam = .6
-        const min_val = 0;
-        const max_val = 99;
-        // todo add some color variation
-//         let material = new THREE.MeshPhongMaterial({
-//                         color: new THREE.Color('rgb(159,226,221)')
-//                     })
-        for(let i = min_val; i<max_val+1; i++){
-            const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
-            const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
-            let material = new THREE.MeshPhongMaterial({
-//                                     color: new THREE.Color('rgb(159,226,'+Math.floor(this.norm_range(120, 255, min_val, max_val, i))+')')
-                                       color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')')
-                                })
-            let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
-            let newGeo = new THREE.BoxGeometry(box_rad, box_rad, box_rad)
-            let min_bound = max_diam*4
-            let horzAngle = Math.random()*360.0
-            let vertAngle = Math.random()*360.0
-            let ranVec = new THREE.Vector3(min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), min_bound*Math.sin(horzAngle))
-            let pos = [ranVec.x, ranVec.y, ranVec.z]
-            let box_temp = this.makeInstance(newGeo, material, pos)
-            this.shapesArray.push(box_temp)
-        }
-//         let boxGeo = new THREE.BoxGeometry(.2, .2, .2);
-//         let material = new THREE.MeshPhongMaterial({
-//             color: new THREE.Color('rgb(159,226,221)')
-//         })
-//         let pos = [0, 0, 0]
-//         let boxShape = this.makeInstance(boxGeo, material, pos)
-//         this.shapesArray.push(boxShape)
-
-    }
-
-    makeInstance(geometry: any, material: any, vertices: any[]): THREE.Mesh{
-        const shape = new THREE.Mesh(geometry, material);
-        shape.castShadow = true;
-        shape.receiveShadow = true;
-        //add to g_scene to be rendered
-        this.scene.add(shape);
-        //set position of shape
-        shape.position.x = vertices[0];
-        shape.position.y = vertices[1];
-        shape.position.z = vertices[2];
-        return shape;
-    }
+//     initBoxes(): void {
+//         const min_diam = .025
+//         const max_diam = .6
+//         const min_val = 0;
+//         const max_val = 99;
+//         // todo add some color variation
+// //         let material = new THREE.MeshPhongMaterial({
+// //                         color: new THREE.Color('rgb(159,226,221)')
+// //                     })
+//         for(let i = min_val; i<max_val+1; i++){
+//             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
+//             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
+//             let material = new THREE.MeshPhongMaterial({
+// //                                     color: new THREE.Color('rgb(159,226,'+Math.floor(this.norm_range(120, 255, min_val, max_val, i))+')')
+//                                        color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')')
+//                                 })
+//             let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
+//             let newGeo = new THREE.BoxGeometry(box_rad, box_rad, box_rad)
+//             let min_bound = max_diam*4
+//             let horzAngle = Math.random()*360.0
+//             let vertAngle = Math.random()*360.0
+//             let ranVec = new THREE.Vector3(min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), min_bound*Math.sin(horzAngle))
+//             let pos = [ranVec.x, ranVec.y, ranVec.z]
+//             let box_temp = this.makeInstance(newGeo, material, pos)
+//             this.shapesArray.push(box_temp)
+//         }
+// //         let boxGeo = new THREE.BoxGeometry(.2, .2, .2);
+// //         let material = new THREE.MeshPhongMaterial({
+// //             color: new THREE.Color('rgb(159,226,221)')
+// //         })
+// //         let pos = [0, 0, 0]
+// //         let boxShape = this.makeInstance(boxGeo, material, pos)
+// //         this.shapesArray.push(boxShape)
+//
+//     }
+//
+//     makeInstance(geometry: any, material: any, vertices: any[]): THREE.Mesh{
+//         const shape = new THREE.Mesh(geometry, material);
+//         shape.castShadow = true;
+//         shape.receiveShadow = true;
+//         //add to g_scene to be rendered
+//         this.scene.add(shape);
+//         //set position of shape
+//         shape.position.x = vertices[0];
+//         shape.position.y = vertices[1];
+//         shape.position.z = vertices[2];
+//         return shape;
+//     }
 
     // @ts-ignore
     animate(timestamp): FrameRequestCallback {
@@ -212,11 +212,8 @@ export class CanvasCompComponent implements OnInit {
             }
 
         }
-
+        // todo move this to obj service, use object methods
         this.shapesArray.forEach((cube:any, index:any) => {
-//             let speed = 1 + index * .1
-//             let rotation = speed * elapsed/1500
-//             let rotation = elapsed/2000
             let rotation = elapsed/(50*index)
             cube.rotation.y = rotation
             cube.rotation.z = rotation/10
@@ -269,7 +266,8 @@ export class CanvasCompComponent implements OnInit {
         this.init_cameras();
         this.window_set_size();
         this.window_size_listener();
-        this.initBoxes();
+//         this.initBoxes();
+        this.builderService.initBoxes(this.shapesArray, this.scene)
 
         requestAnimationFrame(this.animate);
   }
