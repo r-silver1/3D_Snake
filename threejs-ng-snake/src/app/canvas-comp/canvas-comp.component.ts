@@ -25,7 +25,6 @@ export class CanvasCompComponent implements OnInit {
     public renderer: any;
     public start: any;
     public controls: any;
-//     public loader: FontLoader;
     public wordGet: any;
     public axesHelper: THREE.AxesHelper;
     public gridHelper: THREE.GridHelper;
@@ -52,41 +51,10 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initLights(this.scene)
         this.sceneService.initFog(this.scene)
         //for font
-//         this.loader = new FontLoader();
-//         this.addFont("Hello\nWorld")
         this.fontService.addFont("Hello\nWorld", this.scene)
         // necessary to enable "this" keyword to work correctly inside animate
         this.animate = this.animate.bind(this);
     }
-
-
-
-//     addFont(msg: string) : void {
-//         // text
-//         // https://threejs.org/examples/?q=text#webgl_geometry_text_shapes
-//         // https://github.com/mrdoob/three.js/blob/master/examples/webgl_geometry_text_shapes.html
-//         const fontUri = '..\\assets\\helvetiker_regular.typeface.json'
-//         this.loader.load(fontUri, font => {
-//             const fontColor = new THREE.Color('rgb(0, 255, 0)');
-//             const matLite = new THREE.MeshBasicMaterial({
-//                 color: fontColor,
-//                 transparent: true,
-//                 opacity: .5,
-//                 side: THREE.DoubleSide
-//             });
-//             const message = msg
-//             const shape = font.generateShapes(message, .2);
-//             const textGeo = new THREE.ShapeGeometry(shape);
-//             textGeo.computeBoundingBox();
-//             // do some logic for move center of text using bounding box
-//             const text = new THREE.Mesh(textGeo, matLite);
-//             text.name = 'wordName';
-//             text.position.z = 1;
-//             text.position.y = .5;
-//             text.position.x = -.5;
-//             this.scene.add(text);
-//         });
-//     }
 
 
     // @ts-ignore
@@ -103,7 +71,7 @@ export class CanvasCompComponent implements OnInit {
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
         in console log*/
 //         if (elapsed % 180 == 0 && textObj!=undefined){
-        if (elapsed % 3000 == 0 && textObj!=undefined){
+        if (elapsed % 1500 == 0 && textObj!=undefined){
             this.getWordApi()
             // todo this shouldn't be a global probably
             if(this.wordGet!=undefined){
