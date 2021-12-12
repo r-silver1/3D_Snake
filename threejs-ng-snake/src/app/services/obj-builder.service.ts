@@ -23,7 +23,8 @@ export class ObjBuilderService {
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
             let material = new THREE.MeshPhongMaterial({
             //                                     color: new THREE.Color('rgb(159,226,'+Math.floor(this.norm_range(120, 255, min_val, max_val, i))+')')
-                                     color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')')
+                                     color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')'),
+                                     side: THREE.DoubleSide
                               })
             let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
             let pos = this.generatePosition(max_diam)
