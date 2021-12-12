@@ -9,14 +9,6 @@ export class ObjBuilderService {
 
     constructor() { }
 
-//     interface GeneratedShape {
-//         blueCol: number;
-//         greenCol: number;
-//         material: THREE.MeshPhongMaterial;
-//         radius: number;
-//         pos: number[];
-//     }
-
     public initBoxes(shapesArray: any, scene:THREE.Scene): void {
         const min_diam = .025
         const max_diam = .6
@@ -37,18 +29,6 @@ export class ObjBuilderService {
             let pos = this.generatePosition(max_diam)
             let newShape = new RandomShapeClass(material, box_rad, pos)
             let box_temp = newShape.makeInstance()
-
-//             let newGeo = new THREE.BoxGeometry(box_rad, box_rad, box_rad)
-
-//             let min_bound = max_diam*4
-//             let horzAngle = Math.random()*360.0
-//             let vertAngle = Math.random()*360.0
-//             let ranVec = new THREE.Vector3(min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), min_bound*Math.sin(horzAngle))
-//             let pos = [ranVec.x, ranVec.y, ranVec.z]
-
-
-//             let box_temp = this.makeInstance(newGeo, material, pos, scene)
-            //           this.shapesArray.push(box_temp)
             scene.add(box_temp)
             shapesArray.push(box_temp)
         }
@@ -63,20 +43,6 @@ export class ObjBuilderService {
         return pos
 
     }
-
-//     public makeInstance(geometry: any, material: any, vertices: any[], scene: THREE.Scene): THREE.Mesh{
-//         const shape = new THREE.Mesh(geometry, material);
-//         shape.castShadow = true;
-//         shape.receiveShadow = true;
-//         //add to g_scene to be rendered
-//         //       this.scene.add(shape);
-//         scene.add(shape);
-//         //set position of shape
-//         shape.position.x = vertices[0];
-//         shape.position.y = vertices[1];
-//         shape.position.z = vertices[2];
-//         return shape;
-//     }
 
     norm_range(a:number, b:number, min:number, max:number, x:number): number {
         return a + ((x-min)/(max-min))*(b-a)
