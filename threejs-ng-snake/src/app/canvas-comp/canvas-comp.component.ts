@@ -100,10 +100,12 @@ export class CanvasCompComponent implements OnInit {
     }
 
     window_set_size(): void {
+        //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
+        const pixelRatio = window.devicePixelRatio;
         // @ts-ignore
-        const HEIGHT = document.getElementById('mainCanvas').clientHeight;
+        const HEIGHT = document.getElementById('mainCanvas').clientHeight * pixelRatio;
         // @ts-ignore
-        const WIDTH = document.getElementById('mainCanvas').clientWidth;
+        const WIDTH = document.getElementById('mainCanvas').clientWidth * pixelRatio;
         this.renderer.setSize(WIDTH, HEIGHT);
         this.camera.aspect = WIDTH / HEIGHT;
         this.camera.updateProjectionMatrix();
@@ -123,17 +125,22 @@ export class CanvasCompComponent implements OnInit {
     ngOnInit(): void {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
-            logarithmicDepthBuffer: true,
+            logarithmicDepthBuffer: false,
             canvas: document.querySelector('canvas.draw') as HTMLCanvasElement
 
         });
         this.renderer.shadowMap.enabled = true
     // @ts-ignore
         this.renderer.setClearColor(this.scene.fog.color)
+        //https://stackoverflow.com/questions/15409321/super-sample-antialiasing-with-threejs
+        //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
+        // set pixel ratio not recommended
+//         this.renderer.setPixelRatio(window.devicePixelRatio*1.25)
         this.sceneService.initCameras(this.scene, this.camera)
         this.controls = this.sceneService.initControls(this.scene, this.camera)
         this.window_set_size();
         this.window_size_listener();
+
         this.builderService.initBoxes(this.shapesArray, this.scene)
 
         requestAnimationFrame(this.animate);
