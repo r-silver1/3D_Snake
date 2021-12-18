@@ -37,6 +37,11 @@ export class RandomShapeClass {
         for (let i = 0; i < maxPoints; i++) {
             // random value between last generated angle and theta increment
             let theta:number = last + (Math.random() * (thetaDiff))
+            if(i == 0){
+                theta = 0;
+            }else if(i == maxPoints-1){
+                theta = 360;
+            }
 //             let theta:number = last + ((thetaDiff))
             last += thetaDiff
 //             let iX:number = Math.cos(theta) * circleRadius;
