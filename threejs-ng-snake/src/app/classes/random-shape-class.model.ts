@@ -13,6 +13,8 @@ export class RandomShapeClass {
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[]){
             this.material = material;
+            // enable this option to show wireframe view
+//             this.material.wireframe=true;
             this.radius = radius;
             this.position = position;
 //             this.geometry = new THREE.BoxGeometry(radius, radius, radius)
