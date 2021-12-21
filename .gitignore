@@ -46,3 +46,6 @@ threejs-ng-snake/out-tsc
 /threejs-ng-snake/Thumbs.db
 threejs-flask-backend/venv/
 threejs-flask-backend/in_a.pickle
+threejs-flask-backend/session_wrapper/__pycache__/
+threejs-ng-snake/src/app/canvas-comp/js_helper_canvas.js
+.idea/

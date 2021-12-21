@@ -15,12 +15,8 @@ export class RandomShapeClass {
             this.material = material;
             this.radius = radius;
             this.position = position;
-//             this.geometry = new THREE.BoxGeometry(radius, radius, radius)
-//             this.geometry = this.makeGeometry(radius)
-            //temp
             let maxPoints = 6
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
-//             this.geometry = this.makeTempGeometry(maxPoints, radius)
     }
 
 
@@ -29,9 +25,7 @@ export class RandomShapeClass {
     makeCircle(index:number, maxPoints:number, radius:number, yIndex:number) : number[] {
         // 0 <= index < maxPoints - 1
         const pointsNum: number = maxPoints - index
-//         const circleRadius: number = radius/(index+1)
         const circleRadius: number = radius * ((maxPoints-(index))/maxPoints)
-//         let circlePointsMat: Float32Array[] = [];
         let circlePointsMat: Array<any> = []
         let last: number = 0.0
         let thetaDiff: number = 360.0/maxPoints
@@ -43,12 +37,9 @@ export class RandomShapeClass {
             }else if(i == maxPoints-1){
                 theta = 360;
             }
-//             let theta:number = last + ((thetaDiff))
             last += thetaDiff
-//             let iX:number = Math.cos(theta) * circleRadius;
             let iX:number = Math.cos(this.thetaToRad(theta)) * circleRadius;
             let iZ:number = Math.sin(this.thetaToRad(theta)) * circleRadius;
-//             circlePointsMat.push(new Float32Array([iX, yIndex, iZ]))
             circlePointsMat.push([iX, yIndex, iZ])
 
         }
@@ -77,10 +68,6 @@ export class RandomShapeClass {
 
     }
 
-// //     generateBufferFromArr()
-//     pushPoint(arrPoints: Array<any>, bufferGeo: number[]) : void {
-//         bufferGeo.concat()
-//     }
 
     pushTwoCircles(circleOne: Array<any>, circleTwo: Array<any>, bufferArr: number[]) : number[] {
         let indxOne = 0;
@@ -116,16 +103,13 @@ export class RandomShapeClass {
     makeRandomGeometry(maxPoints: number, radius: number) : THREE.BufferGeometry {
         radius/=1.2
         let circlesPointsArr = this.makeCirclesArrays(maxPoints, radius, false);
-//         let currObjArr = new Float32Array()
         let currObjArr:number[] = []
         for(let i = 0; i < circlesPointsArr.length-1; i++){
-//             console.log(circlesPointsArr)
             currObjArr = this.pushTwoCircles(circlesPointsArr[i], circlesPointsArr[i+1], currObjArr)
         }
         let bottomPointsArr = this.makeCirclesArrays(maxPoints, radius, true);
         bottomPointsArr[0] = circlesPointsArr[0]
         for(let i = 0; i < bottomPointsArr.length-1; i++){
-//             console.log(circlesPointsArr)
             currObjArr = this.pushTwoCircles(bottomPointsArr[i], bottomPointsArr[i+1], currObjArr)
         }
         let geometry = new THREE.BufferGeometry();
@@ -190,71 +174,71 @@ export class RandomShapeClass {
 
     // https://threejs.org/docs/index.html#api/en/core/BufferGeometry.groups
     // https://dustinpfister.github.io/2021/04/22/threejs-buffer-geometry/
-    makeGeometry(radius:number) : THREE.BufferGeometry {
-        radius/=2
-        const vertices = new Float32Array([
-            //front
-            -radius, -radius, radius,
-            radius, -radius, radius,
-            radius, radius, radius,
-
-            radius, radius, radius,
-            -radius, radius, radius,
-            -radius, -radius, radius,
-
-            //back
-            -radius, -radius, -radius,
-            radius, -radius, -radius,
-            radius, radius, -radius,
-
-            radius, radius, -radius,
-            -radius, radius, -radius,
-            -radius, -radius, -radius,
-
-            // top
-            -radius, radius, radius,
-            radius, radius, radius,
-            radius, radius, -radius,
-
-            radius, radius, -radius,
-            -radius, radius, -radius,
-            -radius, radius, radius,
-
-
-            //bottom
-            -radius, -radius, radius,
-            radius, -radius, radius,
-            radius, -radius, -radius,
-
-            radius, -radius, -radius,
-            -radius, -radius, -radius,
-            -radius, -radius, radius,
-
-            //left
-            -radius, -radius, radius,
-            -radius, radius, radius,
-            -radius, radius, -radius,
-
-            -radius, radius, -radius,
-            -radius, -radius, -radius,
-            -radius, -radius, radius,
-
-            //right
-            radius, -radius, radius,
-            radius, radius, radius,
-            radius, radius, -radius,
-
-            radius, radius, -radius,
-            radius, -radius, -radius,
-            radius, -radius, radius
-
-
-        ])
-        let geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-        geometry.computeVertexNormals();
-        return geometry
-    }
+//     makeGeometry(radius:number) : THREE.BufferGeometry {
+//         radius/=2
+//         const vertices = new Float32Array([
+//             //front
+//             -radius, -radius, radius,
+//             radius, -radius, radius,
+//             radius, radius, radius,
+//
+//             radius, radius, radius,
+//             -radius, radius, radius,
+//             -radius, -radius, radius,
+//
+//             //back
+//             -radius, -radius, -radius,
+//             radius, -radius, -radius,
+//             radius, radius, -radius,
+//
+//             radius, radius, -radius,
+//             -radius, radius, -radius,
+//             -radius, -radius, -radius,
+//
+//             // top
+//             -radius, radius, radius,
+//             radius, radius, radius,
+//             radius, radius, -radius,
+//
+//             radius, radius, -radius,
+//             -radius, radius, -radius,
+//             -radius, radius, radius,
+//
+//
+//             //bottom
+//             -radius, -radius, radius,
+//             radius, -radius, radius,
+//             radius, -radius, -radius,
+//
+//             radius, -radius, -radius,
+//             -radius, -radius, -radius,
+//             -radius, -radius, radius,
+//
+//             //left
+//             -radius, -radius, radius,
+//             -radius, radius, radius,
+//             -radius, radius, -radius,
+//
+//             -radius, radius, -radius,
+//             -radius, -radius, -radius,
+//             -radius, -radius, radius,
+//
+//             //right
+//             radius, -radius, radius,
+//             radius, radius, radius,
+//             radius, radius, -radius,
+//
+//             radius, radius, -radius,
+//             radius, -radius, -radius,
+//             radius, -radius, radius
+//
+//
+//         ])
+//         let geometry = new THREE.BufferGeometry();
+//         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+//         geometry.computeVertexNormals();
+//         return geometry
+//     }
 
     makeInstance(): THREE.Mesh {
         const shape = new THREE.Mesh(this.geometry, this.material);

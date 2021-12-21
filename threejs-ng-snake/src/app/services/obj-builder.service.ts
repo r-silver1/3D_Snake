@@ -32,6 +32,15 @@ export class ObjBuilderService {
             let box_temp = newShape.makeInstance()
             scene.add(box_temp)
             shapesArray.push(box_temp)
+            //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
+            //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection/Bounding_volume_collision_detection_with_THREE.js
+            let boxHelper = new THREE.BoxHelper(box_temp, 0x0000FF)
+            //comment this to remove bounding boxes
+            scene.add(boxHelper)
+//             let boxBB = new THREE.Box3()
+//             boxBB.setFromObject(box_temp)
+//             let boxMesh = new THREE.Mesh(boxBB, material)
+//             scene.add(boxMesh)
         }
     }
 
