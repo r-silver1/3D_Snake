@@ -23,7 +23,12 @@ export class RandomShapeClass {
     makeCircle(index:number, maxPoints:number, radius:number, yIndex:number) : number[] {
         // 0 <= index < maxPoints - 1
         const pointsNum: number = maxPoints - index
-        const circleRadius: number = radius * (pointsNum/maxPoints)
+        const circleRadius1: number = radius * (pointsNum/maxPoints)
+        const circleRadius2: number = Math.sqrt(Math.pow(radius, 2) - Math.pow(yIndex, 2))
+        let circleRadius = (circleRadius1+circleRadius2)/2
+//         circleRadius*= ((maxPoints-index)/maxPoints)
+        //uncomment for hourglass
+//         const circleRadius: number = radius - Math.sqrt(Math.pow(radius, 2) - Math.pow(yIndex, 2))
         let circlePointsMat: Array<any> = []
         let last: number = 0.0
         let thetaDiff: number = 360.0/pointsNum
@@ -47,7 +52,7 @@ export class RandomShapeClass {
     makeCirclesArrays(maxPoints: number, radius:number, bottomFlag:boolean) : Array<any> {
         let numCircles = maxPoints - 1;
         // smaller number, taller asteroid, vice versa
-        let heightSquisher : number = 1.2
+        let heightSquisher : number = 1
         let yStep = radius / (heightSquisher*numCircles);
         let yIndex = 0;
         if(bottomFlag == true){
@@ -98,7 +103,7 @@ export class RandomShapeClass {
     }
 
     makeRandomGeometry(maxPoints: number, radius: number) : THREE.BufferGeometry {
-//         radius/=1.2
+        radius/=1.2
         let circlesPointsArr = this.makeCirclesArrays(maxPoints, radius, false);
         let currObjArr:number[] = []
         for(let i = 0; i < circlesPointsArr.length-2; i++){
