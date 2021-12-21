@@ -7,7 +7,6 @@ export class RandomShapeClass {
     private material: THREE.MeshPhongMaterial;
     private radius: number;
     private position: number[];
-//     private geometry: THREE.BoxGeometry;
     private geometry: THREE.BufferGeometry;
 
     constructor(material: THREE.MeshPhongMaterial,
@@ -15,26 +14,25 @@ export class RandomShapeClass {
             this.material = material;
             this.radius = radius;
             this.position = position;
-            let maxPoints = 6
+            let maxPoints = 30
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
     }
 
 
     // https://sites.math.washington.edu/~king/coursedir/m445w04/notes/vector/coord.html
-//     makeCircle(index:number, maxPoints:number, radius:number, yIndex:number) : Float32Array[] {
     makeCircle(index:number, maxPoints:number, radius:number, yIndex:number) : number[] {
         // 0 <= index < maxPoints - 1
         const pointsNum: number = maxPoints - index
-        const circleRadius: number = radius * ((maxPoints-(index))/maxPoints)
+        const circleRadius: number = radius * (pointsNum/maxPoints)
         let circlePointsMat: Array<any> = []
         let last: number = 0.0
-        let thetaDiff: number = 360.0/maxPoints
-        for (let i = 0; i < maxPoints; i++) {
+        let thetaDiff: number = 360.0/pointsNum
+        for (let i = 0; i < pointsNum; i++) {
             // random value between last generated angle and theta increment
             let theta:number = last + (Math.random() * (thetaDiff))
             if(i == 0){
                 theta = 0;
-            }else if(i == maxPoints-1){
+            }else if(i == pointsNum-1){
                 theta = 360;
             }
             last += thetaDiff
@@ -46,11 +44,10 @@ export class RandomShapeClass {
         return circlePointsMat;
     }
 
-//     makeCirclesArrays(maxPoints: number, radius:number) : THREE.BufferGeometry {
     makeCirclesArrays(maxPoints: number, radius:number, bottomFlag:boolean) : Array<any> {
         let numCircles = maxPoints - 1;
         // smaller number, taller asteroid, vice versa
-        let heightSquisher : number = .75
+        let heightSquisher : number = 1.2
         let yStep = radius / (heightSquisher*numCircles);
         let yIndex = 0;
         if(bottomFlag == true){
@@ -61,7 +58,7 @@ export class RandomShapeClass {
             let currCircle = this.makeCircle(i, maxPoints, radius, yIndex)
             circles[i] = currCircle
             yIndex += yStep;
-            maxPoints -= 1;
+//             maxPoints -= 1;
 
         }
         return circles;
@@ -101,19 +98,18 @@ export class RandomShapeClass {
     }
 
     makeRandomGeometry(maxPoints: number, radius: number) : THREE.BufferGeometry {
-        radius/=1.2
+//         radius/=1.2
         let circlesPointsArr = this.makeCirclesArrays(maxPoints, radius, false);
         let currObjArr:number[] = []
-        for(let i = 0; i < circlesPointsArr.length-1; i++){
+        for(let i = 0; i < circlesPointsArr.length-2; i++){
             currObjArr = this.pushTwoCircles(circlesPointsArr[i], circlesPointsArr[i+1], currObjArr)
         }
         let bottomPointsArr = this.makeCirclesArrays(maxPoints, radius, true);
         bottomPointsArr[0] = circlesPointsArr[0]
-        for(let i = 0; i < bottomPointsArr.length-1; i++){
+        for(let i = 0; i < bottomPointsArr.length-2; i++){
             currObjArr = this.pushTwoCircles(bottomPointsArr[i], bottomPointsArr[i+1], currObjArr)
         }
         let geometry = new THREE.BufferGeometry();
-        console.log(currObjArr)
         geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(currObjArr), 3));
         geometry.computeVertexNormals();
         return geometry
@@ -123,122 +119,9 @@ export class RandomShapeClass {
         return (Math.PI*deg)/180.0
     }
 
-//     //todo temp: remove
-//     makeTempGeometry(maxPoints: number, radius:number): THREE.BufferGeometry {
-//         let bottomDif: number = 360.0/5.0;
-//         let bottomPoints: Array<any> = []
-//         let theta = 0;
-//         for(let i = 0; i < 5; i ++){
-//             let iX:number = Math.cos(this.thetaToRad(theta)) * radius;
-//             let iZ:number = Math.sin(this.thetaToRad(theta)) * radius;
-//             bottomPoints.push([iX, 0, iZ])
-//             theta+=bottomDif
-//         }
-//         console.log("bottom")
-//         console.log(bottomPoints)
-//
-//         let topPoints: Array<any> = []
-//         let topDiff: number = 360/4.0
-//         theta = 0;
-//         for(let i = 0; i < 4; i++){
-//             let iX:number = Math.cos(this.thetaToRad(theta)) * radius
-//             let iZ:number = Math.sin(this.thetaToRad(theta)) * radius
-//             topPoints.push([iX, radius/2, iZ])
-//             theta+=topDiff
-//         }
-//         console.log("top")
-//         console.log(topPoints)
-//
-//         const vertices = new Float32Array([
-//             bottomPoints[0][0], bottomPoints[0][1], bottomPoints[0][2],
-//             topPoints[0][0], topPoints[0][1], topPoints[0][2],
-//             bottomPoints[1][0], bottomPoints[1][1], bottomPoints[1][2],
-//
-//             topPoints[0][0], topPoints[0][1], topPoints[0][2],
-//             bottomPoints[1][0], bottomPoints[1][1], bottomPoints[1][2],
-//             topPoints[1][0], topPoints[1][1], topPoints[1][2],
-//
-//             bottomPoints[1][0], bottomPoints[1][1], bottomPoints[1][2],
-//             topPoints[1][0], topPoints[1][1], topPoints[1][2],
-//             bottomPoints[2][0], bottomPoints[2][1], bottomPoints[2][2],
-//
-//             topPoints[1][0], topPoints[1][1], topPoints[1][2],
-//             bottomPoints[2][0], bottomPoints[2][1], bottomPoints[2][2],
-//             topPoints[2][0], topPoints[2][1], topPoints[2][2],
-//         ])
-//         let geometry = new THREE.BufferGeometry();
-//         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-//         geometry.computeVertexNormals();
-//         return geometry
-//     }
 
     // https://threejs.org/docs/index.html#api/en/core/BufferGeometry.groups
     // https://dustinpfister.github.io/2021/04/22/threejs-buffer-geometry/
-//     makeGeometry(radius:number) : THREE.BufferGeometry {
-//         radius/=2
-//         const vertices = new Float32Array([
-//             //front
-//             -radius, -radius, radius,
-//             radius, -radius, radius,
-//             radius, radius, radius,
-//
-//             radius, radius, radius,
-//             -radius, radius, radius,
-//             -radius, -radius, radius,
-//
-//             //back
-//             -radius, -radius, -radius,
-//             radius, -radius, -radius,
-//             radius, radius, -radius,
-//
-//             radius, radius, -radius,
-//             -radius, radius, -radius,
-//             -radius, -radius, -radius,
-//
-//             // top
-//             -radius, radius, radius,
-//             radius, radius, radius,
-//             radius, radius, -radius,
-//
-//             radius, radius, -radius,
-//             -radius, radius, -radius,
-//             -radius, radius, radius,
-//
-//
-//             //bottom
-//             -radius, -radius, radius,
-//             radius, -radius, radius,
-//             radius, -radius, -radius,
-//
-//             radius, -radius, -radius,
-//             -radius, -radius, -radius,
-//             -radius, -radius, radius,
-//
-//             //left
-//             -radius, -radius, radius,
-//             -radius, radius, radius,
-//             -radius, radius, -radius,
-//
-//             -radius, radius, -radius,
-//             -radius, -radius, -radius,
-//             -radius, -radius, radius,
-//
-//             //right
-//             radius, -radius, radius,
-//             radius, radius, radius,
-//             radius, radius, -radius,
-//
-//             radius, radius, -radius,
-//             radius, -radius, -radius,
-//             radius, -radius, radius
-//
-//
-//         ])
-//         let geometry = new THREE.BufferGeometry();
-//         geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-//         geometry.computeVertexNormals();
-//         return geometry
-//     }
 
     makeInstance(): THREE.Mesh {
         const shape = new THREE.Mesh(this.geometry, this.material);
@@ -251,9 +134,6 @@ export class RandomShapeClass {
 //                         )
         shape.castShadow = true;
         shape.receiveShadow = true;
-        //add to g_scene to be rendered
-        //       this.scene.add(shape);
-//         scene.add(shape);
         //set position of shape
         const vertices = this.position;
         shape.position.x = vertices[0];
