@@ -81,10 +81,20 @@ export class CanvasCompComponent implements OnInit {
 
         }
         // todo move this to obj service, use object methods
-        this.shapesArray.forEach((cube:any, index:any) => {
-            let rotation = elapsed/(50*index)
-            cube.rotation.y = rotation
-            cube.rotation.z = rotation/10
+//         this.shapesArray.forEach((cube:any, index:any) => {
+        this.shapesArray.forEach((asteroid:any, index:any) => {
+//             let rotation = elapsed/(50*(index+1))
+//             cube.rotation.y = rotation
+//             cube.rotation.z = rotation/10
+//             asteroid.shapeObj.rotation.y = rotation/2
+//             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
+            let rotation = .01 + .03*((this.shapesArray.length-index)/this.shapesArray.length)
+            asteroid.geometry.rotateY(rotation)
+            asteroid.geometry.rotateZ(rotation/2)
+//             asteroid.shapeObj.rotation.z = rotation/10
+            asteroid.updateBoxHelper()
+//             asteroid.shapeObj.rotation.z = rotation/10
+//             asteroid.updateBoxHelper()
         })
         this.render_all()
         requestAnimationFrame(this.animate);

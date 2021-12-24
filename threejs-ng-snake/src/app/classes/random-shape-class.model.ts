@@ -8,14 +8,40 @@ export class RandomShapeClass {
     private radius: number;
     private position: number[];
     private geometry: THREE.BufferGeometry;
+    public shapeObj: THREE.Mesh;
+    public boxHelper: THREE.BoxHelper;
+    public boxGeo: THREE.Box3;
 
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[]){
             this.material = material;
             this.radius = radius;
             this.position = position;
-            let maxPoints = 30
+            let maxPoints = 12
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
+
+            this.shapeObj = new THREE.Mesh(this.geometry, this.material);
+            //         const this.shapeObj = new THREE.Points(this.geometry,
+            //                             new THREE.PointsMaterial({
+            //                                 color: THREE.Color('rgb(255, 0, 0)'),
+            //                                 size: 0.5
+            //
+            //                             })
+            //                         )
+            this.shapeObj.castShadow = true;
+            this.shapeObj.receiveShadow = true;
+            //set position of this.shapeObj
+            const vertices = this.position;
+            this.shapeObj.position.x = vertices[0];
+            this.shapeObj.position.y = vertices[1];
+            this.shapeObj.position.z = vertices[2];
+
+
+            this.boxHelper = new THREE.BoxHelper(this.shapeObj, 0x0000FF)
+            this.shapeObj.add(this.boxHelper)
+            this.boxGeo = new THREE.Box3()
+            this.boxGeo.setFromObject(this.boxHelper)
+
     }
 
 
@@ -25,7 +51,8 @@ export class RandomShapeClass {
         const pointsNum: number = maxPoints - index
         const circleRadius1: number = radius * (pointsNum/maxPoints)
         const circleRadius2: number = Math.sqrt(Math.pow(radius, 2) - Math.pow(yIndex, 2))
-        let circleRadius = (circleRadius1+circleRadius2)/2
+        // todo here: could do weighted average
+        let circleRadius = ((circleRadius1*.3)+(circleRadius2*.7))
 //         circleRadius*= ((maxPoints-index)/maxPoints)
         //uncomment for hourglass
 //         const circleRadius: number = radius - Math.sqrt(Math.pow(radius, 2) - Math.pow(yIndex, 2))
@@ -128,7 +155,7 @@ export class RandomShapeClass {
     // https://threejs.org/docs/index.html#api/en/core/BufferGeometry.groups
     // https://dustinpfister.github.io/2021/04/22/threejs-buffer-geometry/
 
-    makeInstance(): THREE.Mesh {
+    makeInstance(scene: THREE.Scene): THREE.Mesh {
         const shape = new THREE.Mesh(this.geometry, this.material);
 //         const shape = new THREE.Points(this.geometry,
 //                             new THREE.PointsMaterial({
@@ -137,14 +164,25 @@ export class RandomShapeClass {
 //
 //                             })
 //                         )
-        shape.castShadow = true;
-        shape.receiveShadow = true;
-        //set position of shape
-        const vertices = this.position;
-        shape.position.x = vertices[0];
-        shape.position.y = vertices[1];
-        shape.position.z = vertices[2];
-        return shape;
+//         shape.castShadow = true;
+//         shape.receiveShadow = true;
+//         //set position of shape
+//         const vertices = this.position;
+//         shape.position.x = vertices[0];
+//         shape.position.y = vertices[1];
+//         shape.position.z = vertices[2];
+//         return shape;
+        return this.shapeObj
+    }
+
+
+    updateBoxHelper() : void {
+//         console.log(this.shapeObj.position.x)
+//         if(this.shapeObj.position.x == NaN || this.shapeObj.position.y == NaN || this.shapeObj.position.z == NaN){
+//             console.log("HEREE!!!!")
+//         }
+        this.boxHelper.update()
+        this.boxGeo.setFromObject(this.boxHelper)
     }
 
 }
