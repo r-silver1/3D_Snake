@@ -88,7 +88,7 @@ export class CanvasCompComponent implements OnInit {
 //             cube.rotation.z = rotation/10
 //             asteroid.shapeObj.rotation.y = rotation/2
 //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
-            let rotation = .01 + .03*((this.shapesArray.length-index)/this.shapesArray.length)
+            let rotation = .04*((this.shapesArray.length-index)/this.shapesArray.length)
             asteroid.geometry.rotateY(rotation)
             asteroid.geometry.rotateZ(rotation/2)
 //             asteroid.shapeObj.rotation.z = rotation/10

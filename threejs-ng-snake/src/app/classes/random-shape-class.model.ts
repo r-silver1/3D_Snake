@@ -37,10 +37,13 @@ export class RandomShapeClass {
             this.shapeObj.position.z = vertices[2];
 
 
-            this.boxHelper = new THREE.BoxHelper(this.shapeObj, 0x0000FF)
+//             this.boxHelper = new THREE.BoxHelper(this.shapeObj, 0x0000FF)
+//             this.makeBoxHelper(0x0000FF);
+            this.boxHelper = this.makeBoxHelper(0x0000FF)
             this.shapeObj.add(this.boxHelper)
-            this.boxGeo = new THREE.Box3()
-            this.boxGeo.setFromObject(this.boxHelper)
+//             this.boxGeo = new THREE.Box3()
+//             this.boxGeo.setFromObject(this.boxHelper)
+            this.boxGeo = this.makeBoxGeo();
 
     }
 
@@ -183,6 +186,25 @@ export class RandomShapeClass {
 //         }
         this.boxHelper.update()
         this.boxGeo.setFromObject(this.boxHelper)
+    }
+
+    changeBoxHelperCol(hexCol:number) : void {
+        this.shapeObj.remove(this.boxHelper)
+        this.boxHelper = this.makeBoxHelper(hexCol)
+        this.shapeObj.add(this.boxHelper)
+//             this.boxGeo = new THREE.Box3()
+//             this.boxGeo.setFromObject(this.boxHelper)
+        this.boxGeo = this.makeBoxGeo();
+    }
+
+    makeBoxHelper(newColorHex : number) : THREE.BoxHelper{
+        return new THREE.BoxHelper(this.shapeObj, newColorHex)
+    }
+
+    makeBoxGeo() : THREE.Box3 {
+        let tempBox = new THREE.Box3();
+        tempBox.setFromObject(this.boxHelper);
+        return tempBox
     }
 
 }

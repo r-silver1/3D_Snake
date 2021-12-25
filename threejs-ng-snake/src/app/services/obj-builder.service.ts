@@ -43,6 +43,8 @@ export class ObjBuilderService {
 //             let boxHelper = newShape.getBoxHelper()
 //             //comment this to remove bounding boxes
 //             scene.add(boxHelper)
+//             console.log(newShape.boxHelper.material)
+            newShape.changeBoxHelperCol(0xFF0000)
             scene.add(newShape.boxHelper)
 //             let boxBB = new THREE.Box3()
 //             boxBB.setFromObject(box_temp)
