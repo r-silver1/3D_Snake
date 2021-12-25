@@ -85,15 +85,28 @@ export class CanvasCompComponent implements OnInit {
         this.shapesArray.forEach((asteroid:any, index:any) => {
 //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
             // using rotateY or rotateX to rotate geometry, handles boxhelper more smoothly
+            let tempPos = asteroid.position;
+//             asteroid.shapeObj.position.x = 0
+//             asteroid.shapeObj.position.y = 0
+//             asteroid.shapeObj.position.z = 0
+            asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
             let rotation = .04*((this.shapesArray.length-index)/this.shapesArray.length)
             asteroid.geometry.rotateY(rotation)
             asteroid.geometry.rotateZ(rotation/5)
+            asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
+//             asteroid.shapeObj.position.x = tempPos[0]
+//             asteroid.shapeObj.position.y = tempPos[1]
+//             asteroid.shapeObj.position.z = tempPos[2]
             // update box helper, or box helper won't change in size with rotation etc
+            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
             asteroid.updateBoxHelper()
+
         })
         this.render_all()
         requestAnimationFrame(this.animate);
     }
+
+
 
     getWordApi() : void {
         this.wordService.getWord().subscribe(data => {

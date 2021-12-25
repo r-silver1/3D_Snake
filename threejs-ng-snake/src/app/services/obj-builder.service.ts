@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .6
         const min_val = 0;
-        const max_val = 75;
+        const max_val = 59;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -27,12 +27,12 @@ export class ObjBuilderService {
 //             const maxPoints = 12
             const maxPoints = Math.floor(this.norm_range(9, 14, min_val, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
+            this.checkConflicts(newShape, shapesArray, i, scene)
             shapesArray.push(newShape)
             scene.add(newShape.shapeObj)
             //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
             //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection/Bounding_volume_collision_detection_with_THREE.js
 //             console.log(newShape.boxHelper.material)
-            newShape.changeBoxHelperCol(0xFF0000)
             scene.add(newShape.boxHelper)
         }
     }
@@ -51,6 +51,22 @@ export class ObjBuilderService {
 
     norm_range(a:number, b:number, min:number, max:number, x:number): number {
         return a + ((x-min)/(max-min))*(b-a)
+    }
+
+    checkConflicts(asteroid: any, shapesArray: any[], index: number, scene: THREE.Scene) : void {
+        for(let j = 0; j<index; j++){
+            let other = shapesArray[j]
+            let checkBool = asteroid.checkOtherConflict(other)
+            if(checkBool == true){
+                scene.remove(asteroid.boxHelper)
+                scene.remove(other.boxHelper)
+                asteroid.changeBoxHelperCol(0xFF0000)
+                other.changeBoxHelperCol(0xFF0000)
+                scene.add(asteroid.boxHelper)
+                scene.add(other.boxHelper)
+            }
+
+        }
     }
 
 }

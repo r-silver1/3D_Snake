@@ -21,18 +21,21 @@ export class RandomShapeClass {
 //             let maxPoints = 12
             this.maxPoints = maxPoints
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
-
+            // this makes bad orbit
+            const vertices = this.position;
+            this.geometry.translate(vertices[0], vertices[1], vertices[2])
             this.shapeObj = new THREE.Mesh(this.geometry, this.material);
             this.shapeObj.castShadow = true;
             this.shapeObj.receiveShadow = true;
             //set position of this.shapeObj
-            const vertices = this.position;
-            this.shapeObj.position.x = vertices[0];
-            this.shapeObj.position.y = vertices[1];
-            this.shapeObj.position.z = vertices[2];
+//             const vertices = this.position;
+//             this.shapeObj.position.x = vertices[0];
+//             this.shapeObj.position.y = vertices[1];
+//             this.shapeObj.position.z = vertices[2];
             this.boxHelper = this.makeBoxHelper(0x0000FF)
-            this.shapeObj.add(this.boxHelper)
+//             this.shapeObj.add(this.boxHelper)
             this.boxGeo = this.makeBoxGeo();
+
 
     }
 
@@ -161,9 +164,9 @@ export class RandomShapeClass {
     }
 
     changeBoxHelperCol(hexCol:number) : void {
-        this.shapeObj.remove(this.boxHelper)
+//         this.shapeObj.remove(this.boxHelper)
         this.boxHelper = this.makeBoxHelper(hexCol)
-        this.shapeObj.add(this.boxHelper)
+//         this.shapeObj.add(this.boxHelper)
         this.boxGeo = this.makeBoxGeo();
     }
 
@@ -175,6 +178,12 @@ export class RandomShapeClass {
         let tempBox = new THREE.Box3();
         tempBox.setFromObject(this.boxHelper);
         return tempBox
+    }
+
+    checkOtherConflict(other:RandomShapeClass):boolean{
+        let boxCheck = this.boxGeo.intersectsBox(other.boxGeo)
+//         console.log("BOX CHECK " + boxCheck)
+        return boxCheck
     }
 
 }
