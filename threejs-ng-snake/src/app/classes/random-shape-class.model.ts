@@ -8,26 +8,21 @@ export class RandomShapeClass {
     private radius: number;
     private position: number[];
     private geometry: THREE.BufferGeometry;
+    private maxPoints: number;
     public shapeObj: THREE.Mesh;
     public boxHelper: THREE.BoxHelper;
     public boxGeo: THREE.Box3;
 
     constructor(material: THREE.MeshPhongMaterial,
-                radius: number, position: number[]){
+                radius: number, position: number[], maxPoints: number){
             this.material = material;
             this.radius = radius;
             this.position = position;
-            let maxPoints = 12
+//             let maxPoints = 12
+            this.maxPoints = maxPoints
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
 
             this.shapeObj = new THREE.Mesh(this.geometry, this.material);
-            //         const this.shapeObj = new THREE.Points(this.geometry,
-            //                             new THREE.PointsMaterial({
-            //                                 color: THREE.Color('rgb(255, 0, 0)'),
-            //                                 size: 0.5
-            //
-            //                             })
-            //                         )
             this.shapeObj.castShadow = true;
             this.shapeObj.receiveShadow = true;
             //set position of this.shapeObj
@@ -35,14 +30,8 @@ export class RandomShapeClass {
             this.shapeObj.position.x = vertices[0];
             this.shapeObj.position.y = vertices[1];
             this.shapeObj.position.z = vertices[2];
-
-
-//             this.boxHelper = new THREE.BoxHelper(this.shapeObj, 0x0000FF)
-//             this.makeBoxHelper(0x0000FF);
             this.boxHelper = this.makeBoxHelper(0x0000FF)
             this.shapeObj.add(this.boxHelper)
-//             this.boxGeo = new THREE.Box3()
-//             this.boxGeo.setFromObject(this.boxHelper)
             this.boxGeo = this.makeBoxGeo();
 
     }
@@ -51,12 +40,15 @@ export class RandomShapeClass {
     // https://sites.math.washington.edu/~king/coursedir/m445w04/notes/vector/coord.html
     makeCircle(index:number, maxPoints:number, radius:number, yIndex:number) : number[] {
         // 0 <= index < maxPoints - 1
-        const pointsNum: number = maxPoints - index
-        const circleRadius1: number = radius * (pointsNum/maxPoints)
-        const circleRadius2: number = Math.sqrt(Math.pow(radius, 2) - Math.pow(yIndex, 2))
-        // todo here: could do weighted average
-        let circleRadius = ((circleRadius1*.3)+(circleRadius2*.7))
-//         circleRadius*= ((maxPoints-index)/maxPoints)
+        const pointsNum: number = maxPoints - index;
+        // coneMultiplier:set to 1 and sphereMultiplier to 0 for cone
+        const coneMultiplier = .5;
+        // coneRadius: equation to trace out edges cone
+        const coneRadius: number = radius * (pointsNum/maxPoints);
+        // sphereMultiplier:set to 1 and coneMultiplier to 0 for orb
+        const sphereMultiplier = 1.0-coneMultiplier;
+        const sphereRadius: number = Math.sqrt(Math.pow(radius, 2) - Math.pow(yIndex, 2));
+        let circleRadius = ((coneRadius*coneMultiplier)+(sphereRadius*sphereMultiplier))
         //uncomment for hourglass
 //         const circleRadius: number = radius - Math.sqrt(Math.pow(radius, 2) - Math.pow(yIndex, 2))
         let circlePointsMat: Array<any> = []
@@ -157,33 +149,13 @@ export class RandomShapeClass {
 
     // https://threejs.org/docs/index.html#api/en/core/BufferGeometry.groups
     // https://dustinpfister.github.io/2021/04/22/threejs-buffer-geometry/
-
     makeInstance(scene: THREE.Scene): THREE.Mesh {
         const shape = new THREE.Mesh(this.geometry, this.material);
-//         const shape = new THREE.Points(this.geometry,
-//                             new THREE.PointsMaterial({
-//                                 color: THREE.Color('rgb(255, 0, 0)'),
-//                                 size: 0.5
-//
-//                             })
-//                         )
-//         shape.castShadow = true;
-//         shape.receiveShadow = true;
-//         //set position of shape
-//         const vertices = this.position;
-//         shape.position.x = vertices[0];
-//         shape.position.y = vertices[1];
-//         shape.position.z = vertices[2];
-//         return shape;
         return this.shapeObj
     }
 
 
     updateBoxHelper() : void {
-//         console.log(this.shapeObj.position.x)
-//         if(this.shapeObj.position.x == NaN || this.shapeObj.position.y == NaN || this.shapeObj.position.z == NaN){
-//             console.log("HEREE!!!!")
-//         }
         this.boxHelper.update()
         this.boxGeo.setFromObject(this.boxHelper)
     }
@@ -192,8 +164,6 @@ export class RandomShapeClass {
         this.shapeObj.remove(this.boxHelper)
         this.boxHelper = this.makeBoxHelper(hexCol)
         this.shapeObj.add(this.boxHelper)
-//             this.boxGeo = new THREE.Box3()
-//             this.boxGeo.setFromObject(this.boxHelper)
         this.boxGeo = this.makeBoxGeo();
     }
 
