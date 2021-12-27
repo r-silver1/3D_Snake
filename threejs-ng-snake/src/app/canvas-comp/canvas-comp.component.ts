@@ -89,6 +89,7 @@ export class CanvasCompComponent implements OnInit {
 //             asteroid.shapeObj.position.x = 0
 //             asteroid.shapeObj.position.y = 0
 //             asteroid.shapeObj.position.z = 0
+            // todo make helper for translate
             asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
             let rotation = .04*((this.shapesArray.length-index)/this.shapesArray.length)
             asteroid.geometry.rotateY(rotation)
