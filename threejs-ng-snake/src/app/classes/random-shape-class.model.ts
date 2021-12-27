@@ -6,8 +6,8 @@ import * as THREE from 'three';
 export class RandomShapeClass {
     private material: THREE.MeshPhongMaterial;
     private radius: number;
-    private position: number[];
-    private geometry: THREE.BufferGeometry;
+    public position: number[];
+    public geometry: THREE.BufferGeometry;
     private maxPoints: number;
     public shapeObj: THREE.Mesh;
     public boxHelper: THREE.BoxHelper;
