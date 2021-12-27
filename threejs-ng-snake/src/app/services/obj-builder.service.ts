@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .6
         const min_val = 0;
-        const max_val = 50;
+        const max_val = 70;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -29,20 +29,21 @@ export class ObjBuilderService {
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
             let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
             // todo if this while loop commented, no bad spinning
-//             while(conflictCheck == true){
-//                 console.log("true hit")
-//                 let new_pos = this.generatePosition(max_diam)
-//                 newShape.geometry.translate(-newShape.position[0],
-//                                             -newShape.position[1],
-//                                             -newShape.position[2]
-//                                             )
-//                 newShape.geometry.translate(new_pos[0],
-//                                             new_pos[1],
-//                                             new_pos[2]
-//                                             )
-//                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
-//
-//             }
+            while(conflictCheck == true){
+                console.log("true hit")
+                let new_pos = this.generatePosition(max_diam)
+                newShape.geometry.translate(-newShape.position[0],
+                                            -newShape.position[1],
+                                            -newShape.position[2]
+                                            )
+                newShape.geometry.translate(new_pos[0],
+                                            new_pos[1],
+                                            new_pos[2]
+                                            )
+                newShape.position = new_pos
+                conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+
+            }
             shapesArray.push(newShape)
             scene.add(newShape.shapeObj)
             //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
