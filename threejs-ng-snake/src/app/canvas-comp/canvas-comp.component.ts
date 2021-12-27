@@ -95,6 +95,7 @@ export class CanvasCompComponent implements OnInit {
             asteroid.geometry.rotateY(rotation)
             asteroid.geometry.rotateZ(rotation/5)
             asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
+            asteroid.shapeObj.rotateY(rotation/10)
 //             asteroid.shapeObj.position.x = tempPos[0]
 //             asteroid.shapeObj.position.y = tempPos[1]
 //             asteroid.shapeObj.position.z = tempPos[2]
