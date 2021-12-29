@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .6
         const min_val = 0;
-        const max_val = 25;
+        const max_val = 10;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -27,7 +27,8 @@ export class ObjBuilderService {
 //             const maxPoints = 12
             const maxPoints = Math.floor(this.norm_range(9, 14, min_val, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
-            let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+//             let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+            let conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
             // todo if this while loop commented, no bad spinning
             while(conflictCheck == true){
                 console.log("true hit")
@@ -41,7 +42,8 @@ export class ObjBuilderService {
                                             new_pos[2]
                                             )
                 newShape.position = new_pos
-                conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+//                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+                conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
 
             }
             shapesArray.push(newShape)
