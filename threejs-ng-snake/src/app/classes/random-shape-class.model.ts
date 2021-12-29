@@ -10,8 +10,10 @@ export class RandomShapeClass {
     public geometry: THREE.BufferGeometry;
     private maxPoints: number;
     public shapeObj: THREE.Mesh;
-    public boxHelper: THREE.BoxHelper;
-    public boxGeo: THREE.Box3;
+//     public boxHelper: THREE.BoxHelper;
+//     public boxGeo: THREE.Box3;
+    public boxHelper: any;
+    public boxGeo: any;
 
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[], maxPoints: number){
@@ -165,8 +167,11 @@ export class RandomShapeClass {
 
     changeBoxHelperCol(hexCol:number) : void {
 //         this.shapeObj.remove(this.boxHelper)
+        this.boxHelper = null
         this.boxHelper = this.makeBoxHelper(hexCol)
 //         this.shapeObj.add(this.boxHelper)
+        this.boxGeo = null
+//         this.boxGeo.dispose()
         this.boxGeo = this.makeBoxGeo();
     }
 

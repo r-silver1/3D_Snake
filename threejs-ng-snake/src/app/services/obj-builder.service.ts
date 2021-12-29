@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .6
         const min_val = 0;
-        const max_val = 20;
+        const max_val = 50;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
