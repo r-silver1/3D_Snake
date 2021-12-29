@@ -75,15 +75,18 @@ export class ObjBuilderService {
         let checkBool = false;
         for(let j = 0; j<index; j++){
             let other = shapesArray[j]
-            checkBool = asteroid.checkOtherConflict(other)
-            if(checkBool == true){
+//             checkBool = asteroid.checkOtherConflict(other)
+            let thisBool = asteroid.checkOtherConflict(other)
+//             if(checkBool == true){
+            if(thisBool == true){
+                checkBool = true;
                 scene.remove(asteroid.boxHelper)
                 scene.remove(other.boxHelper)
                 asteroid.changeBoxHelperCol(0xFF0000)
                 other.changeBoxHelperCol(0xFF0000)
                 scene.add(asteroid.boxHelper)
                 scene.add(other.boxHelper)
-                break
+//                 break
             }
 
         }
