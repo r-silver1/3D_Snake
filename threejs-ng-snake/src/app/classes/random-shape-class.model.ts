@@ -162,15 +162,20 @@ export class RandomShapeClass {
 
     updateBoxHelper() : void {
         this.boxHelper.update()
-        this.boxGeo.setFromObject(this.boxHelper)
+//         this.boxGeo.setFromObject(this.boxHelper)
+        this.boxGeo = null;
+        delete this.boxGeo;
+        this.boxGeo = this.makeBoxGeo()
     }
 
     changeBoxHelperCol(hexCol:number) : void {
 //         this.shapeObj.remove(this.boxHelper)
         this.boxHelper = null
+        delete this.boxHelper
         this.boxHelper = this.makeBoxHelper(hexCol)
 //         this.shapeObj.add(this.boxHelper)
         this.boxGeo = null
+        delete this.boxGeo
 //         this.boxGeo.dispose()
         this.boxGeo = this.makeBoxGeo();
     }
