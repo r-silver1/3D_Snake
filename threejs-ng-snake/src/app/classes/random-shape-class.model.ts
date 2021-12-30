@@ -171,13 +171,21 @@ export class RandomShapeClass {
 
     changeBoxHelperCol(hexCol:number) : void {
 //         this.shapeObj.remove(this.boxHelper)
-        delete this.boxHelper
-        this.boxHelper = null
+//         delete this.boxHelper
+//         this.boxHelper = null
+//         this.boxHelper.dispose()
+        this.boxHelper.material.dispose()
+        this.boxHelper.geometry.dispose()
         this.boxHelper = this.makeBoxHelper(hexCol)
 //         this.shapeObj.add(this.boxHelper)
-        delete this.boxGeo
-        this.boxGeo = null
+//         delete this.boxGeo
+//         this.boxGeo = null
 //         this.boxGeo.dispose()
+//         this.boxGeo.material.dispose()
+        //https://r105.threejsfundamentals.org/threejs/lessons/threejs-cleanup.html
+//         if(this.boxGeo.material !== undefined){
+//             this.boxGeo.material.dispose()
+//         }
         this.boxGeo = this.makeBoxGeo();
     }
 
