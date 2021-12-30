@@ -16,7 +16,8 @@ export class RandomShapeClass {
     public boxGeo: any;
 
     constructor(material: THREE.MeshPhongMaterial,
-                radius: number, position: number[], maxPoints: number){
+                radius: number, position: number[],
+                maxPoints: number){
             this.material = material;
             this.radius = radius;
             this.position = position;
@@ -163,19 +164,19 @@ export class RandomShapeClass {
     updateBoxHelper() : void {
         this.boxHelper.update()
 //         this.boxGeo.setFromObject(this.boxHelper)
-        this.boxGeo = null;
         delete this.boxGeo;
+        this.boxGeo = null;
         this.boxGeo = this.makeBoxGeo()
     }
 
     changeBoxHelperCol(hexCol:number) : void {
 //         this.shapeObj.remove(this.boxHelper)
-        this.boxHelper = null
         delete this.boxHelper
+        this.boxHelper = null
         this.boxHelper = this.makeBoxHelper(hexCol)
 //         this.shapeObj.add(this.boxHelper)
-        this.boxGeo = null
         delete this.boxGeo
+        this.boxGeo = null
 //         this.boxGeo.dispose()
         this.boxGeo = this.makeBoxGeo();
     }
