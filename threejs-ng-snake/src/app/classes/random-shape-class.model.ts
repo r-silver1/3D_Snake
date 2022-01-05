@@ -17,8 +17,8 @@ export class RandomShapeClass {
     public conflictHit: boolean;
 
     // static members
-    static blueColor: THREE.Color = new THREE.Color('rgb(0,0,255)')
-    static redColor: THREE.Color = new THREE.Color('rgb(255,0,0)')
+    static blueColor: THREE.Color = new THREE.Color('rgb(0,120,255)')
+    static redColor: THREE.Color = new THREE.Color('rgb(255,120,0)')
 
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[],
