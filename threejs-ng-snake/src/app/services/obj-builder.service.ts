@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .6
         const min_val = 0;
-        const max_val = 20;
+        const max_val = 14;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -25,8 +25,8 @@ export class ObjBuilderService {
             let pos = this.generatePosition(max_diam)
             // todo in future use this to change complexity of oids
 //             const maxPoints = 12
-            const minPointsBound = 5;
-            const maxPointsBound = 8;
+            const minPointsBound = 7;
+            const maxPointsBound = 12;
 //             const maxPoints = Math.floor(this.norm_range(9, 14, min_val, max_val, i))
             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, min_val, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
@@ -35,7 +35,7 @@ export class ObjBuilderService {
             // todo if this while loop commented, no bad spinning
             while(conflictCheck == true){
                 console.log("true hit")
-                let new_diam = max_diam * 1.2
+                let new_diam = max_diam * 1.1
                 let new_pos = this.generatePosition(max_diam)
                 newShape.geometry.translate(-newShape.position[0],
                                             -newShape.position[1],
