@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .6
         const min_val = 0;
-        const max_val = 14;
+        const max_val = 10;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -33,24 +33,26 @@ export class ObjBuilderService {
 //             let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
             let conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
             // todo if this while loop commented, no bad spinning
-            while(conflictCheck == true){
-                console.log("true hit")
-                let new_diam = max_diam * 1.1
-                let new_pos = this.generatePosition(max_diam)
-                newShape.geometry.translate(-newShape.position[0],
-                                            -newShape.position[1],
-                                            -newShape.position[2]
-                                            )
-                newShape.geometry.translate(new_pos[0],
-                                            new_pos[1],
-                                            new_pos[2]
-                                            )
-                newShape.position = new_pos
-                newShape.updateBoxHelper()
-//                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
-                conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
-
-            }
+//             let conflictCount = 0;
+//             while(conflictCheck == true && conflictCount < 30){
+// //                 console.log("true hit")
+//                 let new_diam = max_diam * 3
+//                 let new_pos = this.generatePosition(max_diam)
+//                 newShape.geometry.translate(-newShape.position[0],
+//                                             -newShape.position[1],
+//                                             -newShape.position[2]
+//                                             )
+//                 newShape.geometry.translate(new_pos[0],
+//                                             new_pos[1],
+//                                             new_pos[2]
+//                                             )
+//                 newShape.position = new_pos
+//                 newShape.updateBoxHelper()
+// //                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+//                 conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
+//                 conflictCount++
+//
+//             }
 
             shapesArray.push(newShape)
             scene.add(newShape.shapeObj)
@@ -61,12 +63,15 @@ export class ObjBuilderService {
         }
     }
 
+    // todo changes here: should probably check conflict before generating position
+    // if possible...
     public generatePosition(max_diam:number): number[] {
         let sizeMultiplier = 4
         let min_bound = max_diam*4
         let horzAngle = Math.random()*360.0
         let vertAngle = Math.random()*360.0
-        min_bound = min_bound/2 + Math.random()*min_bound/2
+        // adding in randomness to min bound, necessary?
+        min_bound = min_bound*.8 + Math.random()*(min_bound*.2)
         let horz_min_bound = min_bound * Math.cos(vertAngle)
 //         let ranVec = new THREE.Vector3(min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), min_bound*Math.sin(horzAngle))
         let ranVec = new THREE.Vector3(horz_min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), horz_min_bound*Math.sin(horzAngle))
@@ -75,10 +80,12 @@ export class ObjBuilderService {
 
     }
 
+    // todo should find way to make this global helpful function, used multiple places
     norm_range(a:number, b:number, min:number, max:number, x:number): number {
         return a + ((x-min)/(max-min))*(b-a)
     }
 
+    // todo move into asteroid class? or other helper class?
     checkConflicts(asteroid: any, shapesArray: any[], index: number, scene: THREE.Scene) : boolean {
         let checkBool = false;
         for(let j = 0; j<index; j++){
@@ -86,21 +93,31 @@ export class ObjBuilderService {
 //             checkBool = asteroid.checkOtherConflict(other)
             let thisBool = asteroid.checkOtherConflict(other)
 //             if(checkBool == true){
-            if(thisBool == true){
+            let tempAstBool = asteroid.conflictHit
+            let tempOthBool = other.conflictHit
+            if(thisBool){
+                asteroid.conflictHit = true;
+                other.conflictHit = true;
                 checkBool = true;
-                scene.remove(asteroid.boxHelper)
-                scene.remove(other.boxHelper)
-                asteroid.changeBoxHelperCol(0xFF0000)
-                other.changeBoxHelperCol(0xFF0000)
-                scene.add(asteroid.boxHelper)
-                scene.add(other.boxHelper)
+
+                if(tempAstBool == false){
+                    scene.remove(asteroid.boxHelper)
+                    asteroid.changeBoxHelperCol()
+                    scene.add(asteroid.boxHelper)
+                }
+                if(tempOthBool == false){
+                    scene.remove(other.boxHelper)
+                    other.changeBoxHelperCol()
+                    scene.add(other.boxHelper)
+                }
 //                 break
             }
 
         }
         if(checkBool == false){
+            asteroid.conflictHit = false;
             scene.remove(asteroid.boxHelper)
-            asteroid.changeBoxHelperCol(0x0000FF)
+            asteroid.changeBoxHelperCol()
             scene.add(asteroid.boxHelper)
         }
         return checkBool

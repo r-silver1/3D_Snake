@@ -14,14 +14,20 @@ export class RandomShapeClass {
 //     public boxGeo: THREE.Box3;
     public boxHelper: any;
     public boxGeo: any;
+    public conflictHit: boolean;
+
+    // static members
+    static blueColor: THREE.Color = new THREE.Color('rgb(0,0,255)')
+    static redColor: THREE.Color = new THREE.Color('rgb(255,0,0)')
 
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[],
                 maxPoints: number){
+
             this.material = material;
             this.radius = radius;
             this.position = position;
-//             let maxPoints = 12
+
             this.maxPoints = maxPoints
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
             // this makes bad orbit
@@ -30,12 +36,13 @@ export class RandomShapeClass {
             this.shapeObj = new THREE.Mesh(this.geometry, this.material);
             this.shapeObj.castShadow = true;
             this.shapeObj.receiveShadow = true;
+
+            // conflictHit: used to determine box color, red or green
+            this.conflictHit = false;
+
             //set position of this.shapeObj
-//             const vertices = this.position;
-//             this.shapeObj.position.x = vertices[0];
-//             this.shapeObj.position.y = vertices[1];
-//             this.shapeObj.position.z = vertices[2];
-            this.boxHelper = this.makeBoxHelper(0x0000FF)
+//             this.boxHelper = this.makeBoxHelper(RandomShapeClass.blueColor)
+            this.boxHelper = this.makeBoxHelper()
 //             this.shapeObj.add(this.boxHelper)
             this.boxGeo = this.makeBoxGeo();
 
@@ -169,14 +176,22 @@ export class RandomShapeClass {
         this.boxGeo = this.makeBoxGeo()
     }
 
-    changeBoxHelperCol(hexCol:number) : void {
+//     changeBoxHelperCol(hexCol:number) : void {
+//     changeBoxHelperCol(hexCol:THREE.Color) : void {
+    changeBoxHelperCol() : void {
 //         this.shapeObj.remove(this.boxHelper)
 //         delete this.boxHelper
 //         this.boxHelper = null
 //         this.boxHelper.dispose()
         this.boxHelper.material.dispose()
         this.boxHelper.geometry.dispose()
-        this.boxHelper = this.makeBoxHelper(hexCol)
+//         if(this.conflictHit){
+//             this.boxHelper = this.makeBoxHelper(RandomShapeClass.redColor)
+//         }else if(this.conflictHit == false){
+//             this.boxHelper = this.makeBoxHelper(RandomShapeClass.blueColor)
+//         }
+
+        this.boxHelper = this.makeBoxHelper()
 //         this.shapeObj.add(this.boxHelper)
 //         delete this.boxGeo
 //         this.boxGeo = null
@@ -189,8 +204,15 @@ export class RandomShapeClass {
         this.boxGeo = this.makeBoxGeo();
     }
 
-    makeBoxHelper(newColorHex : number) : THREE.BoxHelper{
-        return new THREE.BoxHelper(this.shapeObj, newColorHex)
+//     makeBoxHelper(newColorHex : number) : THREE.BoxHelper{
+//     makeBoxHelper(newColorHex : THREE.Color) : THREE.BoxHelper{
+    makeBoxHelper() : THREE.BoxHelper{
+        let colChoice = RandomShapeClass.blueColor
+        if(this.conflictHit){
+             colChoice = RandomShapeClass.redColor
+        }
+        return new THREE.BoxHelper(this.shapeObj, colChoice)
+//         return new THREE.BoxHelper(this.shapeObj, newColorHex)
     }
 
     makeBoxGeo() : THREE.Box3 {
@@ -201,6 +223,10 @@ export class RandomShapeClass {
 
     checkOtherConflict(other:RandomShapeClass):boolean{
         let boxCheck = this.boxGeo.intersectsBox(other.boxGeo)
+//         if(boxCheck){
+//             this.conflictHit = true;
+//             other.conflictHit = true;
+//         }
 //         console.log("BOX CHECK " + boxCheck)
         return boxCheck
     }
