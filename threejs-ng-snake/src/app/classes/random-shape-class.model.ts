@@ -42,7 +42,7 @@ export class RandomShapeClass {
 
             //set position of this.shapeObj
 //             this.boxHelper = this.makeBoxHelper(RandomShapeClass.blueColor)
-            this.boxHelper = this.makeBoxHelper()
+            this.boxHelper = this.makeBoxHelper(false)
 //             this.shapeObj.add(this.boxHelper)
             this.boxGeo = this.makeBoxGeo();
 
@@ -178,7 +178,7 @@ export class RandomShapeClass {
 
 //     changeBoxHelperCol(hexCol:number) : void {
 //     changeBoxHelperCol(hexCol:THREE.Color) : void {
-    changeBoxHelperCol() : void {
+    changeBoxHelperCol(checkBool: boolean) : void {
 //         this.shapeObj.remove(this.boxHelper)
 //         delete this.boxHelper
 //         this.boxHelper = null
@@ -191,7 +191,7 @@ export class RandomShapeClass {
 //             this.boxHelper = this.makeBoxHelper(RandomShapeClass.blueColor)
 //         }
 
-        this.boxHelper = this.makeBoxHelper()
+        this.boxHelper = this.makeBoxHelper(checkBool)
 //         this.shapeObj.add(this.boxHelper)
 //         delete this.boxGeo
 //         this.boxGeo = null
@@ -206,9 +206,10 @@ export class RandomShapeClass {
 
 //     makeBoxHelper(newColorHex : number) : THREE.BoxHelper{
 //     makeBoxHelper(newColorHex : THREE.Color) : THREE.BoxHelper{
-    makeBoxHelper() : THREE.BoxHelper{
+    makeBoxHelper(checkBool: boolean) : THREE.BoxHelper{
         let colChoice = RandomShapeClass.blueColor
-        if(this.conflictHit){
+//         if(this.conflictHit){
+        if(checkBool){
              colChoice = RandomShapeClass.redColor
         }
         return new THREE.BoxHelper(this.shapeObj, colChoice)

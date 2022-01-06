@@ -102,12 +102,12 @@ export class ObjBuilderService {
 
                 if(tempAstBool == false){
                     scene.remove(asteroid.boxHelper)
-                    asteroid.changeBoxHelperCol()
+                    asteroid.changeBoxHelperCol(true)
                     scene.add(asteroid.boxHelper)
                 }
                 if(tempOthBool == false){
                     scene.remove(other.boxHelper)
-                    other.changeBoxHelperCol()
+                    other.changeBoxHelperCol(true)
                     scene.add(other.boxHelper)
                 }
 //                 break
@@ -117,7 +117,7 @@ export class ObjBuilderService {
         if(checkBool == false){
             asteroid.conflictHit = false;
             scene.remove(asteroid.boxHelper)
-            asteroid.changeBoxHelperCol()
+            asteroid.changeBoxHelperCol(false)
             scene.add(asteroid.boxHelper)
         }
         return checkBool
