@@ -176,59 +176,29 @@ export class RandomShapeClass {
         this.boxGeo = this.makeBoxGeo()
     }
 
-//     changeBoxHelperCol(hexCol:number) : void {
-//     changeBoxHelperCol(hexCol:THREE.Color) : void {
-    changeBoxHelperCol(checkBool: boolean) : void {
-//         this.shapeObj.remove(this.boxHelper)
-//         delete this.boxHelper
-//         this.boxHelper = null
-//         this.boxHelper.dispose()
-        this.boxHelper.material.dispose()
-        this.boxHelper.geometry.dispose()
-//         if(this.conflictHit){
-//             this.boxHelper = this.makeBoxHelper(RandomShapeClass.redColor)
-//         }else if(this.conflictHit == false){
-//             this.boxHelper = this.makeBoxHelper(RandomShapeClass.blueColor)
-//         }
-
-        this.boxHelper = this.makeBoxHelper(checkBool)
-//         this.shapeObj.add(this.boxHelper)
-//         delete this.boxGeo
-//         this.boxGeo = null
-//         this.boxGeo.dispose()
-//         this.boxGeo.material.dispose()
-        //https://r105.threejsfundamentals.org/threejs/lessons/threejs-cleanup.html
-//         if(this.boxGeo.material !== undefined){
-//             this.boxGeo.material.dispose()
-//         }
-        this.boxGeo = this.makeBoxGeo();
-    }
-
-//     makeBoxHelper(newColorHex : number) : THREE.BoxHelper{
-//     makeBoxHelper(newColorHex : THREE.Color) : THREE.BoxHelper{
-    makeBoxHelper(checkBool: boolean) : THREE.BoxHelper{
-        let colChoice = RandomShapeClass.blueColor
-//         if(this.conflictHit){
-        if(checkBool){
-             colChoice = RandomShapeClass.redColor
-        }
-        return new THREE.BoxHelper(this.shapeObj, colChoice)
-//         return new THREE.BoxHelper(this.shapeObj, newColorHex)
-    }
-
     makeBoxGeo() : THREE.Box3 {
         let tempBox = new THREE.Box3();
         tempBox.setFromObject(this.boxHelper);
         return tempBox
     }
 
+    changeBoxHelperCol(checkBool: boolean) : void {
+        this.boxHelper.material.dispose()
+        this.boxHelper.geometry.dispose()
+        this.boxHelper = this.makeBoxHelper(checkBool)
+        this.boxGeo = this.makeBoxGeo();
+    }
+
+    makeBoxHelper(checkBool: boolean) : THREE.BoxHelper{
+        let colChoice = RandomShapeClass.blueColor
+        if(checkBool == true){
+             colChoice = RandomShapeClass.redColor
+        }
+        return new THREE.BoxHelper(this.shapeObj, colChoice)
+    }
+
     checkOtherConflict(other:RandomShapeClass):boolean{
         let boxCheck = this.boxGeo.intersectsBox(other.boxGeo)
-//         if(boxCheck){
-//             this.conflictHit = true;
-//             other.conflictHit = true;
-//         }
-//         console.log("BOX CHECK " + boxCheck)
         return boxCheck
     }
 

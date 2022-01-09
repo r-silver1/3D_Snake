@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .6
         const min_val = 0;
-        const max_val = 15;
+        const max_val = 20;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -23,15 +23,12 @@ export class ObjBuilderService {
                               })
             let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
             let pos = this.generatePosition(max_diam)
-            // todo in future use this to change complexity of oids
-//             const maxPoints = 12
+            // use this to change complexity of oids
             const minPointsBound = 7;
             const maxPointsBound = 12;
-//             const maxPoints = Math.floor(this.norm_range(9, 14, min_val, max_val, i))
             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, min_val, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
-//             let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
-            let conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
+//             let conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
             // todo if this while loop commented, no bad spinning
 //             let conflictCount = 0;
 //             while(conflictCheck == true && conflictCount < 30){
@@ -100,17 +97,24 @@ export class ObjBuilderService {
                 other.conflictHit = true;
                 checkBool = true;
 
-                if(tempAstBool == false){
-                    scene.remove(asteroid.boxHelper)
-                    asteroid.changeBoxHelperCol(true)
-                    scene.add(asteroid.boxHelper)
-                }
-                if(tempOthBool == false){
-                    scene.remove(other.boxHelper)
-                    other.changeBoxHelperCol(true)
-                    scene.add(other.boxHelper)
-                }
-//                 break
+                scene.remove(asteroid.boxHelper)
+                asteroid.changeBoxHelperCol(true)
+                scene.add(asteroid.boxHelper)
+
+                scene.remove(other.boxHelper)
+                other.changeBoxHelperCol(true)
+                scene.add(other.boxHelper)
+
+//                 if(tempAstBool == false){
+//                     scene.remove(asteroid.boxHelper)
+//                     asteroid.changeBoxHelperCol(true)
+//                     scene.add(asteroid.boxHelper)
+//                 }
+//                 if(tempOthBool == false){
+//                     scene.remove(other.boxHelper)
+//                     other.changeBoxHelperCol(true)
+//                     scene.add(other.boxHelper)
+//                 }
             }
 
         }
