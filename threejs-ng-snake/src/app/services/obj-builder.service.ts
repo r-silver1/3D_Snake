@@ -28,35 +28,47 @@ export class ObjBuilderService {
             const maxPointsBound = 9;
             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, min_val, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
-//             let conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
-            // todo if this while loop commented, no bad spinning
-//             let conflictCount = 0;
-//             while(conflictCheck == true && conflictCount < 30){
-// //                 console.log("true hit")
-//                 let new_diam = max_diam * 3
-//                 let new_pos = this.generatePosition(max_diam)
-//                 newShape.geometry.translate(-newShape.position[0],
-//                                             -newShape.position[1],
-//                                             -newShape.position[2]
-//                                             )
-//                 newShape.geometry.translate(new_pos[0],
-//                                             new_pos[1],
-//                                             new_pos[2]
-//                                             )
-//                 newShape.position = new_pos
-//                 newShape.updateBoxHelper()
-// //                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
-//                 conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
-//                 conflictCount++
-//
-//             }
-
             shapesArray.push(newShape)
             scene.add(newShape.shapeObj)
             //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
             //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection/Bounding_volume_collision_detection_with_THREE.js
 //             console.log(newShape.boxHelper.material)
             scene.add(newShape.boxHelper)
+            let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+            // todo if this while loop commented, no bad spinning
+//             let conflictCount = 0;
+//             while(conflictCheck == true && conflictCount < 30){
+            if(conflictCheck){
+                console.log(i+":")
+            }
+            while(conflictCheck == true){
+                console.log("true hit")
+                let new_diam = max_diam * 2
+                let new_pos = this.generatePosition(new_diam)
+                newShape.geometry.translate(-newShape.position[0],
+                                            -newShape.position[1],
+                                            -newShape.position[2]
+                                            )
+                newShape.geometry.translate(new_pos[0],
+                                            new_pos[1],
+                                            new_pos[2]
+                                            )
+                newShape.position = new_pos
+                scene.remove(newShape.boxHelper)
+                newShape.updateBoxHelper()
+                scene.add(newShape.boxHelper)
+//                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+                conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+                console.log("this.conlifctcheck: " + conflictCheck)
+
+            }
+
+//             shapesArray.push(newShape)
+//             scene.add(newShape.shapeObj)
+//             //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
+//             //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection/Bounding_volume_collision_detection_with_THREE.js
+// //             console.log(newShape.boxHelper.material)
+//             scene.add(newShape.boxHelper)
         }
     }
 

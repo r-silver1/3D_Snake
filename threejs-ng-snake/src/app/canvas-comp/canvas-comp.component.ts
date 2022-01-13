@@ -101,7 +101,8 @@ export class CanvasCompComponent implements OnInit {
 //             asteroid.shapeObj.position.y = tempPos[1]
 //             asteroid.shapeObj.position.z = tempPos[2]
             // update box helper, or box helper won't change in size with rotation etc
-            asteroid.updateBoxHelper()
+//             asteroid.updateBoxHelper()
+            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
 
 
 
