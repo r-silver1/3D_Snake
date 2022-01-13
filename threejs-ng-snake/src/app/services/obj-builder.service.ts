@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .7
         const min_val = 0;
-        const max_val = 45;
+        const max_val = 50;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -113,26 +113,26 @@ export class ObjBuilderService {
                 other.conflictHit = true;
                 checkBool = true;
 
-//                 scene.remove(asteroid.boxHelper)
-//                 asteroid.changeBoxHelperCol(true)
-//                 scene.add(asteroid.boxHelper)
-//
-//                 scene.remove(other.boxHelper)
-//                 other.changeBoxHelperCol(true)
-//                 scene.add(other.boxHelper)
+                scene.remove(asteroid.boxHelper)
+                asteroid.changeBoxHelperCol(true)
+                scene.add(asteroid.boxHelper)
+
+                scene.remove(other.boxHelper)
+                other.changeBoxHelperCol(true)
+                scene.add(other.boxHelper)
 //
 //                 console.log("index " + j +": after if statement,\nasteroid conflict: " + asteroid.conflictHit + "\nother: " + other.conflictHit + "\n")
 
-                if(tempAstBool != true){
-                    scene.remove(asteroid.boxHelper)
-                    asteroid.changeBoxHelperCol(true)
-                    scene.add(asteroid.boxHelper)
-                }
-                if(tempOthBool != true){
-                    scene.remove(other.boxHelper)
-                    other.changeBoxHelperCol(true)
-                    scene.add(other.boxHelper)
-                }
+//                 if(tempAstBool != true){
+//                     scene.remove(asteroid.boxHelper)
+//                     asteroid.changeBoxHelperCol(true)
+//                     scene.add(asteroid.boxHelper)
+//                 }
+//                 if(tempOthBool != true){
+//                     scene.remove(other.boxHelper)
+//                     other.changeBoxHelperCol(true)
+//                     scene.add(other.boxHelper)
+//                 }
             }
 
         }
