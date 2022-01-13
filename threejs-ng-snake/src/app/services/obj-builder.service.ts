@@ -11,9 +11,9 @@ export class ObjBuilderService {
 
     public initBoxes(shapesArray: any, scene:THREE.Scene): void {
         const min_diam = .025
-        const max_diam = .6
+        const max_diam = .7
         const min_val = 0;
-        const max_val = 20;
+        const max_val = 50;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -24,8 +24,8 @@ export class ObjBuilderService {
             let box_rad = this.norm_range(min_diam, max_diam, min_val, max_val, i)
             let pos = this.generatePosition(max_diam)
             // use this to change complexity of oids
-            const minPointsBound = 7;
-            const maxPointsBound = 12;
+            const minPointsBound = 6;
+            const maxPointsBound = 9;
             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, min_val, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
 //             let conflictCheck = this.checkConflicts(newShape, shapesArray, shapesArray.length, scene)
@@ -63,12 +63,14 @@ export class ObjBuilderService {
     // todo changes here: should probably check conflict before generating position
     // if possible...
     public generatePosition(max_diam:number): number[] {
-        let sizeMultiplier = 4
-        let min_bound = max_diam*4
-        let horzAngle = Math.random()*360.0
-        let vertAngle = Math.random()*360.0
+//         let sizeMultiplier = 4
+        let min_bound = max_diam*5
+//         let horzAngle = Math.random()*90
+//         let vertAngle = Math.random()*90
+        let horzAngle = this.toRadians(Math.random()*360.0)
+        let vertAngle = this.toRadians(Math.random()*360.0)
         // adding in randomness to min bound, necessary?
-        min_bound = min_bound*.8 + Math.random()*(min_bound*.2)
+        min_bound = min_bound*.6 + Math.random()*(min_bound*.4)
         let horz_min_bound = min_bound * Math.cos(vertAngle)
 //         let ranVec = new THREE.Vector3(min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), min_bound*Math.sin(horzAngle))
         let ranVec = new THREE.Vector3(horz_min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), horz_min_bound*Math.sin(horzAngle))
@@ -80,6 +82,10 @@ export class ObjBuilderService {
     // todo should find way to make this global helpful function, used multiple places
     norm_range(a:number, b:number, min:number, max:number, x:number): number {
         return a + ((x-min)/(max-min))*(b-a)
+    }
+
+    toRadians(theta:number): number {
+        return (theta*Math.PI)/180.0
     }
 
     // todo move into asteroid class? or other helper class?

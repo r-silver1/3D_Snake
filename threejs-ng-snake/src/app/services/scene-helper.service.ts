@@ -49,9 +49,12 @@ export class SceneHelperService {
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-        camera.position.z = 6;
-        camera.position.x = -2.5;
-        camera.position.y = 4;
+//         camera.position.z = 6;
+//         camera.position.x = -2.5;
+//         camera.position.y = 4;
+        camera.position.z = 3.0;
+        camera.position.x = 0.0;
+        camera.position.y = 0.0;
         scene.add(camera);
     }
 
