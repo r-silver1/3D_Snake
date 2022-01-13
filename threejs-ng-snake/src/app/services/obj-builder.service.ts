@@ -13,7 +13,7 @@ export class ObjBuilderService {
         const min_diam = .025
         const max_diam = .7
         const min_val = 0;
-        const max_val = 50;
+        const max_val = 45;
         for(let i = min_val; i<max_val; i++){
             const blueCol = Math.floor(this.norm_range(120, 255, min_val, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, min_val, max_val, i));
@@ -38,11 +38,8 @@ export class ObjBuilderService {
             // todo if this while loop commented, no bad spinning
 //             let conflictCount = 0;
 //             while(conflictCheck == true && conflictCount < 30){
-            if(conflictCheck){
-                console.log(i+":")
-            }
             while(conflictCheck == true){
-                console.log("true hit")
+//                 console.log("true hit")
                 let new_diam = max_diam * 2
                 let new_pos = this.generatePosition(new_diam)
                 newShape.geometry.translate(-newShape.position[0],
@@ -56,10 +53,10 @@ export class ObjBuilderService {
                 newShape.position = new_pos
                 scene.remove(newShape.boxHelper)
                 newShape.updateBoxHelper()
+                newShape.changeBoxHelperCol(false)
                 scene.add(newShape.boxHelper)
 //                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
-                console.log("this.conlifctcheck: " + conflictCheck)
 
             }
 
@@ -110,34 +107,48 @@ export class ObjBuilderService {
 //             if(checkBool == true){
             let tempAstBool = asteroid.conflictHit
             let tempOthBool = other.conflictHit
+
             if(thisBool){
                 asteroid.conflictHit = true;
                 other.conflictHit = true;
                 checkBool = true;
 
-                scene.remove(asteroid.boxHelper)
-                asteroid.changeBoxHelperCol(true)
-                scene.add(asteroid.boxHelper)
+//                 scene.remove(asteroid.boxHelper)
+//                 asteroid.changeBoxHelperCol(true)
+//                 scene.add(asteroid.boxHelper)
+//
+//                 scene.remove(other.boxHelper)
+//                 other.changeBoxHelperCol(true)
+//                 scene.add(other.boxHelper)
+//
+//                 console.log("index " + j +": after if statement,\nasteroid conflict: " + asteroid.conflictHit + "\nother: " + other.conflictHit + "\n")
 
-                scene.remove(other.boxHelper)
-                other.changeBoxHelperCol(true)
-                scene.add(other.boxHelper)
-
-//                 if(tempAstBool == false){
-//                     scene.remove(asteroid.boxHelper)
-//                     asteroid.changeBoxHelperCol(true)
-//                     scene.add(asteroid.boxHelper)
-//                 }
-//                 if(tempOthBool == false){
-//                     scene.remove(other.boxHelper)
-//                     other.changeBoxHelperCol(true)
-//                     scene.add(other.boxHelper)
-//                 }
+                if(tempAstBool != true){
+                    scene.remove(asteroid.boxHelper)
+                    asteroid.changeBoxHelperCol(true)
+                    scene.add(asteroid.boxHelper)
+                }
+                if(tempOthBool != true){
+                    scene.remove(other.boxHelper)
+                    other.changeBoxHelperCol(true)
+                    scene.add(other.boxHelper)
+                }
             }
 
         }
-        if(checkBool == false){
+        if(checkBool ==false){
+//             console.log("checkBool: " + checkBool)
+            let tempGoodAstBool = asteroid.conflictHit
+//             console.log("asteroid conflict hit: " + asteroid.conflictHit +"\ntempgoodbool:" + tempGoodAstBool)
+
             asteroid.conflictHit = false;
+
+//             if(tempGoodAstBool != false){
+//                 console.log("in here: " + tempGoodAstBool)
+//                 scene.remove(asteroid.boxHelper)
+//                 asteroid.changeBoxHelperCol(false)
+//                 scene.add(asteroid.boxHelper)
+//             }
             scene.remove(asteroid.boxHelper)
             asteroid.changeBoxHelperCol(false)
             scene.add(asteroid.boxHelper)
