@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
 import * as THREE from 'three';
 
 @Injectable({
@@ -22,7 +23,7 @@ export class SceneHelperService {
         // todo make class variables or add names?
         {
             const colorDir = new THREE.Color('rgb(191,208,212)');
-            const intensityDir = 1;
+            const intensityDir = .6;
             const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
             lightDir.position.set(3, 2, 3);
             lightDir.target.position.set(0, 0, 0);
@@ -46,29 +47,33 @@ export class SceneHelperService {
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-        camera.position.z = 6;
-        camera.position.x = -2.5;
-        camera.position.y = 4;
-//         camera.position.z = 3.0;
-//         camera.position.x = 0.0;
-//         camera.position.y = 0.0;
+//         camera.position.z = 6;
+//         camera.position.x = -2.5;
+//         camera.position.y = 4;
+        camera.position.z = 2.0;
+        camera.position.x = 1.5;
+        camera.position.y = 1.5;
         scene.add(camera);
     }
 
-    public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): OrbitControls{
+//     public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): OrbitControls{
+    public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): FirstPersonControls{
         const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement;
         //         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
         //         https://threejs.org/docs/#examples/en/controls/OrbitControls
-        let controls = new OrbitControls(camera, domElement);
+//         let controls = new OrbitControls(camera, domElement);
+        let controls = new FirstPersonControls(camera, domElement)
+        controls.lookSpeed =.15
+        controls.lookAt(0,1,0)
         // disable right click pan
         // note: target updates with pan
-        controls.enablePan = false;
+//         controls.enablePan = false;
 //         this.controls.enablePan = false;
         // constrain zoom
-        controls.minDistance = 2;
-        controls.maxDistance = 12;
-        controls.enableDamping = true;
-        controls.dampingFactor = .01;
+//         controls.minDistance = 2;
+//         controls.maxDistance = 12;
+//         controls.enableDamping = true;
+//         controls.dampingFactor = .01;
         return controls
 
     }

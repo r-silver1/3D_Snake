@@ -18,6 +18,7 @@ export class ObjBuilderService {
 //         const min_val = 0;
         // max_val: max number of asteroids to generate; min val 1
         const max_val = 60;
+
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
             //  should be moved to helper functions inside service
@@ -29,15 +30,15 @@ export class ObjBuilderService {
             const blueCol = Math.floor(this.norm_range(120, 255, 0, max_val, i));
             const greenCol = Math.floor(this.norm_range(0, 255, 0, max_val, i));
             let material = new THREE.MeshPhongMaterial({
-                                     color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')'),
+                                     color: new THREE.Color('rgb(100,'+greenCol+','+blueCol+')'),
 //                                      side: THREE.DoubleSide
                                     side: THREE.FrontSide
                               })
             let box_rad = this.norm_range(min_radius, max_radius, 0, max_val, i)
             let pos = this.generatePosition(max_radius)
             // use this to change complexity of oids
-            const minPointsBound = 6;
-            const maxPointsBound = 9;
+            const minPointsBound = 12;
+            const maxPointsBound = 16;
             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
 
