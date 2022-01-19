@@ -50,9 +50,9 @@ export class SceneHelperService {
 //         camera.position.z = 6;
 //         camera.position.x = -2.5;
 //         camera.position.y = 4;
-        camera.position.z = 2.0;
-        camera.position.x = 1.5;
-        camera.position.y = 1.5;
+        camera.position.z = 5.0;
+        camera.position.x = 0;
+        camera.position.y = 3.5;
         scene.add(camera);
     }
 
@@ -61,10 +61,18 @@ export class SceneHelperService {
         const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement;
         //         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
         //         https://threejs.org/docs/#examples/en/controls/OrbitControls
-//         let controls = new OrbitControls(camera, domElement);
+        //first person controls and configuration
         let controls = new FirstPersonControls(camera, domElement)
-        controls.lookSpeed =.15
+        controls.lookSpeed =.2
         controls.lookAt(0,1,0)
+        controls.movementSpeed = 0
+        controls.constrainVertical = true;
+        controls.verticalMin = Math.PI/4
+        controls.verticalMax = 3*Math.PI/4
+
+
+        //orbit controls and configuration
+        //         let controls = new OrbitControls(camera, domElement);
         // disable right click pan
         // note: target updates with pan
 //         controls.enablePan = false;
