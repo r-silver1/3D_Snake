@@ -61,7 +61,7 @@ export class CanvasCompComponent implements OnInit {
     animate(timestamp): FrameRequestCallback {
         // controls update: necessary for damping orbit controls
         this.controls.update()
-//         console.log(this.controls.target)
+        // note: controls target, useful
         if (this.start === -1){
             this.start = timestamp;
         }
@@ -70,7 +70,6 @@ export class CanvasCompComponent implements OnInit {
         const textObj = this.scene.getObjectByName('wordName');
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
         in console log*/
-//         if (elapsed % 180 == 0 && textObj!=undefined){
         if (elapsed % 1500 == 0 && textObj!=undefined){
             this.getWordApi()
             // todo this shouldn't be a global probably
@@ -81,14 +80,28 @@ export class CanvasCompComponent implements OnInit {
 
         }
         // todo move this to obj service, use object methods
-        this.shapesArray.forEach((cube:any, index:any) => {
-            let rotation = elapsed/(50*index)
-            cube.rotation.y = rotation
-            cube.rotation.z = rotation/10
+        this.shapesArray.forEach((asteroid:any, index:any) => {
+//             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
+            // using rotateY or rotateX to rotate geometry, handles boxhelper more smoothly
+//             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
+            let tempPos = asteroid.position;
+            // todo make helper for translate
+            asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
+            let rotation = .04*((this.shapesArray.length-index)/this.shapesArray.length)
+            asteroid.geometry.rotateY(rotation)
+            asteroid.geometry.rotateZ(rotation/5)
+            asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
+            asteroid.shapeObj.rotateY(rotation/10)
+            // update box helper, or box helper won't change in size with rotation etc
+            asteroid.updateBoxHelper()
+            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
+
         })
         this.render_all()
         requestAnimationFrame(this.animate);
     }
+
+
 
     getWordApi() : void {
         this.wordService.getWord().subscribe(data => {
