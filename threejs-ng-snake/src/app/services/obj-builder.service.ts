@@ -102,7 +102,6 @@ export class ObjBuilderService {
         let checkBool = false;
         for(let j = 0; j<index; j++){
             let other = shapesArray[j]
-//             checkBool = asteroid.checkOtherConflict(other)
             let thisBool = asteroid.checkOtherConflict(other)
 //             if(checkBool == true){
             let tempAstBool = asteroid.conflictHit
@@ -127,16 +126,18 @@ export class ObjBuilderService {
 //                     scene.remove(asteroid.boxHelper)
 //                     asteroid.changeBoxHelperCol(true)
 //                     scene.add(asteroid.boxHelper)
+//                     asteroid.updateBoxHelper()
 //                 }
 //                 if(tempOthBool != true){
 //                     scene.remove(other.boxHelper)
 //                     other.changeBoxHelperCol(true)
 //                     scene.add(other.boxHelper)
+//                     other.updateBoxHelper()
 //                 }
             }
 
         }
-        if(checkBool ==false){
+        if(checkBool == false){
 //             console.log("checkBool: " + checkBool)
             let tempGoodAstBool = asteroid.conflictHit
 //             console.log("asteroid conflict hit: " + asteroid.conflictHit +"\ntempgoodbool:" + tempGoodAstBool)
