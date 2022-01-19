@@ -17,7 +17,7 @@ export class ObjBuilderService {
         // min_val: minimum asteroid number, just zero, should be removed
 //         const min_val = 0;
         // max_val: max number of asteroids to generate; min val 1
-        const max_val = 30;
+        const max_val = 60;
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
             //  should be moved to helper functions inside service
@@ -30,7 +30,8 @@ export class ObjBuilderService {
             const greenCol = Math.floor(this.norm_range(0, 255, 0, max_val, i));
             let material = new THREE.MeshPhongMaterial({
                                      color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')'),
-                                     side: THREE.DoubleSide
+//                                      side: THREE.DoubleSide
+                                    side: THREE.FrontSide
                               })
             let box_rad = this.norm_range(min_radius, max_radius, 0, max_val, i)
             let pos = this.generatePosition(max_radius)

@@ -115,10 +115,48 @@ export class RandomShapeClass {
                 indxOne++;
                 bufferArr = bufferArr.concat(circleOne[indxOne]);
             }else{
+                indxTwo++;
+                bufferArr = bufferArr.concat(circleTwo[indxTwo]);
+                bufferArr = bufferArr.concat(circleOne[indxOne]);
+//                 indxTwo++;
+//                 bufferArr = bufferArr.concat(circleTwo[indxTwo]);
+                bufferArr = bufferArr.concat(circleTwo[indxTwo-1]);
+            }
+            indxBool = !indxBool
+        }
+        bufferArr.concat(circleTwo[circleTwo.length-1])
+        bufferArr.concat(circleOne[circleOne.length-1])
+        bufferArr.concat(circleTwo[0])
+
+        bufferArr.concat(circleOne[circleOne.length-1])
+        bufferArr.concat(circleTwo[0])
+        bufferArr.concat(circleOne[0])
+
+        return bufferArr
+    }
+
+    // todo combine these two functions, only difference is marked
+    pushBottomCircles(circleOne: Array<any>, circleTwo: Array<any>, bufferArr: number[]) : number[] {
+        let indxOne = 0;
+        let indxTwo = 0;
+        let indxBool = true;
+        //circle1 should be longer circle; circle2 should have one less entry
+        const numPoints = circleOne.length;
+        while(indxOne < numPoints-1){
+            if(indxBool){
+                // this is only difference, incrementing this index differently than above
+                indxOne++;
+                bufferArr = bufferArr.concat(circleOne[indxOne]);
+                bufferArr = bufferArr.concat(circleTwo[indxTwo]);
+//                 indxOne++;
+//                 bufferArr = bufferArr.concat(circleOne[indxOne]);
+                bufferArr = bufferArr.concat(circleOne[indxOne-1]);
+            }else{
                 bufferArr = bufferArr.concat(circleTwo[indxTwo]);
                 bufferArr = bufferArr.concat(circleOne[indxOne]);
                 indxTwo++;
                 bufferArr = bufferArr.concat(circleTwo[indxTwo]);
+//                 bufferArr = bufferArr.concat(circleTwo[indxTwo-1]);
             }
             indxBool = !indxBool
         }
@@ -143,7 +181,7 @@ export class RandomShapeClass {
         let bottomPointsArr = this.makeCirclesArrays(maxPoints, radius, true);
         bottomPointsArr[0] = circlesPointsArr[0]
         for(let i = 0; i < bottomPointsArr.length-2; i++){
-            currObjArr = this.pushTwoCircles(bottomPointsArr[i], bottomPointsArr[i+1], currObjArr)
+            currObjArr = this.pushBottomCircles(bottomPointsArr[i], bottomPointsArr[i+1], currObjArr)
         }
         let geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(currObjArr), 3));
