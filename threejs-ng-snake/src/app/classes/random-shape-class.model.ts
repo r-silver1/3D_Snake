@@ -10,8 +10,6 @@ export class RandomShapeClass {
     public geometry: THREE.BufferGeometry;
     private maxPoints: number;
     public shapeObj: THREE.Mesh;
-//     public boxHelper: THREE.BoxHelper;
-//     public boxGeo: THREE.Box3;
     public boxHelper: any;
     public boxGeo: any;
     public conflictHit: boolean;
@@ -23,14 +21,13 @@ export class RandomShapeClass {
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[],
                 maxPoints: number){
-
             this.material = material;
             this.radius = radius;
             this.position = position;
-
             this.maxPoints = maxPoints
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
-            // this makes bad orbit
+            // todo necessary for vertices const here? also could have helper
+            // to translate given simple pos input
             const vertices = this.position;
             this.geometry.translate(vertices[0], vertices[1], vertices[2])
             this.shapeObj = new THREE.Mesh(this.geometry, this.material);
@@ -40,10 +37,9 @@ export class RandomShapeClass {
             // conflictHit: used to determine box color, red or green
             this.conflictHit = false;
 
-            //set position of this.shapeObj
-//             this.boxHelper = this.makeBoxHelper(RandomShapeClass.blueColor)
+            // make a box helper, passing in false boolean because no initial conflict
             this.boxHelper = this.makeBoxHelper(false)
-//             this.shapeObj.add(this.boxHelper)
+            // also make box geometry used for conflict checking
             this.boxGeo = this.makeBoxGeo();
 
 
