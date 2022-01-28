@@ -56,7 +56,7 @@ export class ObjBuilderService {
             // to find a new position free of collisions
             while(conflictCheck == true){
                 // each time, increase radius before generating position to reduce conflict likelihood
-                let new_diam = max_radius * 2
+                let new_diam = max_radius * 1.1
                 let new_pos = this.generatePosition(new_diam)
                 // todo translate geometry: could be helper function inside shape taking pos as input
                 newShape.geometry.translate(-newShape.position[0],
