@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
+import { TurretControls } from '../js/TurretControls'
 import * as THREE from 'three';
 
 @Injectable({
@@ -57,15 +58,16 @@ export class SceneHelperService {
     }
 
 //     public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): OrbitControls{
-    public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): FirstPersonControls{
+//     public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): FirstPersonControls{
+    public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): TurretControls{
         const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement;
         //         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
         //         https://threejs.org/docs/#examples/en/controls/OrbitControls
         //first person controls and configuration
-        let controls = new FirstPersonControls(camera, domElement)
+        let controls = new TurretControls(camera, domElement)
         controls.lookSpeed =.2
         controls.lookAt(0,1,0)
-        controls.movementSpeed = 0
+
         controls.constrainVertical = true;
         controls.verticalMin = Math.PI/4
         controls.verticalMax = 3*Math.PI/4
