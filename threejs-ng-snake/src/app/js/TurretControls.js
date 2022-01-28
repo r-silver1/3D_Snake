@@ -1,3 +1,7 @@
+/*
+* ADAPTION THREEJS FIRST PERSON CONTROLS
+*/
+
 import {
 	MathUtils,
 	Spherical,
