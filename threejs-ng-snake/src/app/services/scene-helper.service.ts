@@ -48,12 +48,12 @@ export class SceneHelperService {
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-//         camera.position.z = 6;
-//         camera.position.x = -2.5;
-//         camera.position.y = 4;
-        camera.position.z = 5.0;
+        camera.position.z = 6;
         camera.position.x = 0;
-        camera.position.y = 3.5;
+        camera.position.y = 1;
+//         camera.position.z = 5.0;
+//         camera.position.x = 0;
+//         camera.position.y = 3.5;
         scene.add(camera);
     }
 
@@ -65,7 +65,7 @@ export class SceneHelperService {
         //         https://threejs.org/docs/#examples/en/controls/OrbitControls
         //first person controls and configuration
         let controls = new TurretControls(camera, domElement)
-        controls.lookSpeed =.2
+        controls.lookSpeed =.35
         controls.lookAt(0,1,0)
 
         controls.constrainVertical = true;

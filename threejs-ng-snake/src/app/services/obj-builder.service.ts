@@ -13,11 +13,11 @@ export class ObjBuilderService {
         // min_radius: minimum size asteroids to be generated
         const min_radius = .025
         // max_radius: maximum radius for an asteroid
-        const max_radius = .7
+        const max_radius = .3
         // min_val: minimum asteroid number, just zero, should be removed
 //         const min_val = 0;
         // max_val: max number of asteroids to generate; min val 1
-        const max_val = 30;
+        const max_val = 60;
 
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
@@ -37,8 +37,10 @@ export class ObjBuilderService {
             let box_rad = this.norm_range(min_radius, max_radius, 0, max_val, i)
             let pos = this.generatePosition(max_radius)
             // use this to change complexity of oids
-            const minPointsBound = 12;
-            const maxPointsBound = 16;
+//             const minPointsBound = 12;
+//             const maxPointsBound = 16;
+            const minPointsBound = 6;
+            const maxPointsBound = 12;
             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
 
@@ -75,10 +77,13 @@ export class ObjBuilderService {
     }
 
     public generatePosition(max_radius:number): number[] {
-        let min_bound = max_radius*5
+//         let min_bound = max_radius*5
+        // todo make this based on distance to camera not size
+        let min_bound = max_radius*15
         let horzAngle = this.toRadians(Math.random()*360.0)
-        let vertAngle = this.toRadians(Math.random()*360.0)
-        min_bound = min_bound*.6 + Math.random()*(min_bound*.4)
+//         let vertAngle = this.toRadians(Math.random()*360.0)
+        let vertAngle = this.toRadians(Math.random()*20)
+        min_bound = min_bound*.9 + Math.random()*(min_bound*.1)
         let horz_min_bound = min_bound * Math.cos(vertAngle)
         let ranVec = new THREE.Vector3(horz_min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), horz_min_bound*Math.sin(horzAngle))
         let pos = [ranVec.x, ranVec.y, ranVec.z]
