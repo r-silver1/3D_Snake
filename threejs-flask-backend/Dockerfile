@@ -3,7 +3,7 @@ FROM ubuntu
 
 WORKDIR /asteroids
 
-VOLUME /tables
+#VOLUME /tables
 
 RUN apt-get update
 RUN apt-get -y install python3.9
