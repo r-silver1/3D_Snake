@@ -38,8 +38,8 @@ def word_api():
         delete_bool = request.args.get("delete")
         # test to see if deletion parameter present/true; if so delete row
         if delete_bool:
-            print("deleting")
             delete_row("WORDS", "cookie", curr_cookie)
+            # must "commit" DB to persist changes made
             commit_db()
 
         # using session cookie, query DB to get word choice
@@ -47,9 +47,6 @@ def word_api():
         word_choice = None
         if vals_ret:
             word_choice = vals_ret[0][1]
-
-        print(f"GET RESP: {vals_ret}")
-        # must "commit" DB to persist changes made
 
         # close connection
         close_connection()
@@ -65,6 +62,7 @@ def word_api():
         """
     else:
         # ensure that WORDS table is created
+        # todo this could be replaced with create if not exists
         tables_ret = check_tables()
         if "WORDS" not in tables_ret:
             create_table("WORDS")
@@ -112,8 +110,6 @@ def pickle_api():
     response.headers.add('Access-Control-Allow-Headers',
                          "Origin, X-Requested-With, Content-Type, Accept, x-auth")
     return response
-
-
 
 
 # https://www.geeksforgeeks.org/how-to-return-a-json-response-form-a-flask-api/

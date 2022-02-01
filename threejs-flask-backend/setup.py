@@ -23,11 +23,20 @@ setup(
 )
 
 # pip install -e .
+# PS?
 # $env:FLASK_APP = "threejs-flask-backend"
 # $env:FLASK_ENV = "development"
 # flask run
+
+# or in cmd
+# set FLASK_APP=threejs-flask-backend
+# set FLASK_ENV=development
 
 # ----
 # or?
 # python setup.py install
 # python setup.py develop
+
+# ---
+# or? (vs flask run)
+# python -m flask run --host=0.0.0.0
