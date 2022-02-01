@@ -11,13 +11,11 @@ export class ObjBuilderService {
 
     public initBoxes(shapesArray: any, scene:THREE.Scene): void {
         // min_radius: minimum size asteroids to be generated
-        const min_radius = .025
+        const min_radius = .06
         // max_radius: maximum radius for an asteroid
-        const max_radius = .3
-        // min_val: minimum asteroid number, just zero, should be removed
-//         const min_val = 0;
+        const max_radius = .2
         // max_val: max number of asteroids to generate; min val 1
-        const max_val = 60;
+        const max_val = 80;
 
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
@@ -36,11 +34,9 @@ export class ObjBuilderService {
                               })
             let box_rad = this.norm_range(min_radius, max_radius, 0, max_val, i)
             let pos = this.generatePosition(max_radius)
-            // use this to change complexity of oids
-//             const minPointsBound = 12;
-//             const maxPointsBound = 16;
-            const minPointsBound = 6;
-            const maxPointsBound = 12;
+            // use this to change complexity of asteroids; higher values -> more triangles
+            const minPointsBound = 5;
+            const maxPointsBound = 8;
             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
 
@@ -77,12 +73,12 @@ export class ObjBuilderService {
     }
 
     public generatePosition(max_radius:number): number[] {
-//         let min_bound = max_radius*5
-        // todo make this based on distance to camera not size
-        let min_bound = max_radius*15
+        // todo make this based on distance to camera not size of radius
+        let min_bound = max_radius*20
         let horzAngle = this.toRadians(Math.random()*360.0)
 //         let vertAngle = this.toRadians(Math.random()*360.0)
-        let vertAngle = this.toRadians(Math.random()*20)
+        // new: constrain vertical angle to make an asteroid "belt" effect
+        let vertAngle = this.toRadians(Math.random()*30)
         min_bound = min_bound*.9 + Math.random()*(min_bound*.1)
         let horz_min_bound = min_bound * Math.cos(vertAngle)
         let ranVec = new THREE.Vector3(horz_min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), horz_min_bound*Math.sin(horzAngle))

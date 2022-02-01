@@ -41,7 +41,8 @@ export class SceneHelperService {
         {
             const color = new THREE.Color('rgb(54,52,70)')
             const near = 1;
-            const far = 15;
+//             const far = 15;
+            const far = 12;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }
@@ -51,14 +52,9 @@ export class SceneHelperService {
         camera.position.z = 6;
         camera.position.x = 0;
         camera.position.y = 1;
-//         camera.position.z = 5.0;
-//         camera.position.x = 0;
-//         camera.position.y = 3.5;
         scene.add(camera);
     }
 
-//     public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): OrbitControls{
-//     public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): FirstPersonControls{
     public initControls(scene:THREE.Scene, camera:THREE.PerspectiveCamera): TurretControls{
         const domElement = document.querySelector('canvas.draw') as HTMLCanvasElement;
         //         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
@@ -71,19 +67,6 @@ export class SceneHelperService {
         controls.constrainVertical = true;
         controls.verticalMin = Math.PI/4
         controls.verticalMax = 3*Math.PI/4
-
-
-        //orbit controls and configuration
-        //         let controls = new OrbitControls(camera, domElement);
-        // disable right click pan
-        // note: target updates with pan
-//         controls.enablePan = false;
-//         this.controls.enablePan = false;
-        // constrain zoom
-//         controls.minDistance = 2;
-//         controls.maxDistance = 12;
-//         controls.enableDamping = true;
-//         controls.dampingFactor = .01;
         return controls
 
     }

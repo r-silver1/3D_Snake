@@ -167,53 +167,6 @@ class TurretControls {
 		}
 
 
-
-//		this.onKeyDown = function ( event ) {
-//
-//			switch ( event.code ) {
-//
-//				case 'ArrowUp':
-//				case 'KeyW': this.moveForward = true; break;
-//
-//				case 'ArrowLeft':
-//				case 'KeyA': this.moveLeft = true; break;
-//
-//				case 'ArrowDown':
-//				case 'KeyS': this.moveBackward = true; break;
-//
-//				case 'ArrowRight':
-//				case 'KeyD': this.moveRight = true; break;
-//
-//				case 'KeyR': this.moveUp = true; break;
-//				case 'KeyF': this.moveDown = true; break;
-//
-//			}
-//
-//		};
-//
-//		this.onKeyUp = function ( event ) {
-//
-//			switch ( event.code ) {
-//
-//				case 'ArrowUp':
-//				case 'KeyW': this.moveForward = false; break;
-//
-//				case 'ArrowLeft':
-//				case 'KeyA': this.moveLeft = false; break;
-//
-//				case 'ArrowDown':
-//				case 'KeyS': this.moveBackward = false; break;
-//
-//				case 'ArrowRight':
-//				case 'KeyD': this.moveRight = false; break;
-//
-//				case 'KeyR': this.moveUp = false; break;
-//				case 'KeyF': this.moveDown = false; break;
-//
-//			}
-//
-//		};
-
 		this.lookAt = function ( x, y, z ) {
 
 			if ( x.isVector3 ) {
