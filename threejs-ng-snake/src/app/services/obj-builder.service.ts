@@ -25,19 +25,23 @@ export class ObjBuilderService {
 
             // blueCol/greenCol: change color of asteroid based on position in list of all asteroids
             //  the higher the index, the more intense the color
-            const blueCol = Math.floor(this.norm_range(120, 255, 0, max_val, i));
-            const greenCol = Math.floor(this.norm_range(0, 255, 0, max_val, i));
+//             const blueCol = Math.floor(this.norm_range(120, 255, 0, max_val, i));
+            const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 120, 255))
+//             const greenCol = Math.floor(this.norm_range(0, 255, 0, max_val, i));
+            const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 0, 255));
             let material = new THREE.MeshPhongMaterial({
                                      color: new THREE.Color('rgb(100,'+greenCol+','+blueCol+')'),
 //                                      side: THREE.DoubleSide
                                     side: THREE.FrontSide
                               })
-            let box_rad = this.norm_range(min_radius, max_radius, 0, max_val, i)
+//             let box_rad = this.norm_range(min_radius, max_radius, 0, max_val, i)
+            let box_rad = THREE.MathUtils.mapLinear(i, 0, max_val, min_radius, max_radius)
             let pos = this.generatePosition(max_radius)
             // use this to change complexity of asteroids; higher values -> more triangles
             const minPointsBound = 5;
             const maxPointsBound = 8;
-            const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
+//             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
+            const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, minPointsBound, maxPointsBound))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
 
             // todo: helper function static inside shape to accept scene param, add shape and helper?
@@ -87,10 +91,10 @@ export class ObjBuilderService {
 
     }
 
-    // todo should find way to make this global helpful function, used multiple places
-    norm_range(a:number, b:number, min:number, max:number, x:number): number {
-        return a + ((x-min)/(max-min))*(b-a)
-    }
+//     // todo should find way to make this global helpful function, used multiple places
+//     norm_range(a:number, b:number, min:number, max:number, x:number): number {
+//         return a + ((x-min)/(max-min))*(b-a)
+//     }
 
     toRadians(theta:number): number {
         return (theta*Math.PI)/180.0

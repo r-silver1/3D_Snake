@@ -65,8 +65,8 @@ export class SceneHelperService {
         controls.lookAt(0,1,0)
 
         controls.constrainVertical = true;
-        controls.verticalMin = Math.PI/4
-        controls.verticalMax = 3*Math.PI/4
+        controls.verticalMin = 3*Math.PI/8
+        controls.verticalMax = 5*Math.PI/8
         return controls
 
     }
