@@ -146,10 +146,8 @@ class TurretControls {
 		this.onMouseLeave = function ( event ) {
 		    // todo need to see usage of this, likely uneeded else if
 		    if ( this.domElement === document) {
-		        console.log("here")
 		        this.enabled = false
 		    }else{
-		        console.log("here2")
 		        this.enabled = false
 
 		    }
@@ -157,10 +155,8 @@ class TurretControls {
 
 		this.onMouseEnter = function( event ) {
 		    if ( this.domElement === document ) {
-		        console.log("here enter")
 		        this.enabled = true
 		    }else{
-		        console.log("here enter 2")
 		        this.enabled = true
 		    }
 
