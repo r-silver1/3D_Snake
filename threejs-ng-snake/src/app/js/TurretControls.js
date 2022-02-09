@@ -30,11 +30,9 @@ class TurretControls {
 
 		this.enabled = true;
 
-//		this.movementSpeed = 1.0;
 		this.lookSpeed = 0.005;
 
 		this.lookVertical = true;
-//		this.autoForward = false;
 
 		this.activeLook = true;
 
@@ -43,11 +41,15 @@ class TurretControls {
 		this.heightMin = 0.0;
 		this.heightMax = 1.0;
 
+        // todo here constrain vertical: only really used look ratio... remove and make own var?
 		this.constrainVertical = false;
 		this.verticalMin = 0;
 		this.verticalMax = Math.PI;
 
 		this.mouseDragOn = false;
+        // todo here preAddCopy, targetCopy only used helper
+//		this.targetCopy = new Vector3()
+//		this.preAddCopy = new Vector3()
 
 		// internals
 
@@ -55,11 +57,6 @@ class TurretControls {
 
 		this.mouseX = 0;
 		this.mouseY = 0;
-
-//		this.moveForward = false;
-//		this.moveBackward = false;
-//		this.moveLeft = false;
-//		this.moveRight = false;
 
 		this.viewHalfX = 0;
 		this.viewHalfY = 0;
@@ -87,45 +84,6 @@ class TurretControls {
 
 		};
 
-//		this.onMouseDown = function ( event ) {
-//
-//			if ( this.domElement !== document ) {
-//
-//				this.domElement.focus();
-//
-//			}
-//
-//			if ( this.activeLook ) {
-//
-//				switch ( event.button ) {
-//
-//					case 0: this.moveForward = true; break;
-//					case 2: this.moveBackward = true; break;
-//
-//				}
-//
-//			}
-//
-//			this.mouseDragOn = true;
-//
-//		};
-//
-//		this.onMouseUp = function ( event ) {
-//
-//			if ( this.activeLook ) {
-//
-//				switch ( event.button ) {
-//
-//					case 0: this.moveForward = false; break;
-//					case 2: this.moveBackward = false; break;
-//
-//				}
-//
-//			}
-//
-//			this.mouseDragOn = false;
-//
-//		};
 
 		this.onMouseMove = function ( event ) {
 
@@ -144,7 +102,7 @@ class TurretControls {
 		};
 
 		this.onMouseLeave = function ( event ) {
-		    // todo need to see usage of this, likely uneeded else if
+		    // todo need to see usage of this, likely unneeded else if
 		    if ( this.domElement === document) {
 		        this.enabled = false
 		    }else{
@@ -204,16 +162,6 @@ class TurretControls {
 
 				}
 
-//				const actualMoveSpeed = delta * this.movementSpeed;
-
-//				if ( this.moveForward || ( this.autoForward && ! this.moveBackward ) ) this.object.translateZ( - ( actualMoveSpeed + this.autoSpeedFactor ) );
-//				if ( this.moveBackward ) this.object.translateZ( actualMoveSpeed );
-//
-//				if ( this.moveLeft ) this.object.translateX( - actualMoveSpeed );
-//				if ( this.moveRight ) this.object.translateX( actualMoveSpeed );
-//
-//				if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
-//				if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
 
 				let actualLookSpeed = delta * this.lookSpeed;
 
@@ -230,26 +178,34 @@ class TurretControls {
 					verticalLookRatio = Math.PI / ( this.verticalMax - this.verticalMin );
 
 				}
-
-				lon -= this.mouseX * actualLookSpeed;
+                // todo here new change with ratio for lon added
+                lon -= this.mouseX * actualLookSpeed;
+//				lon -= this.mouseX * actualLookSpeed * verticalLookRatio;
 				if ( this.lookVertical ) lat -= this.mouseY * actualLookSpeed * verticalLookRatio;
 
-				lat = Math.max( - 85, Math.min( 85, lat ) );
+                // todo here should make new variables for max movement any dir
+				lat = Math.max( - 35, Math.min( 25, lat ) );
 
 				let phi = MathUtils.degToRad( 90 - lat );
+
+                // todo new lon logic... angle from z+ axis?
+				lon = Math.max(130, Math.min(235, lon))
 				const theta = MathUtils.degToRad( lon );
 
-				if ( this.constrainVertical ) {
-
-					phi = MathUtils.mapLinear( phi, 0, Math.PI, this.verticalMin, this.verticalMax );
-
-				}
+                // todo here: removed logic for this constrain vertical; maybe just make look ratio own variable?
+//				if ( this.constrainVertical ) {
+////					phi = MathUtils.mapLinear( phi, 0, Math.PI, this.verticalMin, this.verticalMax );
+//				}
 
 				const position = this.object.position;
-
+				// todo here preAddCopy only used helper
+//                this.preAddCopy.setFromSphericalCoords( 1, phi, theta )
 				targetPosition.setFromSphericalCoords( 1, phi, theta ).add( position );
 
 				this.object.lookAt( targetPosition );
+//				// todo here targetCopy only used helper
+//				this.targetCopy.copy(targetPosition)
+
 
 			};
 
@@ -258,41 +214,22 @@ class TurretControls {
 		this.dispose = function () {
 
 			this.domElement.removeEventListener( 'contextmenu', contextmenu );
-//			this.domElement.removeEventListener( 'mousedown', _onMouseDown );
 			this.domElement.removeEventListener( 'mousemove', _onMouseMove );
-//			this.domElement.removeEventListener( 'mouseup', _onMouseUp );
-            // todo new logic mouse leave
             this.domElement.removeEventListener( 'mouseleave',  _onMouseLeave)
-            // todo new logic mouse enter
             this.domElement.removeEventListener( 'mouseenter', _onMouseEnter )
-
-//			window.removeEventListener( 'keydown', _onKeyDown );
-//			window.removeEventListener( 'keyup', _onKeyUp );
 
 		};
 
 		const _onMouseMove = this.onMouseMove.bind( this );
-		//todo new logic mouse leave
 		const _onMouseLeave = this.onMouseLeave.bind( this );
-		// todo new logic mouse enter
 		const _onMouseEnter = this.onMouseEnter.bind( this );
 
-//		const _onMouseDown = this.onMouseDown.bind( this );
-//		const _onMouseUp = this.onMouseUp.bind( this );
-//		const _onKeyDown = this.onKeyDown.bind( this );
-//		const _onKeyUp = this.onKeyUp.bind( this );
 
 		this.domElement.addEventListener( 'contextmenu', contextmenu );
 		this.domElement.addEventListener( 'mousemove', _onMouseMove );
-		// todo new logic mouse leave
 		this.domElement.addEventListener( 'mouseleave', _onMouseLeave )
-		// todo new logic mouse enter
 		this.domElement.addEventListener( 'mouseenter', _onMouseEnter )
-//		this.domElement.addEventListener( 'mousedown', _onMouseDown );
-//		this.domElement.addEventListener( 'mouseup', _onMouseUp );
 
-//		window.addEventListener( 'keydown', _onKeyDown );
-//		window.addEventListener( 'keyup', _onKeyUp );
 
 		function setOrientation( controls ) {
 

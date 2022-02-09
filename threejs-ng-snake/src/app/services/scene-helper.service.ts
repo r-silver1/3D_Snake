@@ -49,7 +49,7 @@ export class SceneHelperService {
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-        camera.position.z = 6;
+        camera.position.z = 5.5;
         camera.position.x = 0;
         camera.position.y = 1;
         scene.add(camera);
@@ -62,11 +62,11 @@ export class SceneHelperService {
         //first person controls and configuration
         let controls = new TurretControls(camera, domElement)
         controls.lookSpeed =.35
-        controls.lookAt(0,1,0)
-
         controls.constrainVertical = true;
-        controls.verticalMin = 3*Math.PI/8
-        controls.verticalMax = 5*Math.PI/8
+        controls.verticalMin = 1*Math.PI/8
+//         controls.verticalMin = 1
+        controls.verticalMax = 7*Math.PI/8
+//         controls.verticalMax = 3.14
         return controls
 
     }
