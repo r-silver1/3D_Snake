@@ -49,3 +49,12 @@ threejs-flask-backend/in_a.pickle
 threejs-flask-backend/session_wrapper/__pycache__/
 threejs-ng-snake/src/app/canvas-comp/js_helper_canvas.js
 .idea/
+threejs-flask-backend/tables/word_table.db
+threejs-flask-backend/.help
+threejs-flask-backend/__pycache__/
+threejs-flask-backend/db_dao/__pycache__/
+threejs-flask-backend/threejs-flask-backend/__pycache__/
+threejs-flask-backend/threejs-flask-backend/in_a.pickle
+threejs-flask-backend/threejs-flask-backend/notes.txt
+threejs-flask-backend/threejs-flask-backend.egg-info/
+threejs-flask-backend/threejs_flask_backend.egg-info/

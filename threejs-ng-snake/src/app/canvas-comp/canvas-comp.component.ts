@@ -16,7 +16,6 @@ import { FontBuilderService } from '../services/font-builder.service'
 })
 
 
-
 export class CanvasCompComponent implements OnInit {
     public word_form: any;
     public scene: THREE.Scene;
@@ -28,6 +27,14 @@ export class CanvasCompComponent implements OnInit {
     public wordGet: any;
     public axesHelper: THREE.AxesHelper;
     public gridHelper: THREE.GridHelper;
+    public clock: THREE.Clock;
+
+//     // todo here all arrows: just helpers
+    private cameraHelpers: boolean = false;
+    public controlArrow: any;
+    public posArrow: any;
+    public oldArrow: any;
+    public addArrow: any;
 
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
@@ -52,20 +59,29 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initFog(this.scene)
         //for font
         this.fontService.addFont("Hello\nWorld", this.scene)
+
+        this.clock = new THREE.Clock()
+
         // necessary to enable "this" keyword to work correctly inside animate
         this.animate = this.animate.bind(this);
+
+
+
     }
 
 
     // @ts-ignore
     animate(timestamp): FrameRequestCallback {
         // controls update: necessary for damping orbit controls
-        this.controls.update()
+
         // note: controls target, useful
         if (this.start === -1){
             this.start = timestamp;
         }
         const elapsed = timestamp - this.start;
+        // https://threejs.org/examples/?q=Controls#misc_controls_fly
+        const delta = this.clock.getDelta()
+        this.controls.update(delta)
         //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
         const textObj = this.scene.getObjectByName('wordName');
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
@@ -79,6 +95,17 @@ export class CanvasCompComponent implements OnInit {
             }
 
         }
+
+        // logic arrow helpers
+        if(this.cameraHelpers == true){
+            let [cA, pA, oA, aA] = this.sceneService.updateCameraHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
+            this.controlArrow = cA;
+            this.posArrow = pA;
+            this.oldArrow = oA;
+            this.addArrow = aA;
+        }
+
+        // main logic asteroids
         // todo move this to obj service, use object methods
         this.shapesArray.forEach((asteroid:any, index:any) => {
 //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
@@ -87,7 +114,7 @@ export class CanvasCompComponent implements OnInit {
             let tempPos = asteroid.position;
             // todo make helper for translate
             asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
-            let rotation = .04*((this.shapesArray.length-index)/this.shapesArray.length)
+            let rotation = .01 + .02*((this.shapesArray.length-index)/this.shapesArray.length)
             asteroid.geometry.rotateY(rotation)
             asteroid.geometry.rotateZ(rotation/5)
             asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
@@ -143,7 +170,7 @@ export class CanvasCompComponent implements OnInit {
 
         });
         this.renderer.shadowMap.enabled = true
-    // @ts-ignore
+        // @ts-ignore
         this.renderer.setClearColor(this.scene.fog.color)
         //https://stackoverflow.com/questions/15409321/super-sample-antialiasing-with-threejs
         //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
@@ -151,12 +178,27 @@ export class CanvasCompComponent implements OnInit {
 //         this.renderer.setPixelRatio(window.devicePixelRatio*1.25)
         this.sceneService.initCameras(this.scene, this.camera)
         this.controls = this.sceneService.initControls(this.scene, this.camera)
+
+
+
+        // main logic
         this.window_set_size();
         this.window_size_listener();
-
         this.builderService.initBoxes(this.shapesArray, this.scene)
+
+        // arrow helper logic
+        if(this.cameraHelpers == true){
+            this.controls.cameraHelpers = true;
+            let [cA, pA, oA, aA]  = this.sceneService.initCameraHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
+            this.controlArrow = cA;
+            this.posArrow = pA;
+            this.oldArrow = oA;
+            this.addArrow = aA;
+        }
 
         requestAnimationFrame(this.animate);
   }
 
 }
+
+

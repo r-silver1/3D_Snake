@@ -1,0 +1,1 @@
+TABLES: directory for sqlite3; if no directory present, error

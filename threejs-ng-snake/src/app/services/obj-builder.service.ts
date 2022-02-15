@@ -11,13 +11,12 @@ export class ObjBuilderService {
 
     public initBoxes(shapesArray: any, scene:THREE.Scene): void {
         // min_radius: minimum size asteroids to be generated
-        const min_radius = .025
+        const min_radius = .06
         // max_radius: maximum radius for an asteroid
-        const max_radius = .7
-        // min_val: minimum asteroid number, just zero, should be removed
-//         const min_val = 0;
+        const max_radius = .2
         // max_val: max number of asteroids to generate; min val 1
-        const max_val = 30;
+        const max_val = 80;
+
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
             //  should be moved to helper functions inside service
@@ -26,18 +25,23 @@ export class ObjBuilderService {
 
             // blueCol/greenCol: change color of asteroid based on position in list of all asteroids
             //  the higher the index, the more intense the color
-            const blueCol = Math.floor(this.norm_range(120, 255, 0, max_val, i));
-            const greenCol = Math.floor(this.norm_range(0, 255, 0, max_val, i));
+//             const blueCol = Math.floor(this.norm_range(120, 255, 0, max_val, i));
+            const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 120, 255))
+//             const greenCol = Math.floor(this.norm_range(0, 255, 0, max_val, i));
+            const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 0, 255));
             let material = new THREE.MeshPhongMaterial({
-                                     color: new THREE.Color('rgb(159,'+greenCol+','+blueCol+')'),
-                                     side: THREE.DoubleSide
+                                     color: new THREE.Color('rgb(100,'+greenCol+','+blueCol+')'),
+//                                      side: THREE.DoubleSide
+                                    side: THREE.FrontSide
                               })
-            let box_rad = this.norm_range(min_radius, max_radius, 0, max_val, i)
+//             let box_rad = this.norm_range(min_radius, max_radius, 0, max_val, i)
+            let box_rad = THREE.MathUtils.mapLinear(i, 0, max_val, min_radius, max_radius)
             let pos = this.generatePosition(max_radius)
-            // use this to change complexity of oids
-            const minPointsBound = 6;
-            const maxPointsBound = 9;
-            const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
+            // use this to change complexity of asteroids; higher values -> more triangles
+            const minPointsBound = 5;
+            const maxPointsBound = 8;
+//             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
+            const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, minPointsBound, maxPointsBound))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
 
             // todo: helper function static inside shape to accept scene param, add shape and helper?
@@ -52,7 +56,7 @@ export class ObjBuilderService {
             // to find a new position free of collisions
             while(conflictCheck == true){
                 // each time, increase radius before generating position to reduce conflict likelihood
-                let new_diam = max_radius * 2
+                let new_diam = max_radius * 1.1
                 let new_pos = this.generatePosition(new_diam)
                 // todo translate geometry: could be helper function inside shape taking pos as input
                 newShape.geometry.translate(-newShape.position[0],
@@ -73,10 +77,13 @@ export class ObjBuilderService {
     }
 
     public generatePosition(max_radius:number): number[] {
-        let min_bound = max_radius*5
+        // todo make this based on distance to camera not size of radius
+        let min_bound = max_radius*20
         let horzAngle = this.toRadians(Math.random()*360.0)
-        let vertAngle = this.toRadians(Math.random()*360.0)
-        min_bound = min_bound*.6 + Math.random()*(min_bound*.4)
+//         let vertAngle = this.toRadians(Math.random()*360.0)
+        // new: constrain vertical angle to make an asteroid "belt" effect
+        let vertAngle = this.toRadians(Math.random()*30)
+        min_bound = min_bound*.9 + Math.random()*(min_bound*.1)
         let horz_min_bound = min_bound * Math.cos(vertAngle)
         let ranVec = new THREE.Vector3(horz_min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), horz_min_bound*Math.sin(horzAngle))
         let pos = [ranVec.x, ranVec.y, ranVec.z]
@@ -84,10 +91,10 @@ export class ObjBuilderService {
 
     }
 
-    // todo should find way to make this global helpful function, used multiple places
-    norm_range(a:number, b:number, min:number, max:number, x:number): number {
-        return a + ((x-min)/(max-min))*(b-a)
-    }
+//     // todo should find way to make this global helpful function, used multiple places
+//     norm_range(a:number, b:number, min:number, max:number, x:number): number {
+//         return a + ((x-min)/(max-min))*(b-a)
+//     }
 
     toRadians(theta:number): number {
         return (theta*Math.PI)/180.0
