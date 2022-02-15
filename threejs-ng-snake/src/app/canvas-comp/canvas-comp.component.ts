@@ -31,10 +31,10 @@ export class CanvasCompComponent implements OnInit {
     public clock: THREE.Clock;
 
 //     // todo here all arrows: just helpers
-//     public controlArrow: any;
-//     public posArrow: any;
-//     public oldArrow: any;
-//     public addArrow: any;
+    public controlArrow: any;
+    public posArrow: any;
+    public oldArrow: any;
+    public addArrow: any;
 
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
@@ -96,49 +96,13 @@ export class CanvasCompComponent implements OnInit {
 
         }
 
-//
-//         // todo helpers below: all arrows only ... could be added separate function
-//         // todo new helper logic
-//         this.controlArrow.setLength(this.controls.targetCopy.length(),
-//                                     this.controlArrow.headLength,
-//                                     .15)
-//         this.controlArrow.setDirection(this.controls.targetCopy.normalize())
-//         // todo below: just calculation using angle target vector and Y axis
-//         let Yval = this.controls.targetCopy.y
-//         let radTheta = Math.acos(Yval/this.controls.targetCopy.length())
-//         let thetaY = THREE.MathUtils.radToDeg(radTheta)
-//         console.log("radTheta: " + radTheta)
-//         console.log("thetaY: " + thetaY)
-//
-//         let addPos = new THREE.Vector3()
-//         addPos.copy(this.controls.object.position)
-// //         addPos.add(this.controls.preAddCopy)
-//         this.scene.remove(this.addArrow)
-//         let addLength = addPos.length()
-// //         console.log("here")
-// //         console.log(this.controls.preAddCopy)
-//         this.addArrow = new THREE.ArrowHelper(
-//                                 addPos.normalize(),
-//                                 new THREE.Vector3(this.controls.preAddCopy.x-1, this.controls.preAddCopy.y, this.controls.preAddCopy.z),
-//                                 addLength,
-//                                 new THREE.Color('rgb(100, 100, 100)')
-//
-//         )
-//         this.addArrow.setLength(addLength)
-//         this.scene.add(this.addArrow)
-//
-//         this.oldArrow.setLength(this.controls.preAddCopy.length(),
-//                                 this.controls.preAddCopy.headLength,
-//                                 .15)
-//         this.oldArrow.setDirection(this.controls.preAddCopy.normalize())
-//         let posCopy = new THREE.Vector3(0,0,0)
-//         posCopy.copy(this.controls.object.position)
-//         posCopy.normalize()
-//         this.posArrow.setLength(this.controls.object.position.length()*.95,
-//                                 this.posArrow.headLength,
-//                                 .08
-//         )
-//         this.posArrow.setDirection(posCopy)
+        // logic arrow helpers
+        [this.controlArrow, this.posArrow, this.oldArrow, this.addArrow] = this.sceneService.updateArrowHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
+        let [cA, pA, oA, aA] = this.sceneService.updateArrowHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
+        this.controlArrow = cA;
+        this.posArrow = pA;
+        this.oldArrow = oA;
+        this.addArrow = aA;
 
         // main logic asteroids
         // todo move this to obj service, use object methods
@@ -205,7 +169,7 @@ export class CanvasCompComponent implements OnInit {
 
         });
         this.renderer.shadowMap.enabled = true
-    // @ts-ignore
+        // @ts-ignore
         this.renderer.setClearColor(this.scene.fog.color)
         //https://stackoverflow.com/questions/15409321/super-sample-antialiasing-with-threejs
         //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
@@ -214,49 +178,23 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initCameras(this.scene, this.camera)
         this.controls = this.sceneService.initControls(this.scene, this.camera)
 
-        // todo below: controls helpers: could be moved to separate function
-        // helper arrow target
-//         const origin = new THREE.Vector3(-1,0,0)
-//         const length = this.controls.targetCopy.length()
-//         this.controlArrow = new THREE.ArrowHelper(this.controls.targetCopy.normalize(), origin, length, new THREE.Color('rgb(150, 0,0)'))
-//         this.scene.add(this.controlArrow)
-//         // helper arrow position controls
-//         let posCopy = new THREE.Vector3(0,0,0)
-//         posCopy.copy(this.controls.object.position)
-//         posCopy.normalize()
-//         console.log(posCopy)
-//         this.posArrow = new THREE.ArrowHelper(
-//                                 posCopy,
-//                                 origin,
-//                                 this.controls.object.position.length(),
-//                                 new THREE.Color('rgb(0, 100, 150)'))
-//         this.scene.add(this.posArrow)
-//         let oldLength = this.controls.preAddCopy.length()
-//         let preAddCache = new THREE.Vector3()
-//         preAddCache.copy(this.controls.preAddCopy)
-//         this.oldArrow = new THREE.ArrowHelper(this.controls.preAddCopy.normalize(), origin, oldLength, new THREE.Color('rgb(0, 240,0)'))
-//         this.scene.add(this.oldArrow)
-//         let addPos = new THREE.Vector3()
-//         addPos.copy(posCopy).add(preAddCache)
-//         let addLength = addPos.length()
-//         this.addArrow = new THREE.ArrowHelper(
-//                                 addPos.normalize(),
-//                                 new THREE.Vector3(preAddCache.x, preAddCache.y, preAddCache.z),
-//                                 addLength,
-//                                 new THREE.Color('rgb(100, 100, 100)')
-//
-//         )
-//         this.scene.add(this.addArrow)
-
 
 
         // main logic
         this.window_set_size();
         this.window_size_listener();
-
         this.builderService.initBoxes(this.shapesArray, this.scene)
+
+        // arrow helper logic
+        let [cA, pA, oA, aA]  = this.sceneService.initArrowHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
+        this.controlArrow = cA;
+        this.posArrow = pA;
+        this.oldArrow = oA;
+        this.addArrow = aA;
 
         requestAnimationFrame(this.animate);
   }
 
 }
+
+

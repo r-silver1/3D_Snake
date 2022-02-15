@@ -71,4 +71,88 @@ export class SceneHelperService {
 
     }
 
+    public initArrowHelpers(scene:THREE.Scene, controls:TurretControls, controlArrow:THREE.ArrowHelper, posArrow:THREE.ArrowHelper, oldArrow: THREE.ArrowHelper, addArrow:THREE.ArrowHelper) : THREE.ArrowHelper[] {
+        // helper arrow target
+        const origin = new THREE.Vector3(-1,0,0)
+        const length = controls.targetCopy.length()
+        controlArrow = new THREE.ArrowHelper(controls.targetCopy.normalize(), origin, length, new THREE.Color('rgb(150, 0,0)'))
+        scene.add(controlArrow)
+        // helper arrow position controls
+        let posCopy = new THREE.Vector3(0,0,0)
+        posCopy.copy(controls.object.position)
+        posCopy.normalize()
+
+        posArrow = new THREE.ArrowHelper(
+                                posCopy,
+                                origin,
+                                controls.object.position.length(),
+                                new THREE.Color('rgb(0, 100, 150)'))
+        scene.add(posArrow)
+        let oldLength = controls.preAddCopy.length()
+        let preAddCache = new THREE.Vector3()
+        preAddCache.copy(controls.preAddCopy)
+        oldArrow = new THREE.ArrowHelper(controls.preAddCopy.normalize(), origin, oldLength, new THREE.Color('rgb(0, 240,0)'))
+        scene.add(oldArrow)
+        let addPos = new THREE.Vector3()
+        addPos.copy(posCopy).add(preAddCache)
+        let addLength = addPos.length()
+        addArrow = new THREE.ArrowHelper(
+                                addPos.normalize(),
+                                new THREE.Vector3(preAddCache.x, preAddCache.y, preAddCache.z),
+                                addLength,
+                                new THREE.Color('rgb(100, 100, 100)')
+
+        )
+        scene.add(addArrow)
+        return [controlArrow, posArrow, oldArrow, addArrow]
+    }
+
+    public updateArrowHelpers(scene:THREE.Scene, controls:TurretControls, controlArrow:THREE.ArrowHelper, posArrow:THREE.ArrowHelper, oldArrow: THREE.ArrowHelper, addArrow:THREE.ArrowHelper) : THREE.ArrowHelper[] {
+        // todo helpers below: all arrows only ... could be added separate function
+        // todo new helper logic
+
+        controlArrow.setLength(controls.targetCopy.length(),
+                                    // @ts-ignore
+                                    controlArrow.headLength,
+                                    .15)
+        controlArrow.setDirection(controls.targetCopy.normalize())
+        // todo below: just calculation using angle target vector and Y axis
+        let Yval = controls.targetCopy.y
+        let radTheta = Math.acos(Yval/controls.targetCopy.length())
+        let thetaY = THREE.MathUtils.radToDeg(radTheta)
+//         console.log("radTheta: " + radTheta)
+//         console.log("thetaY: " + thetaY)
+
+        let addPos = new THREE.Vector3()
+        addPos.copy(controls.object.position)
+        scene.remove(addArrow)
+        let addLength = addPos.length()
+        addArrow = new THREE.ArrowHelper(
+                                addPos.normalize(),
+                                new THREE.Vector3(controls.preAddCopy.x-1, controls.preAddCopy.y, controls.preAddCopy.z),
+                                addLength,
+                                new THREE.Color('rgb(100, 100, 100)')
+
+        )
+        addArrow.setLength(addLength)
+        scene.add(addArrow)
+
+        oldArrow.setLength(controls.preAddCopy.length(),
+                                // @ts-ignore
+                                controls.preAddCopy.headLength,
+                                .15)
+        oldArrow.setDirection(controls.preAddCopy.normalize())
+        let posCopy = new THREE.Vector3(0,0,0)
+        posCopy.copy(controls.object.position)
+        posCopy.normalize()
+
+        posArrow.setLength(controls.object.position.length()*.95,
+                                // @ts-ignore
+                                posArrow.headLength,
+                                .08
+        )
+        posArrow.setDirection(posCopy)
+        return [controlArrow, posArrow, oldArrow, addArrow]
+    }
+
 }

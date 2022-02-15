@@ -4,6 +4,8 @@ import pickle
 from datetime import datetime
 # from flask_cors import cross_origin
 from flask_cors import CORS
+# https://12ft.io/proxy?q=https://betterprogramming.pub/introduction-to-waitress-a-wsgi-server-for-python-2-and-3-c77e20cb292b
+from waitress import serve
 
 from session_wrapper.session_id import session_id_handler
 
@@ -132,5 +134,7 @@ def time_api():
         return response
 
 
+# python threejs-flask-backend\__init__.py
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    # app.run(host="0.0.0.0")
+    serve(app, host='0.0.0.0', port=5000, threads=1)
