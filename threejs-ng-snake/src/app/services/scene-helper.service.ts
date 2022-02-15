@@ -71,7 +71,7 @@ export class SceneHelperService {
 
     }
 
-    public initArrowHelpers(scene:THREE.Scene, controls:TurretControls, controlArrow:THREE.ArrowHelper, posArrow:THREE.ArrowHelper, oldArrow: THREE.ArrowHelper, addArrow:THREE.ArrowHelper) : THREE.ArrowHelper[] {
+    public initCameraHelpers(scene:THREE.Scene, controls:TurretControls, controlArrow:THREE.ArrowHelper, posArrow:THREE.ArrowHelper, oldArrow: THREE.ArrowHelper, addArrow:THREE.ArrowHelper) : THREE.ArrowHelper[] {
         // helper arrow target
         const origin = new THREE.Vector3(-1,0,0)
         const length = controls.targetCopy.length()
@@ -107,7 +107,7 @@ export class SceneHelperService {
         return [controlArrow, posArrow, oldArrow, addArrow]
     }
 
-    public updateArrowHelpers(scene:THREE.Scene, controls:TurretControls, controlArrow:THREE.ArrowHelper, posArrow:THREE.ArrowHelper, oldArrow: THREE.ArrowHelper, addArrow:THREE.ArrowHelper) : THREE.ArrowHelper[] {
+    public updateCameraHelpers(scene:THREE.Scene, controls:TurretControls, controlArrow:THREE.ArrowHelper, posArrow:THREE.ArrowHelper, oldArrow: THREE.ArrowHelper, addArrow:THREE.ArrowHelper) : THREE.ArrowHelper[] {
         // todo helpers below: all arrows only ... could be added separate function
         // todo new helper logic
 

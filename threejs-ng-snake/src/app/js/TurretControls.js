@@ -48,6 +48,7 @@ class TurretControls {
 
 		this.mouseDragOn = false;
         // todo here preAddCopy, targetCopy only used helper
+        this.CameraHelpers = false;
 		this.targetCopy = new Vector3()
 		this.preAddCopy = new Vector3()
 
@@ -199,12 +200,16 @@ class TurretControls {
 
 				const position = this.object.position;
 				// todo here preAddCopy only used helper
-                this.preAddCopy.setFromSphericalCoords( 1, phi, theta )
+				if(this.CameraHelpers == true){
+                    this.preAddCopy.setFromSphericalCoords( 1, phi, theta )
+                }
 				targetPosition.setFromSphericalCoords( 1, phi, theta ).add( position );
 
 				this.object.lookAt( targetPosition );
 //				// todo here targetCopy only used helper
-				this.targetCopy.copy(targetPosition)
+                if(this.CameraHelpers == true){
+				    this.targetCopy.copy(targetPosition)
+				}
 
 
 			};

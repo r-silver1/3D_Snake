@@ -16,7 +16,6 @@ import { FontBuilderService } from '../services/font-builder.service'
 })
 
 
-
 export class CanvasCompComponent implements OnInit {
     public word_form: any;
     public scene: THREE.Scene;
@@ -31,6 +30,7 @@ export class CanvasCompComponent implements OnInit {
     public clock: THREE.Clock;
 
 //     // todo here all arrows: just helpers
+    private cameraHelpers: boolean = false;
     public controlArrow: any;
     public posArrow: any;
     public oldArrow: any;
@@ -97,12 +97,13 @@ export class CanvasCompComponent implements OnInit {
         }
 
         // logic arrow helpers
-        [this.controlArrow, this.posArrow, this.oldArrow, this.addArrow] = this.sceneService.updateArrowHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
-        let [cA, pA, oA, aA] = this.sceneService.updateArrowHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
-        this.controlArrow = cA;
-        this.posArrow = pA;
-        this.oldArrow = oA;
-        this.addArrow = aA;
+        if(this.cameraHelpers == true){
+            let [cA, pA, oA, aA] = this.sceneService.updateCameraHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
+            this.controlArrow = cA;
+            this.posArrow = pA;
+            this.oldArrow = oA;
+            this.addArrow = aA;
+        }
 
         // main logic asteroids
         // todo move this to obj service, use object methods
@@ -186,11 +187,14 @@ export class CanvasCompComponent implements OnInit {
         this.builderService.initBoxes(this.shapesArray, this.scene)
 
         // arrow helper logic
-        let [cA, pA, oA, aA]  = this.sceneService.initArrowHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
-        this.controlArrow = cA;
-        this.posArrow = pA;
-        this.oldArrow = oA;
-        this.addArrow = aA;
+        if(this.cameraHelpers == true){
+            this.controls.cameraHelpers = true;
+            let [cA, pA, oA, aA]  = this.sceneService.initCameraHelpers(this.scene, this.controls, this.controlArrow, this.posArrow, this.oldArrow, this.addArrow)
+            this.controlArrow = cA;
+            this.posArrow = pA;
+            this.oldArrow = oA;
+            this.addArrow = aA;
+        }
 
         requestAnimationFrame(this.animate);
   }
