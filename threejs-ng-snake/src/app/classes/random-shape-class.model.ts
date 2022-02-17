@@ -18,6 +18,7 @@ export class RandomShapeClass {
     static blueColor: THREE.Color = new THREE.Color('rgb(0,120,255)')
     static redColor: THREE.Color = new THREE.Color('rgb(255,120,0)')
 
+    // todo here take box colors bool as param
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[],
                 maxPoints: number){
@@ -72,8 +73,10 @@ export class RandomShapeClass {
                 theta = 360;
             }
             last += thetaDiff
-            let iX:number = Math.cos(this.thetaToRad(theta)) * circleRadius;
-            let iZ:number = Math.sin(this.thetaToRad(theta)) * circleRadius;
+//             let iX:number = Math.cos(this.thetaToRad(theta)) * circleRadius;
+            let iX:number = Math.cos(THREE.MathUtils.degToRad(theta)) * circleRadius
+//             let iZ:number = Math.sin(this.thetaToRad(theta)) * circleRadius;
+            let iZ:number = Math.sin(THREE.MathUtils.degToRad(theta)) * circleRadius
             circlePointsMat.push([iX, yIndex, iZ])
 
         }
@@ -189,9 +192,9 @@ export class RandomShapeClass {
         return geometry
     }
 
-    thetaToRad(deg:number): number {
-        return (Math.PI*deg)/180.0
-    }
+//     thetaToRad(deg:number): number {
+//         return (Math.PI*deg)/180.0
+//     }
 
 
     // https://threejs.org/docs/index.html#api/en/core/BufferGeometry.groups
@@ -216,6 +219,7 @@ export class RandomShapeClass {
         return tempBox
     }
 
+    // todo here reference bool box helper to make or not
     changeBoxHelperCol(checkBool: boolean) : void {
         this.boxHelper.material.dispose()
         this.boxHelper.geometry.dispose()

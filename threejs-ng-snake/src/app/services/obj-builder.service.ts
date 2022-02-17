@@ -9,13 +9,14 @@ export class ObjBuilderService {
 
     constructor() { }
 
-    public initBoxes(shapesArray: any, scene:THREE.Scene): void {
+    // todo here take boxhelpers as param
+    public initBoxes(shapesArray: any, scene:THREE.Scene, boxHelpers:boolean): void {
         // min_radius: minimum size asteroids to be generated
         const min_radius = .06
         // max_radius: maximum radius for an asteroid
-        const max_radius = .2
+        const max_radius = .26
         // max_val: max number of asteroids to generate; min val 1
-        const max_val = 80;
+        const max_val = 120;
 
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
@@ -38,8 +39,10 @@ export class ObjBuilderService {
             let box_rad = THREE.MathUtils.mapLinear(i, 0, max_val, min_radius, max_radius)
             let pos = this.generatePosition(max_radius)
             // use this to change complexity of asteroids; higher values -> more triangles
-            const minPointsBound = 5;
-            const maxPointsBound = 8;
+//             const minPointsBound = 5;
+//             const maxPointsBound = 8;
+            const minPointsBound = 6;
+            const maxPointsBound = 12;
 //             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
             const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, minPointsBound, maxPointsBound))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
@@ -47,11 +50,13 @@ export class ObjBuilderService {
             // todo: helper function static inside shape to accept scene param, add shape and helper?
             shapesArray.push(newShape)
             scene.add(newShape.shapeObj)
-            scene.add(newShape.boxHelper)
+            if(boxHelpers == true){
+                scene.add(newShape.boxHelper)
+            }
 
             // todo initial conflict checking/placement: could be made into helper
             // function accepting scene, shape array, index, shape
-            let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+            let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene, boxHelpers)
             // if conflict found in initial placing of asteroid, loop through all asteroids
             // to find a new position free of collisions
             while(conflictCheck == true){
@@ -70,8 +75,10 @@ export class ObjBuilderService {
                 newShape.position = new_pos
                 scene.remove(newShape.boxHelper)
                 newShape.changeBoxHelperCol(false)
-                scene.add(newShape.boxHelper)
-                conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene)
+                if(boxHelpers == true){
+                    scene.add(newShape.boxHelper)
+                }
+                conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene, boxHelpers)
             }
         }
     }
@@ -79,10 +86,12 @@ export class ObjBuilderService {
     public generatePosition(max_radius:number): number[] {
         // todo make this based on distance to camera not size of radius
         let min_bound = max_radius*20
-        let horzAngle = this.toRadians(Math.random()*360.0)
+//         let horzAngle = this.toRadians(Math.random()*360.0)
+        let horzAngle = THREE.MathUtils.degToRad(Math.random()*360.0)
 //         let vertAngle = this.toRadians(Math.random()*360.0)
         // new: constrain vertical angle to make an asteroid "belt" effect
-        let vertAngle = this.toRadians(Math.random()*30)
+//         let vertAngle = this.toRadians(Math.random()*30)
+        let vertAngle = THREE.MathUtils.degToRad(Math.random()*30)
         min_bound = min_bound*.9 + Math.random()*(min_bound*.1)
         let horz_min_bound = min_bound * Math.cos(vertAngle)
         let ranVec = new THREE.Vector3(horz_min_bound*Math.cos(horzAngle), min_bound*Math.sin(vertAngle), horz_min_bound*Math.sin(horzAngle))
@@ -90,48 +99,46 @@ export class ObjBuilderService {
         return pos
 
     }
-
-//     // todo should find way to make this global helpful function, used multiple places
-//     norm_range(a:number, b:number, min:number, max:number, x:number): number {
-//         return a + ((x-min)/(max-min))*(b-a)
+//     //lat = 90 - MathUtils.radToDeg( _spherical.phi );?
+//     toRadians(theta:number): number {
+//         return (theta*Math.PI)/180.0
 //     }
-
-    toRadians(theta:number): number {
-        return (theta*Math.PI)/180.0
-    }
 
     //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
     //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection/Bounding_volume_collision_detection_with_THREE.js
     // todo move into asteroid class? or other helper class?
-    checkConflicts(asteroid: any, shapesArray: any[], index: number, scene: THREE.Scene) : boolean {
+    checkConflicts(asteroid: any, shapesArray: any[], index: number, scene: THREE.Scene, boxHelpers:boolean) : boolean {
         let checkBool = false;
         for(let j = 0; j<index; j++){
             let other = shapesArray[j]
             let thisBool = asteroid.checkOtherConflict(other)
-            let tempAstBool = asteroid.conflictHit
-            let tempOthBool = other.conflictHit
+//             let tempAstBool = asteroid.conflictHit
+//             let tempOthBool = other.conflictHit
 
             if(thisBool){
                 asteroid.conflictHit = true;
                 other.conflictHit = true;
                 checkBool = true;
+                if(boxHelpers == true){
+                    scene.remove(asteroid.boxHelper)
+                    asteroid.changeBoxHelperCol(true)
+                    scene.add(asteroid.boxHelper)
 
-                scene.remove(asteroid.boxHelper)
-                asteroid.changeBoxHelperCol(true)
-                scene.add(asteroid.boxHelper)
-
-                scene.remove(other.boxHelper)
-                other.changeBoxHelperCol(true)
-                scene.add(other.boxHelper)
+                    scene.remove(other.boxHelper)
+                    other.changeBoxHelperCol(true)
+                    scene.add(other.boxHelper)
+                }
             }
 
         }
         if(checkBool == false){
-            let tempGoodAstBool = asteroid.conflictHit
-            asteroid.conflictHit = false;
-            scene.remove(asteroid.boxHelper)
-            asteroid.changeBoxHelperCol(false)
-            scene.add(asteroid.boxHelper)
+//             let tempGoodAstBool = asteroid.conflictHit
+            if(boxHelpers){
+                asteroid.conflictHit = false;
+                scene.remove(asteroid.boxHelper)
+                asteroid.changeBoxHelperCol(false)
+                scene.add(asteroid.boxHelper)
+            }
         }
         return checkBool
     }

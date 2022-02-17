@@ -25,6 +25,8 @@ export class CanvasCompComponent implements OnInit {
     public start: any;
     public controls: any;
     public wordGet: any;
+
+
     public axesHelper: THREE.AxesHelper;
     public gridHelper: THREE.GridHelper;
     public clock: THREE.Clock;
@@ -35,6 +37,9 @@ export class CanvasCompComponent implements OnInit {
     public posArrow: any;
     public oldArrow: any;
     public addArrow: any;
+
+    // helper bool box helpers render material
+    private boxHelpers: boolean = false;
 
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
@@ -114,14 +119,14 @@ export class CanvasCompComponent implements OnInit {
             let tempPos = asteroid.position;
             // todo make helper for translate
             asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
-            let rotation = .01 + .02*((this.shapesArray.length-index)/this.shapesArray.length)
+            let rotation = .005 + .01*((this.shapesArray.length-index)/this.shapesArray.length)
             asteroid.geometry.rotateY(rotation)
             asteroid.geometry.rotateZ(rotation/5)
             asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
             asteroid.shapeObj.rotateY(rotation/10)
             // update box helper, or box helper won't change in size with rotation etc
             asteroid.updateBoxHelper()
-            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
+            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
 
         })
         this.render_all()
@@ -179,12 +184,10 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initCameras(this.scene, this.camera)
         this.controls = this.sceneService.initControls(this.scene, this.camera)
 
-
-
         // main logic
         this.window_set_size();
         this.window_size_listener();
-        this.builderService.initBoxes(this.shapesArray, this.scene)
+        this.builderService.initBoxes(this.shapesArray, this.scene, this.boxHelpers)
 
         // arrow helper logic
         if(this.cameraHelpers == true){
