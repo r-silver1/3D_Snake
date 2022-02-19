@@ -16,7 +16,7 @@ export class ObjBuilderService {
         // max_radius: maximum radius for an asteroid
         const max_radius = .26
         // max_val: max number of asteroids to generate; min val 1
-        const max_val = 120;
+        const max_val = 200;
 
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
@@ -64,15 +64,23 @@ export class ObjBuilderService {
                 let new_diam = max_radius * 1.1
                 let new_pos = this.generatePosition(new_diam)
                 // todo translate geometry: could be helper function inside shape taking pos as input
-                newShape.geometry.translate(-newShape.position[0],
-                                            -newShape.position[1],
-                                            -newShape.position[2]
-                                            )
-                newShape.geometry.translate(new_pos[0],
-                                            new_pos[1],
-                                            new_pos[2]
-                                            )
-                newShape.position = new_pos
+//                 newShape.geometry.translate(-newShape.position[0],
+//                                             -newShape.position[1],
+//                                             -newShape.position[2]
+//                                             )
+//                 newShape.geometry.translate(new_pos[0],
+//                                             new_pos[1],
+//                                             new_pos[2]
+//                                             )
+                // todo here same as constructor, edit
+                let posVec = new THREE.Vector3(newShape.position[0], newShape.position[1], newShape.position[2])
+                let posLength = posVec.length();
+    //             this.geometry.translate(vertices[0], vertices[1], vertices[2])
+                newShape.shapeObj.translateOnAxis(posVec.normalize(), posLength)
+                let newVec = new THREE.Vector3(new_pos[0], new_pos[1], new_pos[2])
+                let newLength = newVec.length();
+                newShape.shapeObj.translateOnAxis(newVec.normalize(), newLength)
+//                 newShape.position = new_pos
                 scene.remove(newShape.boxHelper)
                 newShape.changeBoxHelperCol(false)
                 if(boxHelpers == true){
@@ -80,6 +88,8 @@ export class ObjBuilderService {
                 }
                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene, boxHelpers)
             }
+            scene.add(newShape.initDirectionHelper());
+
         }
     }
 

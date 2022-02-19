@@ -7,12 +7,15 @@ export class RandomShapeClass {
     private material: THREE.MeshPhongMaterial;
     private radius: number;
     public position: number[];
+    public direction: THREE.Vector3;
+    public directionHelper: any;
     public geometry: THREE.BufferGeometry;
     private maxPoints: number;
     public shapeObj: THREE.Mesh;
     public boxHelper: any;
     public boxGeo: any;
     public conflictHit: boolean;
+
 
     // static members
     static blueColor: THREE.Color = new THREE.Color('rgb(0,120,255)')
@@ -29,11 +32,17 @@ export class RandomShapeClass {
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
             // todo necessary for vertices const here? also could have helper
             // to translate given simple pos input
-            const vertices = this.position;
-            this.geometry.translate(vertices[0], vertices[1], vertices[2])
+//             const vertices = this.position;
+//             this.geometry.translate(vertices[0], vertices[1], vertices[2])
+            let posVec = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
+            let posLength = posVec.length();
             this.shapeObj = new THREE.Mesh(this.geometry, this.material);
+//             this.geometry.translate(vertices[0], vertices[1], vertices[2])
+            this.shapeObj.translateOnAxis(posVec.normalize(), posLength)
             this.shapeObj.castShadow = true;
             this.shapeObj.receiveShadow = true;
+
+            this.direction = new THREE.Vector3()
 
             // conflictHit: used to determine box color, red or green
             this.conflictHit = false;
@@ -239,5 +248,43 @@ export class RandomShapeClass {
         let boxCheck = this.boxGeo.intersectsBox(other.boxGeo)
         return boxCheck
     }
+
+    setDirection(newDir:THREE.Vector3) {
+        this.direction = newDir;
+    }
+
+    initDirectionHelper() {
+        const arrowLen = .5;
+        const arrowCol = new THREE.Color('rgb(200, 0, 40)');
+        const arrowPos = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
+        this.directionHelper = new THREE.ArrowHelper(this.direction.normalize(), arrowPos, arrowLen, arrowCol)
+        return this.directionHelper;
+    }
+    //https://threejs.org/docs/#api/en/core/BufferGeometry
+    //https://threejs.org/docs/#api/en/core/Object3D
+    //https://computergraphics.stackexchange.com/questions/10362/threejs-updating-an-objects-matrix-doesnt-change-its-position-and-rotation-pa
+    updateDirectionHelper() {
+//         let dirHelperPos = this.directionHelper.position;
+//         this.directionHelper.translateX(-dirHelperPos.x)
+//         this.directionHelper.translateX(this.position[0])
+//         this.directionHelper.translateY(-dirHelperPos.y)
+//         this.directionHelper.translateY(this.position[1])
+//         this.directionHelper.translateZ(-dirHelperPos.z)
+//         this.directionHelper.translateZ(this.position[2])
+//         this.directionHelper.rotateY(-this.directionHelper.rotation)
+//         this.directionHelper.rotateY(this.shapeObj.rotation)
+//             this.directionHelper.clear()
+//             delete this.directionHelper
+//             this.initDirectionHelper()
+//             console.log(this.directionHelper.geometry)
+           this.directionHelper.setRotationFromEuler(this.shapeObj.rotation)
+//            return this.directionHelper
+
+
+
+    }
+
+
+
 
 }

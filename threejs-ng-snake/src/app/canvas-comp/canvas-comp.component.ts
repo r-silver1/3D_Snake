@@ -8,6 +8,8 @@ import { ObjBuilderService } from '../services/obj-builder.service'
 import { SceneHelperService } from '../services/scene-helper.service'
 import { FontBuilderService } from '../services/font-builder.service'
 
+import { Stats } from '../js/stats'
+
 @Component({
     selector: 'app-canvas-comp',
     templateUrl: './canvas-comp.component.html',
@@ -23,6 +25,7 @@ export class CanvasCompComponent implements OnInit {
     public camera: THREE.PerspectiveCamera;
     public renderer: any;
     public start: any;
+    public last: any;
     public controls: any;
     public wordGet: any;
 
@@ -40,6 +43,9 @@ export class CanvasCompComponent implements OnInit {
 
     // helper bool box helpers render material
     private boxHelpers: boolean = false;
+
+    //fps helper
+    public stats: any;
 
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
@@ -82,6 +88,7 @@ export class CanvasCompComponent implements OnInit {
         // note: controls target, useful
         if (this.start === -1){
             this.start = timestamp;
+            this.last = timestamp;
         }
         const elapsed = timestamp - this.start;
         // https://threejs.org/examples/?q=Controls#misc_controls_fly
@@ -112,25 +119,48 @@ export class CanvasCompComponent implements OnInit {
 
         // main logic asteroids
         // todo move this to obj service, use object methods
+        const upVec = new THREE.Vector3(1, 0, 0);
         this.shapesArray.forEach((asteroid:any, index:any) => {
 //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
             // using rotateY or rotateX to rotate geometry, handles boxhelper more smoothly
 //             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
             let tempPos = asteroid.position;
             // todo make helper for translate
-            asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
-            let rotation = .005 + .01*((this.shapesArray.length-index)/this.shapesArray.length)
-            asteroid.geometry.rotateY(rotation)
-            asteroid.geometry.rotateZ(rotation/5)
-            asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
+//             asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
+//             let rotation = .005 + .01*((this.shapesArray.length-index)/this.shapesArray.length)
+//             asteroid.geometry.rotateY(rotation)
+//             asteroid.geometry.rotateZ(rotation/5)
+//             asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
+            let elapsed_modifier = (timestamp-this.last) *.00007
+            let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
+//             asteroid.shapeObj.translateOnAxis(asteroid.shapeObj.position.normalize(),-asteroid.position.length)
+//             asteroid.shapeObj.rotateOnWorldAxis( upVec, rotation )
+            asteroid.shapeObj.rotateY(rotation)
+            asteroid.shapeObj.rotateZ(rotation/5)
+
+//             asteroid.shapeObj.translateX((index % 10)*.001 + .01)
+//             asteroid.shapeObj.translateZ((index % 10)*.001 + .01)
+
+//             asteroid.shapeObj.translate(tempPos[0], tempPos[1], tempPos[2])
+//             asteroid.shapeObj.translateOnAxis(asteroid.shapeObj.position.normalize(),asteroid.position.length)
             asteroid.shapeObj.rotateY(rotation/10)
+            if(index == 5){
+//                 console.log(asteroid.shapeObj.rotation)
+//                    let newVec = new THREE.Vector3()
+//                    asteroid.shapeObj.getWorldPosition(newVec)
+//                    console.log(newVec)
+//                     console.log(asteroid.shapeObj.position)
+            }
             // update box helper, or box helper won't change in size with rotation etc
             asteroid.updateBoxHelper()
             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
 
+            asteroid.updateDirectionHelper()
         })
         this.render_all()
+        this.stats.update()
         requestAnimationFrame(this.animate);
+        this.last = timestamp
     }
 
 
@@ -167,6 +197,7 @@ export class CanvasCompComponent implements OnInit {
     }
 
 
+
     ngOnInit(): void {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -197,6 +228,19 @@ export class CanvasCompComponent implements OnInit {
             this.posArrow = pA;
             this.oldArrow = oA;
             this.addArrow = aA;
+        }
+
+        //fps helper logic
+        // https://subscription.packtpub.com/book/web-development/9781783981182/1/ch01lvl1sec15/determining-the-frame-rate-for-your-scene
+        {
+            // @ts-ignore
+            this.stats = new Stats();
+            this.stats.setMode(0);
+            this.stats.domElement.style.position = 'absolute';
+            this.stats.domElement.style.left = '0';
+            this.stats.domElement.style.top = "90vh";
+            document.body.appendChild( this.stats.domElement );
+
         }
 
         requestAnimationFrame(this.animate);
