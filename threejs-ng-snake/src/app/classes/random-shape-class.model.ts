@@ -8,7 +8,7 @@ export class RandomShapeClass {
     private radius: number;
     public position: number[];
     public direction: THREE.Vector3;
-    public directionHelper: any;
+    public rotationHelper: any;
     public geometry: THREE.BufferGeometry;
     private maxPoints: number;
     public shapeObj: THREE.Mesh;
@@ -253,32 +253,32 @@ export class RandomShapeClass {
         this.direction = newDir;
     }
 
-    initDirectionHelper() {
+    initRotationHelper() {
+        this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
         const arrowLen = .5;
         const arrowCol = new THREE.Color('rgb(200, 0, 40)');
         const arrowPos = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
-        this.directionHelper = new THREE.ArrowHelper(this.direction.normalize(), arrowPos, arrowLen, arrowCol)
-        return this.directionHelper;
+        this.rotationHelper = new THREE.ArrowHelper(this.direction.normalize(), arrowPos, arrowLen, arrowCol)
+        return this.rotationHelper;
     }
     //https://threejs.org/docs/#api/en/core/BufferGeometry
     //https://threejs.org/docs/#api/en/core/Object3D
     //https://computergraphics.stackexchange.com/questions/10362/threejs-updating-an-objects-matrix-doesnt-change-its-position-and-rotation-pa
-    updateDirectionHelper() {
-//         let dirHelperPos = this.directionHelper.position;
-//         this.directionHelper.translateX(-dirHelperPos.x)
-//         this.directionHelper.translateX(this.position[0])
-//         this.directionHelper.translateY(-dirHelperPos.y)
-//         this.directionHelper.translateY(this.position[1])
-//         this.directionHelper.translateZ(-dirHelperPos.z)
-//         this.directionHelper.translateZ(this.position[2])
-//         this.directionHelper.rotateY(-this.directionHelper.rotation)
-//         this.directionHelper.rotateY(this.shapeObj.rotation)
-//             this.directionHelper.clear()
-//             delete this.directionHelper
-//             this.initDirectionHelper()
-//             console.log(this.directionHelper.geometry)
-           this.directionHelper.setRotationFromEuler(this.shapeObj.rotation)
-//            return this.directionHelper
+    updateRotationHelper() {
+        // below causing crazy behavior after a bit
+//         this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
+//         let dirHelperPos = this.rotationHelper.position;
+//         this.rotationHelper.translateX(-dirHelperPos.x)
+//         this.rotationHelper.translateX(this.position[0])
+//         this.rotationHelper.translateY(-dirHelperPos.y)
+//         this.rotationHelper.translateY(this.position[1])
+//         this.rotationHelper.translateZ(-dirHelperPos.z)
+//         this.rotationHelper.translateZ(this.position[2])
+//         this.rotationHelper.setRotationFromEuler(this.shapeObj.rotation)
+
+        delete this.rotationHelper
+        this.initRotationHelper()
+        this.rotationHelper.setRotationFromEuler(this.shapeObj.rotation)
 
 
 

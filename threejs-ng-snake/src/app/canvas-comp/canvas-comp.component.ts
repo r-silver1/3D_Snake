@@ -42,7 +42,7 @@ export class CanvasCompComponent implements OnInit {
     public addArrow: any;
 
     // helper bool box helpers render material
-    private boxHelpers: boolean = false;
+    private boxHelpers: boolean = true;
 
     //fps helper
     public stats: any;
@@ -138,8 +138,8 @@ export class CanvasCompComponent implements OnInit {
             asteroid.shapeObj.rotateY(rotation)
             asteroid.shapeObj.rotateZ(rotation/5)
 
-//             asteroid.shapeObj.translateX((index % 10)*.001 + .01)
-//             asteroid.shapeObj.translateZ((index % 10)*.001 + .01)
+            asteroid.shapeObj.translateX((index % 10)*.001 + .01)
+            asteroid.shapeObj.translateZ((index % 10)*.001 + .01)
 
 //             asteroid.shapeObj.translate(tempPos[0], tempPos[1], tempPos[2])
 //             asteroid.shapeObj.translateOnAxis(asteroid.shapeObj.position.normalize(),asteroid.position.length)
@@ -155,7 +155,10 @@ export class CanvasCompComponent implements OnInit {
             asteroid.updateBoxHelper()
             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
 
-            asteroid.updateDirectionHelper()
+            // rotation helper update
+            this.scene.remove(asteroid.rotationHelper)
+            asteroid.updateRotationHelper()
+            this.scene.add(asteroid.rotationHelper)
         })
         this.render_all()
         this.stats.update()
@@ -237,8 +240,8 @@ export class CanvasCompComponent implements OnInit {
             this.stats = new Stats();
             this.stats.setMode(0);
             this.stats.domElement.style.position = 'absolute';
-            this.stats.domElement.style.left = '0';
-            this.stats.domElement.style.top = "90vh";
+            this.stats.domElement.style.left = '5vh';
+            this.stats.domElement.style.top = "80vh";
             document.body.appendChild( this.stats.domElement );
 
         }

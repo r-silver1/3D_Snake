@@ -88,7 +88,7 @@ export class ObjBuilderService {
                 }
                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene, boxHelpers)
             }
-            scene.add(newShape.initDirectionHelper());
+            scene.add(newShape.initRotationHelper());
 
         }
     }
