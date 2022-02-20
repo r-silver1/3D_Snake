@@ -264,7 +264,7 @@ export class RandomShapeClass {
     //https://threejs.org/docs/#api/en/core/BufferGeometry
     //https://threejs.org/docs/#api/en/core/Object3D
     //https://computergraphics.stackexchange.com/questions/10362/threejs-updating-an-objects-matrix-doesnt-change-its-position-and-rotation-pa
-    updateRotationHelper() {
+    updateRotationHelper(transVec: THREE.Vector3) {
         // below causing crazy behavior after a bit
 //         this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
 //         let dirHelperPos = this.rotationHelper.position;
@@ -276,9 +276,10 @@ export class RandomShapeClass {
 //         this.rotationHelper.translateZ(this.position[2])
 //         this.rotationHelper.setRotationFromEuler(this.shapeObj.rotation)
 
-        delete this.rotationHelper
-        this.initRotationHelper()
+//         delete this.rotationHelper
+//         this.initRotationHelper()
         this.rotationHelper.setRotationFromEuler(this.shapeObj.rotation)
+        this.rotationHelper.position.add(transVec)
 
 
 
