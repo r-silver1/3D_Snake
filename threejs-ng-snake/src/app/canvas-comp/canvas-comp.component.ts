@@ -126,27 +126,28 @@ export class CanvasCompComponent implements OnInit {
 //             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
             let tempPos = asteroid.position;
             // todo make helper for translate
-//             asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
-//             let rotation = .005 + .01*((this.shapesArray.length-index)/this.shapesArray.length)
-//             asteroid.geometry.rotateY(rotation)
-//             asteroid.geometry.rotateZ(rotation/5)
-//             asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
-            let elapsed_modifier = (timestamp-this.last) *.00007
+            let elapsed_modifier = (timestamp-this.last) *.00009
             let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
 //             asteroid.shapeObj.translateOnAxis(asteroid.shapeObj.position.normalize(),-asteroid.position.length)
 //             asteroid.shapeObj.rotateOnWorldAxis( upVec, rotation )
-            if(index == 5){
-                console.log(asteroid.shapeObj.position)
-            }
+
+
             asteroid.shapeObj.rotateY(rotation)
-            asteroid.shapeObj.rotateZ(rotation/2)
+            asteroid.shapeObj.rotateZ(rotation/5)
 
             const transX = (index % 10)*.001 + .01
             const transZ = (index % 10)*.001 + .01
 //             asteroid.shapeObj.translateX(transX)
 //             asteroid.shapeObj.translateZ(transZ)
-            const transVec = new THREE.Vector3(transX, 0, transZ)
-            asteroid.shapeObj.position.add(transVec)
+//             const transVec = new THREE.Vector3(transX, 0, transZ)
+//             asteroid.shapeObj.position.add(transVec)
+//             if(index == 5){
+//                 asteroid.setAsteroidDirection(transVec)
+//                 console.log(asteroid.direction)
+//                    console.log(asteroid.shapeObj.position)
+//             }
+            asteroid.setAsteroidDirection()
+//             asteroid.shapeObj.position.add(asteroid.direction)
 //             asteroid.shapeObj.translateOnAxis(asteroid.shapeObj.worldToLocal(new THREE.Vector3(1, 0, 0)), transX)
 
 //             asteroid.shapeObj.translate(tempPos[0], tempPos[1], tempPos[2])
@@ -159,7 +160,8 @@ export class CanvasCompComponent implements OnInit {
 
             // rotation helper update
 //             this.scene.remove(asteroid.rotationHelper)
-            asteroid.updateRotationHelper(transVec)
+//             asteroid.updateRotationHelper(asteroid.direction)
+//             asteroid.updateRotationHelper(asteroid.direction)
 //             this.scene.add(asteroid.rotationHelper)
         })
         this.render_all()

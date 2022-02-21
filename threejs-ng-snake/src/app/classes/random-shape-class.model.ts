@@ -7,7 +7,11 @@ export class RandomShapeClass {
     private material: THREE.MeshPhongMaterial;
     private radius: number;
     public position: number[];
+    public worldRadius: number;
     public direction: THREE.Vector3;
+    public thetaNow: number;
+    public thetaDif: number;
+
     public rotationHelper: any;
     public geometry: THREE.BufferGeometry;
     private maxPoints: number;
@@ -42,7 +46,19 @@ export class RandomShapeClass {
             this.shapeObj.castShadow = true;
             this.shapeObj.receiveShadow = true;
 
+            // todo make this helepr function
+//             let shapeObjXZ = this.shapeObj.position.projectOnPlane(new THREE.Vector3(0, 1, 0))
+//             this.worldRadius = shapeObjXZ.length()
+// //             console.log(this.worldRadius)
+//             this.direction = new THREE.Vector3()
+//             this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
+//             this.thetaDif = .01
+            this.worldRadius = 0;
             this.direction = new THREE.Vector3()
+            this.thetaNow = 0;
+            this.thetaDif = 0;
+
+            this.initDirectionTheta()
 
             // conflictHit: used to determine box color, red or green
             this.conflictHit = false;
@@ -53,6 +69,16 @@ export class RandomShapeClass {
             this.boxGeo = this.makeBoxGeo();
 
 
+    }
+
+    initDirectionTheta() {
+        let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
+        shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
+        this.worldRadius = shapeObjXZ.length()
+    //             console.log(this.worldRadius)
+        this.direction = new THREE.Vector3()
+        this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
+        this.thetaDif = -.0001/this.radius + -.0001
     }
 
 
@@ -249,8 +275,16 @@ export class RandomShapeClass {
         return boxCheck
     }
 
-    setDirection(newDir:THREE.Vector3) {
-        this.direction = newDir;
+    setAsteroidDirection() {
+        let backupY = this.shapeObj.position.y
+        this.thetaNow += this.thetaDif
+//         this.direction.set(-this.worldRadius*Math.sin(this.thetaNow), 0, this.worldRadius*Math.cos(this.thetaNow)).multiplyScalar(.5)
+        this.direction.set(this.worldRadius * Math.cos(this.thetaNow), 0, (this.worldRadius*.9)*Math.sin(this.thetaNow))
+//         this.shapeObj.position.add(this.direction)
+        this.direction.add(new THREE.Vector3().copy(this.shapeObj.position).multiplyScalar(-1))
+        this.shapeObj.position.add(this.direction)
+        this.shapeObj.position.setComponent(1, backupY)
+        this.updateRotationHelper(this.direction)
     }
 
     initRotationHelper() {
@@ -258,31 +292,16 @@ export class RandomShapeClass {
         const arrowLen = .5;
         const arrowCol = new THREE.Color('rgb(200, 0, 40)');
         const arrowPos = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
-        this.rotationHelper = new THREE.ArrowHelper(this.direction.normalize(), arrowPos, arrowLen, arrowCol)
+        this.rotationHelper = new THREE.ArrowHelper(this.shapeObj.up, arrowPos, arrowLen, arrowCol)
         return this.rotationHelper;
     }
     //https://threejs.org/docs/#api/en/core/BufferGeometry
     //https://threejs.org/docs/#api/en/core/Object3D
     //https://computergraphics.stackexchange.com/questions/10362/threejs-updating-an-objects-matrix-doesnt-change-its-position-and-rotation-pa
     updateRotationHelper(transVec: THREE.Vector3) {
-        // below causing crazy behavior after a bit
-//         this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
-//         let dirHelperPos = this.rotationHelper.position;
-//         this.rotationHelper.translateX(-dirHelperPos.x)
-//         this.rotationHelper.translateX(this.position[0])
-//         this.rotationHelper.translateY(-dirHelperPos.y)
-//         this.rotationHelper.translateY(this.position[1])
-//         this.rotationHelper.translateZ(-dirHelperPos.z)
-//         this.rotationHelper.translateZ(this.position[2])
-//         this.rotationHelper.setRotationFromEuler(this.shapeObj.rotation)
-
-//         delete this.rotationHelper
-//         this.initRotationHelper()
         this.rotationHelper.setRotationFromEuler(this.shapeObj.rotation)
         this.rotationHelper.position.add(transVec)
-
-
-
+        this.rotationHelper.position.setComponent(1, this.shapeObj.position.y)
     }
 
 

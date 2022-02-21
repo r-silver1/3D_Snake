@@ -86,6 +86,7 @@ export class ObjBuilderService {
                 if(boxHelpers == true){
                     scene.add(newShape.boxHelper)
                 }
+                newShape.initDirectionTheta()
                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene, boxHelpers)
             }
             scene.add(newShape.initRotationHelper());

@@ -120,8 +120,6 @@ export class SceneHelperService {
         let Yval = controls.targetCopy.y
         let radTheta = Math.acos(Yval/controls.targetCopy.length())
         let thetaY = THREE.MathUtils.radToDeg(radTheta)
-//         console.log("radTheta: " + radTheta)
-//         console.log("thetaY: " + thetaY)
 
         let addPos = new THREE.Vector3()
         addPos.copy(controls.object.position)
