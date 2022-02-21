@@ -36,8 +36,6 @@ export class RandomShapeClass {
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
             // todo necessary for vertices const here? also could have helper
             // to translate given simple pos input
-//             const vertices = this.position;
-//             this.geometry.translate(vertices[0], vertices[1], vertices[2])
             let posVec = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
             let posLength = posVec.length();
             this.shapeObj = new THREE.Mesh(this.geometry, this.material);
@@ -46,13 +44,6 @@ export class RandomShapeClass {
             this.shapeObj.castShadow = true;
             this.shapeObj.receiveShadow = true;
 
-            // todo make this helepr function
-//             let shapeObjXZ = this.shapeObj.position.projectOnPlane(new THREE.Vector3(0, 1, 0))
-//             this.worldRadius = shapeObjXZ.length()
-// //             console.log(this.worldRadius)
-//             this.direction = new THREE.Vector3()
-//             this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
-//             this.thetaDif = .01
             this.worldRadius = 0;
             this.direction = new THREE.Vector3()
             this.thetaNow = 0;
@@ -75,9 +66,14 @@ export class RandomShapeClass {
         let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
         shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
         this.worldRadius = shapeObjXZ.length()
-    //             console.log(this.worldRadius)
         this.direction = new THREE.Vector3()
         this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
+
+        // angle To: finds shortest
+        if(shapeObjXZ.z < 0 ){
+            this.thetaNow *= -1;
+        }
+
         this.thetaDif = -.0001/this.radius + -.0001
     }
 
@@ -121,8 +117,9 @@ export class RandomShapeClass {
     makeCirclesArrays(maxPoints: number, radius:number, bottomFlag:boolean) : Array<any> {
         let numCircles = maxPoints - 1;
         // smaller number, taller asteroid, vice versa
-        let heightSquisher : number = 1
-        let yStep = radius / (heightSquisher*numCircles);
+//         let heightSquisher : number = 1
+//         let yStep = radius / (heightSquisher*numCircles);
+        let yStep = radius / numCircles
         let yIndex = 0;
         if(bottomFlag == true){
             yStep *= -1;
@@ -132,7 +129,6 @@ export class RandomShapeClass {
             let currCircle = this.makeCircle(i, maxPoints, radius, yIndex)
             circles[i] = currCircle
             yIndex += yStep;
-//             maxPoints -= 1;
 
         }
         return circles;
@@ -144,7 +140,6 @@ export class RandomShapeClass {
         let indxOne = 0;
         let indxTwo = 0;
         let indxBool = true;
-        //circle1 should be longer circle; circle2 should have one less entry
         const numPoints = circleOne.length;
         while(indxOne < numPoints-1){
             if(indxBool){
@@ -156,8 +151,6 @@ export class RandomShapeClass {
                 indxTwo++;
                 bufferArr = bufferArr.concat(circleTwo[indxTwo]);
                 bufferArr = bufferArr.concat(circleOne[indxOne]);
-//                 indxTwo++;
-//                 bufferArr = bufferArr.concat(circleTwo[indxTwo]);
                 bufferArr = bufferArr.concat(circleTwo[indxTwo-1]);
             }
             indxBool = !indxBool
@@ -173,28 +166,23 @@ export class RandomShapeClass {
         return bufferArr
     }
 
-    // todo combine these two functions, only difference is marked
     pushBottomCircles(circleOne: Array<any>, circleTwo: Array<any>, bufferArr: number[]) : number[] {
         let indxOne = 0;
         let indxTwo = 0;
         let indxBool = true;
-        //circle1 should be longer circle; circle2 should have one less entry
         const numPoints = circleOne.length;
+        // could shorten logic by breaking this part into separate function for both and merging
         while(indxOne < numPoints-1){
             if(indxBool){
-                // this is only difference, incrementing this index differently than above
                 indxOne++;
                 bufferArr = bufferArr.concat(circleOne[indxOne]);
                 bufferArr = bufferArr.concat(circleTwo[indxTwo]);
-//                 indxOne++;
-//                 bufferArr = bufferArr.concat(circleOne[indxOne]);
                 bufferArr = bufferArr.concat(circleOne[indxOne-1]);
             }else{
                 bufferArr = bufferArr.concat(circleTwo[indxTwo]);
                 bufferArr = bufferArr.concat(circleOne[indxOne]);
                 indxTwo++;
                 bufferArr = bufferArr.concat(circleTwo[indxTwo]);
-//                 bufferArr = bufferArr.concat(circleTwo[indxTwo-1]);
             }
             indxBool = !indxBool
         }
@@ -227,10 +215,6 @@ export class RandomShapeClass {
         return geometry
     }
 
-//     thetaToRad(deg:number): number {
-//         return (Math.PI*deg)/180.0
-//     }
-
 
     // https://threejs.org/docs/index.html#api/en/core/BufferGeometry.groups
     // https://dustinpfister.github.io/2021/04/22/threejs-buffer-geometry/
@@ -242,7 +226,6 @@ export class RandomShapeClass {
 
     updateBoxHelper() : void {
         this.boxHelper.update()
-//         this.boxGeo.setFromObject(this.boxHelper)
         delete this.boxGeo;
         this.boxGeo = null;
         this.boxGeo = this.makeBoxGeo()
@@ -276,14 +259,14 @@ export class RandomShapeClass {
     }
 
     setAsteroidDirection() {
-        let backupY = this.shapeObj.position.y
+//         let backupY = this.shapeObj.position.y
         this.thetaNow += this.thetaDif
-//         this.direction.set(-this.worldRadius*Math.sin(this.thetaNow), 0, this.worldRadius*Math.cos(this.thetaNow)).multiplyScalar(.5)
-        this.direction.set(this.worldRadius * Math.cos(this.thetaNow), 0, (this.worldRadius*.9)*Math.sin(this.thetaNow))
-//         this.shapeObj.position.add(this.direction)
+        // vector position one theta increment up
+        this.direction.set(this.worldRadius * Math.cos(this.thetaNow), this.shapeObj.position.y, (this.worldRadius*.9)*Math.sin(this.thetaNow))
+        // find difference between new position and current position; direction vector
         this.direction.add(new THREE.Vector3().copy(this.shapeObj.position).multiplyScalar(-1))
         this.shapeObj.position.add(this.direction)
-        this.shapeObj.position.setComponent(1, backupY)
+//         this.shapeObj.position.setComponent(1, backupY)
         this.updateRotationHelper(this.direction)
     }
 

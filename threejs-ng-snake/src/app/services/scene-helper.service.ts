@@ -41,8 +41,8 @@ export class SceneHelperService {
         {
             const color = new THREE.Color('rgb(54,52,70)')
             const near = 1;
-//             const far = 15;
-            const far = 12;
+            const far = 15;
+//             const far = 12;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }
