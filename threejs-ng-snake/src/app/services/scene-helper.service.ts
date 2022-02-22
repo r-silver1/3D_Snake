@@ -41,17 +41,18 @@ export class SceneHelperService {
         {
             const color = new THREE.Color('rgb(54,52,70)')
             const near = 1;
-            const far = 15;
-//             const far = 12;
+//             const far = 15;
+            const far = 12;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-        camera.position.z = 7;
+//         camera.position.z = 7;
+        camera.position.z = 6.6;
         camera.position.x = 0;
-        camera.position.y = 1;
+        camera.position.y = 1.5;
         scene.add(camera);
     }
 
