@@ -52,7 +52,7 @@ export class SceneHelperService {
 //         camera.position.z = 7;
         camera.position.z = 6.6;
         camera.position.x = 0;
-        camera.position.y = 1.5;
+        camera.position.y = 1.2;
         scene.add(camera);
     }
 

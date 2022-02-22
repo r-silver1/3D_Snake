@@ -8,6 +8,7 @@ export class RandomShapeClass {
     private radius: number;
     public position: number[];
     public worldRadius: number;
+
     public direction: THREE.Vector3;
     public thetaNow: number;
     public thetaDif: number;
@@ -22,6 +23,8 @@ export class RandomShapeClass {
     public boxHelper: any;
     public boxGeo: any;
     public conflictHit: boolean;
+
+    public pushDir = new THREE.Vector3(-2, 1, 2)
 
 
     // static members
@@ -54,6 +57,7 @@ export class RandomShapeClass {
 
             this.initDirectionTheta()
 
+
             // conflictHit: used to determine box color, red or green
             this.conflictHit = false;
 
@@ -69,6 +73,7 @@ export class RandomShapeClass {
         let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
         shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
         this.worldRadius = shapeObjXZ.length()
+
         this.direction = new THREE.Vector3()
         this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
 
@@ -77,7 +82,18 @@ export class RandomShapeClass {
             this.thetaNow *= -1;
         }
 
-        this.thetaDif = -.0001/this.radius + -.0001
+        this.thetaDif = -.0001/this.radius + -.001
+    }
+
+    updateDirectionTheta(){
+        let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
+        shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
+        this.worldRadius = shapeObjXZ.length()
+        this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
+        // angle To: finds shortest
+        if(shapeObjXZ.z < 0 ){
+            this.thetaNow *= -1;
+        }
     }
 
 
@@ -263,11 +279,25 @@ export class RandomShapeClass {
 
     setAsteroidDirection() {
 //         let backupY = this.shapeObj.position.y
-        this.thetaNow += this.thetaDif
+//         this.thetaNow += this.thetaDif
+//         this.thetaNow %= (2*Math.PI)
+
+//         this.worldRadius = this.shapeObj.position.length()
         // vector position one theta increment up
+        this.thetaNow += this.thetaDif
         this.direction.set(this.worldRadius * Math.cos(this.thetaNow), this.shapeObj.position.y, (this.worldRadius*.9)*Math.sin(this.thetaNow))
-        // find difference between new position and current position; direction vector
+//         // find difference between new position and current position; direction vector
         this.direction.add(new THREE.Vector3().copy(this.shapeObj.position).multiplyScalar(-1))
+
+//         this.updateDirectionTheta()
+// //         this.direction.set(-this.worldRadius*Math.sin(this.thetaNow), 0, this.worldRadius*Math.cos(this.thetaNow)).normalize().multiplyScalar(-.001/this.radius)
+//         this.direction.set(-this.worldRadius*Math.sin(this.thetaNow), 0, this.worldRadius*Math.cos(this.thetaNow))
+        if(this.pushDir.length() > .005){
+            let newPushVec = new THREE.Vector3().copy(this.pushDir).multiplyScalar(.1)
+            this.direction.add(newPushVec)
+            this.pushDir.add(newPushVec.multiplyScalar(-1))
+        }
+
         this.shapeObj.position.add(this.direction)
 //         this.shapeObj.position.setComponent(1, backupY)
         this.updateRotationHelper(this.direction)
@@ -276,7 +306,8 @@ export class RandomShapeClass {
 
     initRotationHelper() {
         this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
-        const arrowLen = .5;
+//         const arrowLen = .5;
+        const arrowLen = this.radius * 2
         const arrowCol = new THREE.Color('rgb(200, 0, 40)');
         const arrowPos = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
         this.rotationHelper = new THREE.ArrowHelper(this.shapeObj.up, arrowPos, arrowLen, arrowCol)
@@ -293,7 +324,8 @@ export class RandomShapeClass {
 
     initDirectionHelper() {
         this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
-        const arrowLen = .5;
+//         const arrowLen = .5;
+        const arrowLen = this.radius*2
         const arrowCol = new THREE.Color('rgb(0, 200, 40)');
         const arrowPos = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
         this.directionHelper = new THREE.ArrowHelper(this.direction, arrowPos, arrowLen, arrowCol)
@@ -306,6 +338,22 @@ export class RandomShapeClass {
         this.directionHelper.setDirection(dirCopy)
         this.directionHelper.position.add(transVec)
     }
+
+    setWorldRadius(newRad: number){
+        this.worldRadius = newRad
+    }
+
+    getWorldRadius() {
+        return this.worldRadius
+    }
+
+    setPushDir(numList: number[]) {
+        this.pushDir.x = numList[0]
+        this.pushDir.y = numList[1]
+        this.pushDir.z = numList[2]
+    }
+
+
 
 
 

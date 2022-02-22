@@ -89,7 +89,7 @@ export class ObjBuilderService {
 
     public generatePosition(max_radius:number): number[] {
         // todo make this based on distance to camera not size of radius
-        let min_bound = max_radius*20
+        let min_bound = max_radius*17
         let horzAngle = THREE.MathUtils.degToRad(Math.random()*360.0)
         // new: constrain vertical angle to make an asteroid "belt" effect
         let vertAngle = THREE.MathUtils.degToRad(Math.random()*30)

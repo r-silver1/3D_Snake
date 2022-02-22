@@ -47,6 +47,9 @@ export class CanvasCompComponent implements OnInit {
     //fps helper
     public stats: any;
 
+    // todo this just test helper for movement 
+    public pushDirVec: THREE.Vector3 = new THREE.Vector3(-4, 1, 4)
+
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
                 private sceneService: SceneHelperService,
@@ -120,6 +123,14 @@ export class CanvasCompComponent implements OnInit {
         // main logic asteroids
         // todo move this to obj service, use object methods
         const upVec = new THREE.Vector3(1, 0, 0);
+
+        // todo this just test helper for movement
+        let addBool = false;
+        if(elapsed >= 5000 && elapsed % 3000 == 0){
+            addBool = true;
+            this.pushDirVec.multiplyScalar(-1)
+        }
+
         this.shapesArray.forEach((asteroid:any, index:any) => {
 //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
             let tempPos = asteroid.position;
@@ -139,6 +150,15 @@ export class CanvasCompComponent implements OnInit {
             asteroid.updateBoxHelper()
 
             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
+
+            // todo this just test helper for movement
+            if(addBool == true){
+                asteroid.setPushDir([this.pushDirVec.x, this.pushDirVec.y, this.pushDirVec.z])
+                console.log(asteroid.dirTest)
+
+            }
+
+
 
         })
         this.render_all()
