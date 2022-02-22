@@ -135,9 +135,9 @@ export class CanvasCompComponent implements OnInit {
 
             // set asteroid direction, also update rotation helper if necessary
             asteroid.setAsteroidDirection()
-
             // update box helper, or box helper won't change in size with rotation etc
             asteroid.updateBoxHelper()
+
             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
 
         })

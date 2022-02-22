@@ -12,7 +12,10 @@ export class RandomShapeClass {
     public thetaNow: number;
     public thetaDif: number;
 
+    public directionHelper: any;
+
     public rotationHelper: any;
+
     public geometry: THREE.BufferGeometry;
     private maxPoints: number;
     public shapeObj: THREE.Mesh;
@@ -268,6 +271,7 @@ export class RandomShapeClass {
         this.shapeObj.position.add(this.direction)
 //         this.shapeObj.position.setComponent(1, backupY)
         this.updateRotationHelper(this.direction)
+        this.updateDirectionHelper(this.direction)
     }
 
     initRotationHelper() {
@@ -285,6 +289,22 @@ export class RandomShapeClass {
         this.rotationHelper.setRotationFromEuler(this.shapeObj.rotation)
         this.rotationHelper.position.add(transVec)
         this.rotationHelper.position.setComponent(1, this.shapeObj.position.y)
+    }
+
+    initDirectionHelper() {
+        this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
+        const arrowLen = .5;
+        const arrowCol = new THREE.Color('rgb(0, 200, 40)');
+        const arrowPos = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
+        this.directionHelper = new THREE.ArrowHelper(this.direction, arrowPos, arrowLen, arrowCol)
+        return this.directionHelper;
+    }
+
+    updateDirectionHelper(transVec: THREE.Vector3) {
+        const dirCopy = new THREE.Vector3()
+        dirCopy.copy(this.direction).normalize()
+        this.directionHelper.setDirection(dirCopy)
+        this.directionHelper.position.add(transVec)
     }
 
 
