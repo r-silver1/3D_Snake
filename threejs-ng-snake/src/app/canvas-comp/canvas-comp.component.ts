@@ -47,8 +47,8 @@ export class CanvasCompComponent implements OnInit {
     //fps helper
     public stats: any;
 
-    // todo this just test helper for movement 
-    public pushDirVec: THREE.Vector3 = new THREE.Vector3(-4, 1, 4)
+    // todo this just test helper for movement
+    public pushDirVec: THREE.Vector3 = new THREE.Vector3(1, 1, 1)
 
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
@@ -126,7 +126,7 @@ export class CanvasCompComponent implements OnInit {
 
         // todo this just test helper for movement
         let addBool = false;
-        if(elapsed >= 5000 && elapsed % 3000 == 0){
+        if(elapsed >= 2000 && elapsed % 2000 == 0){
             addBool = true;
             this.pushDirVec.multiplyScalar(-1)
         }
@@ -153,8 +153,8 @@ export class CanvasCompComponent implements OnInit {
 
             // todo this just test helper for movement
             if(addBool == true){
-                asteroid.setPushDir([this.pushDirVec.x, this.pushDirVec.y, this.pushDirVec.z])
-                console.log(asteroid.dirTest)
+                asteroid.setPushDir([this.pushDirVec.x*Math.random(), this.pushDirVec.y*Math.random(), this.pushDirVec.z*Math.random()])
+//                 console.log(asteroid.dirTest)
 
             }
 
