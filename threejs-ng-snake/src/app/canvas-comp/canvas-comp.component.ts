@@ -126,7 +126,7 @@ export class CanvasCompComponent implements OnInit {
 
         // todo this just test helper for movement
         let addBool = false;
-        if(elapsed >= 2000 && elapsed % 2000 == 0){
+        if(elapsed >= 1 && elapsed % 4000 == 0){
             addBool = true;
             this.pushDirVec.multiplyScalar(-1)
         }

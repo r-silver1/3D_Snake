@@ -294,7 +294,7 @@ export class RandomShapeClass {
 // //         this.direction.set(-this.worldRadius*Math.sin(this.thetaNow), 0, this.worldRadius*Math.cos(this.thetaNow)).normalize().multiplyScalar(-.001/this.radius)
 //         this.direction.set(-this.worldRadius*Math.sin(this.thetaNow), 0, this.worldRadius*Math.cos(this.thetaNow))
         if(this.pushDir.length() > .01){
-            let newPushVec = new THREE.Vector3().copy(this.pushDir).multiplyScalar(.05)
+            let newPushVec = new THREE.Vector3().copy(this.pushDir).multiplyScalar(.01)
             this.direction.add(newPushVec)
             this.pushDir.add(newPushVec.multiplyScalar(-1))
         }
