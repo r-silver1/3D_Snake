@@ -329,10 +329,6 @@ export class RandomShapeClass {
             let newPushVec = new THREE.Vector3().copy(this.pushDir).multiplyScalar(.01)
             this.direction.add(newPushVec)
             this.pushDir.add(newPushVec.multiplyScalar(-1))
-//             let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
-//             shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
-// //             this.worldRadius = shapeObjXZ.length()
-//             this.setWorldRadius(shapeObjXZ.length())
         }
 
         this.shapeObj.position.add(this.direction)
