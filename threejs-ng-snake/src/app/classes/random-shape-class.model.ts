@@ -284,16 +284,24 @@ export class RandomShapeClass {
 
     updatePushOnBump(other:RandomShapeClass) {
 //         console.log(other.getDirection())
-        let otherTemp = new THREE.Vector3().copy(other.getDirection())
+//         let otherTemp = new THREE.Vector3().copy(other.getDirection())
+        if(this.pushDir.length() < 1){
 //         this.pushDir.add(other.getDirection().multiplyScalar(15))
-        this.pushDir.add(otherTemp.normalize().multiplyScalar(1))
+            let otherTemp = new THREE.Vector3(this.shapeObj.position.x - other.shapeObj.position.x,
+                                              this.shapeObj.position.y - other.shapeObj.position.y,
+                                              this.shapeObj.position.z - other.shapeObj.position.z,
+                                              )
+//             this.pushDir.add(otherTemp.normalize().multiplyScalar(1))
+            this.pushDir.add(otherTemp.multiplyScalar(1))
+            otherTemp.multiplyScalar(-1)
+            other.pushDir.add(otherTemp)
+        }
 //         other.setPushDir([this.direction.x*6, this.direction.y*6, this.direction.z*6])
 //         this.setPushDir([otherTemp.x*6, otherTemp.y*6, otherTemp.z*6])
     }
 
     checkOtherConflict(other:RandomShapeClass):boolean{
         let boxCheck = this.boxGeo.intersectsBox(other.boxGeo)
-
         // todo movement push: make other function not called here?
         if(boxCheck == true){
             this.updatePushOnBump(other)
@@ -321,6 +329,10 @@ export class RandomShapeClass {
             let newPushVec = new THREE.Vector3().copy(this.pushDir).multiplyScalar(.01)
             this.direction.add(newPushVec)
             this.pushDir.add(newPushVec.multiplyScalar(-1))
+//             let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
+//             shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
+// //             this.worldRadius = shapeObjXZ.length()
+//             this.setWorldRadius(shapeObjXZ.length())
         }
 
         this.shapeObj.position.add(this.direction)

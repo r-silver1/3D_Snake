@@ -42,7 +42,7 @@ export class CanvasCompComponent implements OnInit {
     public addArrow: any;
 
     // helper bool box helpers render material
-    private boxHelpers: boolean = true;
+    private boxHelpers: boolean = false;
 
     //fps helper
     public stats: any;
