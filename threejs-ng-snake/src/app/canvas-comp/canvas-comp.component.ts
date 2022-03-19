@@ -42,7 +42,7 @@ export class CanvasCompComponent implements OnInit {
     public addArrow: any;
 
     // helper bool box helpers render material
-    private boxHelpers: boolean = false;
+    private boxHelpers: boolean = true;
 
     //fps helper
     public stats: any;
@@ -138,11 +138,12 @@ export class CanvasCompComponent implements OnInit {
             let elapsed_modifier = (timestamp-this.last) *.00009
             let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
 
+            // todo should make local rotation an internal asteroid function if going to change on collision
             asteroid.shapeObj.rotateY(rotation)
             asteroid.shapeObj.rotateZ(rotation/5)
 
-            const transX = (index % 10)*.001 + .01
-            const transZ = (index % 10)*.001 + .01
+//             const transX = (index % 10)*.001 + .01
+//             const transZ = (index % 10)*.001 + .01
 
             // set asteroid direction, also update rotation helper if necessary
             asteroid.setAsteroidDirection()
@@ -152,11 +153,11 @@ export class CanvasCompComponent implements OnInit {
             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
 
             // todo this just test helper for movement
-            if(addBool == true){
-                asteroid.setPushDir([this.pushDirVec.x*Math.random(), this.pushDirVec.y*Math.random(), this.pushDirVec.z*Math.random()])
-//                 console.log(asteroid.dirTest)
-
-            }
+//             if(addBool == true){
+//                 asteroid.setPushDir([this.pushDirVec.x*Math.random(), this.pushDirVec.y*Math.random(), this.pushDirVec.z*Math.random()])
+// //                 console.log(asteroid.dirTest)
+//
+//             }
 
 
 

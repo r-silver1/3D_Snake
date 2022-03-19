@@ -25,8 +25,8 @@ export class RandomShapeClass {
     public conflictHit: boolean;
 
 //     public pushDir = new THREE.Vector3(-2, 1, 2)
-    public pushDir = new THREE.Vector3(Math.random(), Math.random(), Math.random())
-
+//     public pushDir = new THREE.Vector3(Math.random(), Math.random(), Math.random())
+    public pushDir = new THREE.Vector3(0,0,0)
 
     // static members
     static blueColor: THREE.Color = new THREE.Color('rgb(0,120,255)')
@@ -84,6 +84,10 @@ export class RandomShapeClass {
         }
 
         this.thetaDif = -.0001/this.radius + -.001
+    }
+
+    getDirection() : THREE.Vector3 {
+        return this.direction
     }
 
     updateDirectionTheta(){
@@ -246,14 +250,19 @@ export class RandomShapeClass {
 
     updateBoxHelper() : void {
         this.boxHelper.update()
-        delete this.boxGeo;
-        this.boxGeo = null;
-        this.boxGeo = this.makeBoxGeo()
+//         delete this.boxGeo;
+//         this.boxGeo = null;
+//         this.boxGeo = this.makeBoxGeo()
+//             this.boxGeo.setFromObject(this.boxHelper)
+        this.boxGeo.setFromObject(this.shapeObj, true)
+//         this.boxGeo.position = this.shapeObj.position;
+//         this.boxGeo.rotation = this.shapeObj.rotation;
     }
 
     makeBoxGeo() : THREE.Box3 {
         let tempBox = new THREE.Box3();
-        tempBox.setFromObject(this.boxHelper);
+//         tempBox.setFromObject(this.boxHelper);
+        tempBox.setFromObject(this.shapeObj);
         return tempBox
     }
 
@@ -273,8 +282,23 @@ export class RandomShapeClass {
         return new THREE.BoxHelper(this.shapeObj, colChoice)
     }
 
+    updatePushOnBump(other:RandomShapeClass) {
+//         console.log(other.getDirection())
+        let otherTemp = new THREE.Vector3().copy(other.getDirection())
+//         this.pushDir.add(other.getDirection().multiplyScalar(15))
+        this.pushDir.add(otherTemp.normalize().multiplyScalar(1))
+//         other.setPushDir([this.direction.x*6, this.direction.y*6, this.direction.z*6])
+//         this.setPushDir([otherTemp.x*6, otherTemp.y*6, otherTemp.z*6])
+    }
+
     checkOtherConflict(other:RandomShapeClass):boolean{
         let boxCheck = this.boxGeo.intersectsBox(other.boxGeo)
+
+        // todo movement push: make other function not called here?
+        if(boxCheck == true){
+            this.updatePushOnBump(other)
+//             other.updatePushOnBump(this)
+        }
         return boxCheck
     }
 
@@ -352,6 +376,10 @@ export class RandomShapeClass {
         this.pushDir.x = numList[0]
         this.pushDir.y = numList[1]
         this.pushDir.z = numList[2]
+    }
+
+    getPushDir() : THREE.Vector3 {
+        return this.pushDir
     }
 
 
