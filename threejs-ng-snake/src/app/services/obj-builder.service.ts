@@ -10,7 +10,7 @@ export class ObjBuilderService {
     constructor() { }
 
     // todo here take boxhelpers as param
-    public initBoxes(shapesArray: any, scene:THREE.Scene, boxHelpers:boolean): void {
+    public initBoxes(shapesArray: any, scene:THREE.Scene, boxHelpers:boolean, directionHelpers:boolean): void {
         // min_radius: minimum size asteroids to be generated
         const min_radius = .06
         // max_radius: maximum radius for an asteroid
@@ -18,7 +18,7 @@ export class ObjBuilderService {
         const max_radius = .28
         // max_val: max number of asteroids to generate; min val 1
 //         const max_val = 150;
-        const max_val = 150;
+        const max_val = 300;
 
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
@@ -83,8 +83,11 @@ export class ObjBuilderService {
 
                 conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene, boxHelpers)
             }
-            scene.add(newShape.initRotationHelper());
-            scene.add(newShape.initDirectionHelper());
+            // todo change this with directionBool
+            if(directionHelpers){
+                scene.add(newShape.initRotationHelper());
+                scene.add(newShape.initDirectionHelper());
+            }
 
         }
     }

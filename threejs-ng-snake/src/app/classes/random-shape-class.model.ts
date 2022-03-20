@@ -23,6 +23,8 @@ export class RandomShapeClass {
     public boxHelper: any;
     public boxGeo: any;
     public conflictHit: boolean;
+    // helper for displaying direction or no
+    public directionBool: boolean;
 
 //     public pushDir = new THREE.Vector3(-2, 1, 2)
 //     public pushDir = new THREE.Vector3(Math.random(), Math.random(), Math.random())
@@ -57,6 +59,7 @@ export class RandomShapeClass {
             this.thetaDif = 0;
 
             this.initDirectionTheta()
+            this.directionBool = false;
 
 
             // conflictHit: used to determine box color, red or green
@@ -333,11 +336,15 @@ export class RandomShapeClass {
 
         this.shapeObj.position.add(this.direction)
 //         this.shapeObj.position.setComponent(1, backupY)
-        this.updateRotationHelper(this.direction)
-        this.updateDirectionHelper(this.direction)
+        // todo change tis with directionBool
+        if(this.directionBool == true){
+            this.updateRotationHelper(this.direction)
+            this.updateDirectionHelper(this.direction)
+        }
     }
 
     initRotationHelper() {
+        this.directionBool = true;
         this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
 //         const arrowLen = .5;
         const arrowLen = this.radius * 2
@@ -356,6 +363,7 @@ export class RandomShapeClass {
     }
 
     initDirectionHelper() {
+        this.directionBool = true;
         this.position = [this.shapeObj.position.x, this.shapeObj.position.y, this.shapeObj.position.z]
 //         const arrowLen = .5;
         const arrowLen = this.radius*2

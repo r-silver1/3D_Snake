@@ -43,6 +43,8 @@ export class CanvasCompComponent implements OnInit {
 
     // helper bool box helpers render material
     private boxHelpers: boolean = false;
+    // helper bool for rotation and direction helper arrows
+    private directionHelpers: boolean = false;
 
     //fps helper
     public stats: any;
@@ -223,7 +225,8 @@ export class CanvasCompComponent implements OnInit {
         // main logic
         this.window_set_size();
         this.window_size_listener();
-        this.builderService.initBoxes(this.shapesArray, this.scene, this.boxHelpers)
+//         this.builderService.initBoxes(this.shapesArray, this.scene, this.boxHelpers)
+        this.builderService.initBoxes(this.shapesArray, this.scene, this.boxHelpers, this.directionHelpers)
 
         // arrow helper logic
         if(this.cameraHelpers == true){
