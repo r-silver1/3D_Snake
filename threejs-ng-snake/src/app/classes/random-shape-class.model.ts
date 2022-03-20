@@ -288,17 +288,17 @@ export class RandomShapeClass {
     updatePushOnBump(other:RandomShapeClass) {
 //         console.log(other.getDirection())
 //         let otherTemp = new THREE.Vector3().copy(other.getDirection())
-        if(this.pushDir.length() < 1){
+//         if(this.pushDir.length() < 10){
 //         this.pushDir.add(other.getDirection().multiplyScalar(15))
-            let otherTemp = new THREE.Vector3(this.shapeObj.position.x - other.shapeObj.position.x,
-                                              this.shapeObj.position.y - other.shapeObj.position.y,
-                                              this.shapeObj.position.z - other.shapeObj.position.z,
-                                              )
+        let otherTemp = new THREE.Vector3(this.shapeObj.position.x - other.shapeObj.position.x,
+                                          this.shapeObj.position.y - other.shapeObj.position.y,
+                                          this.shapeObj.position.z - other.shapeObj.position.z,
+                                          )
 //             this.pushDir.add(otherTemp.normalize().multiplyScalar(1))
-            this.pushDir.add(otherTemp.multiplyScalar(1))
-            otherTemp.multiplyScalar(-1)
-            other.pushDir.add(otherTemp)
-        }
+        this.pushDir.add(otherTemp.multiplyScalar(1))
+        otherTemp.multiplyScalar(-1)
+        other.pushDir.add(otherTemp)
+//         }
 //         other.setPushDir([this.direction.x*6, this.direction.y*6, this.direction.z*6])
 //         this.setPushDir([otherTemp.x*6, otherTemp.y*6, otherTemp.z*6])
     }
