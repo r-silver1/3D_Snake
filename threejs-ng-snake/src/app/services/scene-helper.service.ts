@@ -10,6 +10,48 @@ import * as THREE from 'three';
 export class SceneHelperService {
 
     constructor() { }
+
+    private generateStarPosition(min_rad:number): THREE.Vector3 {
+//         let horzAngle = THREE.MathUtils.degToRad(Math.random()*360.0)
+//         let vertAngle = THREE.MathUtils.degToRad(Math.random()*360.0)
+        let vertAngle = THREE.MathUtils.degToRad(THREE.MathUtils.mapLinear(Math.random(), 0, 1, 0, 360.0))
+        let horzAngle = THREE.MathUtils.degToRad(THREE.MathUtils.mapLinear(Math.random(), 0, 1, 0, 360.0))
+        let ranVec = new THREE.Vector3(Math.cos(vertAngle)*Math.cos(horzAngle), Math.sin(vertAngle), Math.sin(horzAngle)*Math.cos(vertAngle))
+//         console.log(ranVec.x, ranVec.y, ranVec.z)
+//         console.log(min_rad)
+        ranVec.normalize()
+        ranVec.setLength(min_rad+Math.random()*min_rad)
+//         ranVec.setLength(min_rad)
+
+        return ranVec
+    }
+
+    public initStars(scene:THREE.Scene, camera_position:THREE.Vector3) : void {
+        const verts = []
+        const sizes = []
+        const num_stars = 10000
+        const min_pos_radius = camera_position.length()
+        const starSprite = new THREE.TextureLoader().load('assets/disc.png');
+
+        const min_star_size = .05
+        const max_star_size = .5
+        for(let i = 0; i<num_stars; i++){
+            let temp_vec = this.generateStarPosition(min_pos_radius)
+            verts.push(temp_vec.x, temp_vec.y, temp_vec.z)
+            sizes.push(THREE.MathUtils.mapLinear(Math.random(), 0, 1, min_star_size, max_star_size))
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+//         geo.setAttribute('size', new THREE.Float32BufferAttribute( [.2], 1))
+        geo.setAttribute('size', new THREE.Float32BufferAttribute( sizes, 1))
+//         const material = new THREE.PointsMaterial({color: new THREE.Color('rgb(255, 255, 255)')})
+        const material = new THREE.PointsMaterial({size: .1, map:starSprite, transparent: true, alphaTest: .2})
+        const points = new THREE.Points(geo, material)
+        scene.add(points)
+
+
+    }
+
     public initLights(scene:THREE.Scene) : void {
         // light
         {
@@ -41,8 +83,8 @@ export class SceneHelperService {
         {
             const color = new THREE.Color('rgb(54,52,70)')
             const near = 1;
-//             const far = 15;
-            const far = 12;
+            const far = 20;
+//             const far = 12;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }

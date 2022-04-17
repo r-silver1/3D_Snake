@@ -73,6 +73,7 @@ export class CanvasCompComponent implements OnInit {
         this.start = -1;
         this.sceneService.initLights(this.scene)
         this.sceneService.initFog(this.scene)
+
         //for font
         this.fontService.addFont("Hello\nWorld", this.scene)
 
@@ -220,6 +221,7 @@ export class CanvasCompComponent implements OnInit {
         // set pixel ratio not recommended
 //         this.renderer.setPixelRatio(window.devicePixelRatio*1.25)
         this.sceneService.initCameras(this.scene, this.camera)
+        this.sceneService.initStars(this.scene, this.camera.position)
         this.controls = this.sceneService.initControls(this.scene, this.camera)
 
         // main logic
