@@ -29,9 +29,11 @@ export class CanvasCompComponent implements OnInit {
     public controls: any;
     public wordGet: any;
 
+    // THREE.AxesHelper
+    public axesHelper: any;
+    // THREE.GridHelper
+    public gridHelper: any;
 
-    public axesHelper: THREE.AxesHelper;
-    public gridHelper: THREE.GridHelper;
     public clock: THREE.Clock;
 
 //     // todo here all arrows: just helpers
@@ -45,6 +47,11 @@ export class CanvasCompComponent implements OnInit {
     private boxHelpers: boolean = false;
     // helper bool for rotation and direction helper arrows
     private directionHelpers: boolean = false;
+    //
+    private axesHelperBool: boolean = false;
+    private gridHelperBool: boolean = false;
+    //
+    private lightDirHelper: boolean = false;
 
     //fps helper
     public stats: any;
@@ -58,20 +65,28 @@ export class CanvasCompComponent implements OnInit {
                 private fontService: FontBuilderService
                 ) {
         this.scene = new THREE.Scene();
-        // todo new logic axes and grid; could be modularized
-//         https://danni-three.blogspot.com/2013/09/threejs-helpers.html
+
         const axesSize = 10
-        this.axesHelper = new THREE.AxesHelper(axesSize)
         const centerColor = new THREE.Color('rgb(0, 0, 255)')
-        const zColor = new THREE.Color('rgb(0, 50, 100)')
-        this.axesHelper.setColors(centerColor, zColor, centerColor)
-        this.gridHelper = new THREE.GridHelper(axesSize, axesSize, centerColor);
-        this.scene.add(this.axesHelper)
-        this.scene.add(this.gridHelper)
+        if(this.axesHelperBool == true){
+        // todo new logic axes and grid; could be modularized
+        // https://danni-three.blogspot.com/2013/09/threejs-helpers.html
+            this.axesHelper = new THREE.AxesHelper(axesSize)
+            const zColor = new THREE.Color('rgb(0, 50, 100)')
+            this.axesHelper.setColors(centerColor, zColor, centerColor)
+            this.scene.add(this.axesHelper)
+        }
+
+        if(this.gridHelperBool == true){
+            this.gridHelper = new THREE.GridHelper(axesSize, axesSize, centerColor);
+            this.scene.add(this.gridHelper)
+        }
+
+
 
         this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
         this.start = -1;
-        this.sceneService.initLights(this.scene)
+        this.sceneService.initLights(this.scene, this.lightDirHelper)
         this.sceneService.initFog(this.scene)
 
         //for font

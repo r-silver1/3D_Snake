@@ -12,17 +12,11 @@ export class SceneHelperService {
     constructor() { }
 
     private generateStarPosition(min_rad:number): THREE.Vector3 {
-//         let horzAngle = THREE.MathUtils.degToRad(Math.random()*360.0)
-//         let vertAngle = THREE.MathUtils.degToRad(Math.random()*360.0)
         let vertAngle = THREE.MathUtils.degToRad(THREE.MathUtils.mapLinear(Math.random(), 0, 1, 0, 360.0))
         let horzAngle = THREE.MathUtils.degToRad(THREE.MathUtils.mapLinear(Math.random(), 0, 1, 0, 360.0))
         let ranVec = new THREE.Vector3(Math.cos(vertAngle)*Math.cos(horzAngle), Math.sin(vertAngle), Math.sin(horzAngle)*Math.cos(vertAngle))
-//         console.log(ranVec.x, ranVec.y, ranVec.z)
-//         console.log(min_rad)
         ranVec.normalize()
         ranVec.setLength(min_rad+Math.random()*min_rad)
-//         ranVec.setLength(min_rad)
-
         return ranVec
     }
 
@@ -33,12 +27,16 @@ export class SceneHelperService {
         const min_pos_radius = camera_position.length()
         const starSprite = new THREE.TextureLoader().load('assets/disc.png');
 
-        const min_star_size = .05
-        const max_star_size = .5
+        const min_star_size = .01
+        const max_star_size = .1
         for(let i = 0; i<num_stars; i++){
             let temp_vec = this.generateStarPosition(min_pos_radius)
             verts.push(temp_vec.x, temp_vec.y, temp_vec.z)
-            sizes.push(THREE.MathUtils.mapLinear(Math.random(), 0, 1, min_star_size, max_star_size))
+            let star_size = THREE.MathUtils.mapLinear(Math.random(), 0, 1, min_star_size, max_star_size)
+            // modifier: goal: closer stars are smaller size
+            let temp_dist_modifier = (temp_vec.distanceTo(camera_position)/min_pos_radius)**2
+            sizes.push(star_size*temp_dist_modifier)
+//             sizes.push(star_size)
         }
         const geo = new THREE.BufferGeometry();
         geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
@@ -52,7 +50,7 @@ export class SceneHelperService {
 
     }
 
-    public initLights(scene:THREE.Scene) : void {
+    public initLights(scene:THREE.Scene, dirHelperBool:boolean) : void {
         // light
         {
             const colorAmb = new THREE.Color('rgb(247,255,246)');
@@ -72,8 +70,10 @@ export class SceneHelperService {
             lightDir.target.position.set(0, 0, 0);
             scene.add(lightDir);
             //           this.scene.add(lightDir);
-            const lightDirHelper = new THREE.DirectionalLightHelper(lightDir)
-            scene.add(lightDirHelper);
+            if(dirHelperBool == true){
+                const lightDirHelper = new THREE.DirectionalLightHelper(lightDir)
+                scene.add(lightDirHelper);
+            }
             //           this.scene.add(lightDirHelper);
         }
     }
@@ -83,7 +83,7 @@ export class SceneHelperService {
         {
             const color = new THREE.Color('rgb(54,52,70)')
             const near = 1;
-            const far = 20;
+            const far = 25;
 //             const far = 12;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
