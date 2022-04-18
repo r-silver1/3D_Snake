@@ -90,7 +90,8 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initFog(this.scene)
 
         //for font
-        this.fontService.addFont("Hello\nWorld", this.scene)
+//         this.fontService.addFont("Hello\nWorld", this.scene)
+        this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
 
         this.clock = new THREE.Clock()
 
