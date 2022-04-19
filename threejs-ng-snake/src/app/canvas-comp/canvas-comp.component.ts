@@ -115,7 +115,10 @@ export class CanvasCompComponent implements OnInit {
         const elapsed = timestamp - this.start;
         // https://threejs.org/examples/?q=Controls#misc_controls_fly
         const delta = this.clock.getDelta()
-        this.controls.update(delta)
+        let controlsTarget = this.controls.update(delta)
+        if(controlsTarget != undefined){
+            this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget)
+        }
         //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
         const textObj = this.scene.getObjectByName('wordName');
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
@@ -239,6 +242,7 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initCameras(this.scene, this.camera)
         this.sceneService.initStars(this.scene, this.camera.position)
         this.controls = this.sceneService.initControls(this.scene, this.camera)
+        this.sceneService.initReticuleSprite(this.scene, this.camera, this.controls)
 
         // main logic
         this.window_set_size();
