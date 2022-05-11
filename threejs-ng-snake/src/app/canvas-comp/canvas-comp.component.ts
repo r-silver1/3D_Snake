@@ -8,6 +8,8 @@ import { ObjBuilderService } from '../services/obj-builder.service'
 import { SceneHelperService } from '../services/scene-helper.service'
 import { FontBuilderService } from '../services/font-builder.service'
 
+import { Stats } from '../js/stats'
+
 @Component({
     selector: 'app-canvas-comp',
     templateUrl: './canvas-comp.component.html',
@@ -23,10 +25,15 @@ export class CanvasCompComponent implements OnInit {
     public camera: THREE.PerspectiveCamera;
     public renderer: any;
     public start: any;
+    public last: any;
     public controls: any;
     public wordGet: any;
-    public axesHelper: THREE.AxesHelper;
-    public gridHelper: THREE.GridHelper;
+
+    // THREE.AxesHelper
+    public axesHelper: any;
+    // THREE.GridHelper
+    public gridHelper: any;
+
     public clock: THREE.Clock;
 
 //     // todo here all arrows: just helpers
@@ -36,29 +43,55 @@ export class CanvasCompComponent implements OnInit {
     public oldArrow: any;
     public addArrow: any;
 
+    // helper bool box helpers render material
+    private boxHelpers: boolean = false;
+    // helper bool for rotation and direction helper arrows
+    private directionHelpers: boolean = false;
+    //
+    private axesHelperBool: boolean = false;
+    private gridHelperBool: boolean = false;
+    //
+    private lightDirHelper: boolean = false;
+
+    //fps helper
+    public stats: any;
+
+    // todo this just test helper for movement
+    public pushDirVec: THREE.Vector3 = new THREE.Vector3(1, 1, 1)
+
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
                 private sceneService: SceneHelperService,
                 private fontService: FontBuilderService
                 ) {
         this.scene = new THREE.Scene();
-        // todo new logic axes and grid; could be modularized
-//         https://danni-three.blogspot.com/2013/09/threejs-helpers.html
+
         const axesSize = 10
-        this.axesHelper = new THREE.AxesHelper(axesSize)
         const centerColor = new THREE.Color('rgb(0, 0, 255)')
-        const zColor = new THREE.Color('rgb(0, 50, 100)')
-        this.axesHelper.setColors(centerColor, zColor, centerColor)
-        this.gridHelper = new THREE.GridHelper(axesSize, axesSize, centerColor);
-        this.scene.add(this.axesHelper)
-        this.scene.add(this.gridHelper)
+        if(this.axesHelperBool == true){
+        // todo new logic axes and grid; could be modularized
+        // https://danni-three.blogspot.com/2013/09/threejs-helpers.html
+            this.axesHelper = new THREE.AxesHelper(axesSize)
+            const zColor = new THREE.Color('rgb(0, 50, 100)')
+            this.axesHelper.setColors(centerColor, zColor, centerColor)
+            this.scene.add(this.axesHelper)
+        }
+
+        if(this.gridHelperBool == true){
+            this.gridHelper = new THREE.GridHelper(axesSize, axesSize, centerColor);
+            this.scene.add(this.gridHelper)
+        }
+
+
 
         this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
         this.start = -1;
-        this.sceneService.initLights(this.scene)
+        this.sceneService.initLights(this.scene, this.lightDirHelper)
         this.sceneService.initFog(this.scene)
+
         //for font
-        this.fontService.addFont("Hello\nWorld", this.scene)
+//         this.fontService.addFont("Hello\nWorld", this.scene)
+        this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
 
         this.clock = new THREE.Clock()
 
@@ -77,11 +110,15 @@ export class CanvasCompComponent implements OnInit {
         // note: controls target, useful
         if (this.start === -1){
             this.start = timestamp;
+            this.last = timestamp;
         }
         const elapsed = timestamp - this.start;
         // https://threejs.org/examples/?q=Controls#misc_controls_fly
         const delta = this.clock.getDelta()
-        this.controls.update(delta)
+        let controlsTarget = this.controls.update(delta)
+        if(controlsTarget != undefined){
+            this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget)
+        }
         //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
         const textObj = this.scene.getObjectByName('wordName');
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
@@ -107,25 +144,50 @@ export class CanvasCompComponent implements OnInit {
 
         // main logic asteroids
         // todo move this to obj service, use object methods
+        const upVec = new THREE.Vector3(1, 0, 0);
+
+        // todo this just test helper for movement
+        let addBool = false;
+        if(elapsed >= 1 && elapsed % 4000 == 0){
+            addBool = true;
+            this.pushDirVec.multiplyScalar(-1)
+        }
+
         this.shapesArray.forEach((asteroid:any, index:any) => {
 //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
-            // using rotateY or rotateX to rotate geometry, handles boxhelper more smoothly
-//             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
             let tempPos = asteroid.position;
             // todo make helper for translate
-            asteroid.geometry.translate(-tempPos[0], -tempPos[1], -tempPos[2])
-            let rotation = .01 + .02*((this.shapesArray.length-index)/this.shapesArray.length)
-            asteroid.geometry.rotateY(rotation)
-            asteroid.geometry.rotateZ(rotation/5)
-            asteroid.geometry.translate(tempPos[0], tempPos[1], tempPos[2])
-            asteroid.shapeObj.rotateY(rotation/10)
+            let elapsed_modifier = (timestamp-this.last) *.00009
+            let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
+
+            // todo should make local rotation an internal asteroid function if going to change on collision
+            asteroid.shapeObj.rotateY(rotation)
+            asteroid.shapeObj.rotateZ(rotation/5)
+
+//             const transX = (index % 10)*.001 + .01
+//             const transZ = (index % 10)*.001 + .01
+
+            // set asteroid direction, also update rotation helper if necessary
+            asteroid.setAsteroidDirection()
             // update box helper, or box helper won't change in size with rotation etc
             asteroid.updateBoxHelper()
-            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene)
+
+            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
+
+            // todo this just test helper for movement
+//             if(addBool == true){
+//                 asteroid.setPushDir([this.pushDirVec.x*Math.random(), this.pushDirVec.y*Math.random(), this.pushDirVec.z*Math.random()])
+// //                 console.log(asteroid.dirTest)
+//
+//             }
+
+
 
         })
         this.render_all()
+        this.stats.update()
         requestAnimationFrame(this.animate);
+        this.last = timestamp
     }
 
 
@@ -162,6 +224,7 @@ export class CanvasCompComponent implements OnInit {
     }
 
 
+
     ngOnInit(): void {
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
@@ -177,14 +240,15 @@ export class CanvasCompComponent implements OnInit {
         // set pixel ratio not recommended
 //         this.renderer.setPixelRatio(window.devicePixelRatio*1.25)
         this.sceneService.initCameras(this.scene, this.camera)
+        this.sceneService.initStars(this.scene, this.camera.position)
         this.controls = this.sceneService.initControls(this.scene, this.camera)
-
-
+        this.sceneService.initReticuleSprite(this.scene, this.camera, this.controls)
 
         // main logic
         this.window_set_size();
         this.window_size_listener();
-        this.builderService.initBoxes(this.shapesArray, this.scene)
+//         this.builderService.initBoxes(this.shapesArray, this.scene, this.boxHelpers)
+        this.builderService.initBoxes(this.shapesArray, this.scene, this.boxHelpers, this.directionHelpers)
 
         // arrow helper logic
         if(this.cameraHelpers == true){
@@ -194,6 +258,19 @@ export class CanvasCompComponent implements OnInit {
             this.posArrow = pA;
             this.oldArrow = oA;
             this.addArrow = aA;
+        }
+
+        //fps helper logic
+        // https://subscription.packtpub.com/book/web-development/9781783981182/1/ch01lvl1sec15/determining-the-frame-rate-for-your-scene
+        {
+            // @ts-ignore
+            this.stats = new Stats();
+            this.stats.setMode(0);
+            this.stats.domElement.style.position = 'absolute';
+            this.stats.domElement.style.left = '5vh';
+            this.stats.domElement.style.top = "80vh";
+            document.body.appendChild( this.stats.domElement );
+
         }
 
         requestAnimationFrame(this.animate);

@@ -211,6 +211,8 @@ class TurretControls {
 				    this.targetCopy.copy(targetPosition)
 				}
 
+				return targetPosition;
+
 
 			};
 

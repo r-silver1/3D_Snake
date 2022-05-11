@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  # https://github.com/docker/awesome-compose/blob/master/nginx-flask-mongo/docker-compose.yaml
+  nginx:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/tmp/nginx.conf
+    command: /bin/bash -c "envsubst < /tmp/nginx.conf > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    ports:
+      - "8081:80"
+    depends_on:
+      - app
+
+  app:
+#    depends_on:
+#      - nginx
+    restart: unless-stopped
+    build: .
+    image: backend-word-flask
+    container_name: threejs-flask-test
+#    ports:
+#      - "5000:5000"
+    volumes:
+      - ./tables:/asteroids/tables
+
+volumes:
+  tables:

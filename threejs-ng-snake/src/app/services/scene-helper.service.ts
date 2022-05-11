@@ -10,7 +10,47 @@ import * as THREE from 'three';
 export class SceneHelperService {
 
     constructor() { }
-    public initLights(scene:THREE.Scene) : void {
+
+    private generateStarPosition(min_rad:number): THREE.Vector3 {
+        let vertAngle = THREE.MathUtils.degToRad(THREE.MathUtils.mapLinear(Math.random(), 0, 1, 0, 360.0))
+        let horzAngle = THREE.MathUtils.degToRad(THREE.MathUtils.mapLinear(Math.random(), 0, 1, 0, 360.0))
+        let ranVec = new THREE.Vector3(Math.cos(vertAngle)*Math.cos(horzAngle), Math.sin(vertAngle), Math.sin(horzAngle)*Math.cos(vertAngle))
+        ranVec.normalize()
+        ranVec.setLength(min_rad+Math.random()*min_rad)
+        return ranVec
+    }
+
+    public initStars(scene:THREE.Scene, camera_position:THREE.Vector3) : void {
+        const verts = []
+        const sizes = []
+        const num_stars = 10000
+        const min_pos_radius = camera_position.length()
+        const starSprite = new THREE.TextureLoader().load('assets/disc.png');
+
+        const min_star_size = .01
+        const max_star_size = .1
+        for(let i = 0; i<num_stars; i++){
+            let temp_vec = this.generateStarPosition(min_pos_radius)
+            verts.push(temp_vec.x, temp_vec.y, temp_vec.z)
+            let star_size = THREE.MathUtils.mapLinear(Math.random(), 0, 1, min_star_size, max_star_size)
+            // modifier: goal: closer stars are smaller size
+            let temp_dist_modifier = (temp_vec.distanceTo(camera_position)/min_pos_radius)**2
+            sizes.push(star_size*temp_dist_modifier)
+//             sizes.push(star_size)
+        }
+        const geo = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+//         geo.setAttribute('size', new THREE.Float32BufferAttribute( [.2], 1))
+        geo.setAttribute('size', new THREE.Float32BufferAttribute( sizes, 1))
+//         const material = new THREE.PointsMaterial({color: new THREE.Color('rgb(255, 255, 255)')})
+        const material = new THREE.PointsMaterial({size: .1, map:starSprite, transparent: true, alphaTest: .2})
+        const points = new THREE.Points(geo, material)
+        scene.add(points)
+
+
+    }
+
+    public initLights(scene:THREE.Scene, dirHelperBool:boolean) : void {
         // light
         {
             const colorAmb = new THREE.Color('rgb(247,255,246)');
@@ -30,8 +70,10 @@ export class SceneHelperService {
             lightDir.target.position.set(0, 0, 0);
             scene.add(lightDir);
             //           this.scene.add(lightDir);
-            const lightDirHelper = new THREE.DirectionalLightHelper(lightDir)
-            scene.add(lightDirHelper);
+            if(dirHelperBool == true){
+                const lightDirHelper = new THREE.DirectionalLightHelper(lightDir)
+                scene.add(lightDirHelper);
+            }
             //           this.scene.add(lightDirHelper);
         }
     }
@@ -41,17 +83,18 @@ export class SceneHelperService {
         {
             const color = new THREE.Color('rgb(54,52,70)')
             const near = 1;
-//             const far = 15;
-            const far = 12;
+            const far = 21;
+//             const far = 12;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-        camera.position.z = 5.5;
+        camera.position.z = 8;
+//         camera.position.z = 5;
         camera.position.x = 0;
-        camera.position.y = 1;
+        camera.position.y = 1.2;
         scene.add(camera);
     }
 
@@ -120,8 +163,6 @@ export class SceneHelperService {
         let Yval = controls.targetCopy.y
         let radTheta = Math.acos(Yval/controls.targetCopy.length())
         let thetaY = THREE.MathUtils.radToDeg(radTheta)
-//         console.log("radTheta: " + radTheta)
-//         console.log("thetaY: " + thetaY)
 
         let addPos = new THREE.Vector3()
         addPos.copy(controls.object.position)
@@ -154,5 +195,46 @@ export class SceneHelperService {
         posArrow.setDirection(posCopy)
         return [controlArrow, posArrow, oldArrow, addArrow]
     }
+
+//     public initReticuleSprite(scene:THREE.Scene, camera:THREE.PerspectiveCamera){
+    public initReticuleSprite(scene:THREE.Scene, camera:THREE.PerspectiveCamera, controls:any){
+        const sprite_uri = ".\\assets\\reticule_small_lens_color.png"
+        let sprite_map = new THREE.TextureLoader().load(sprite_uri)
+        let material = new THREE.SpriteMaterial({map: sprite_map, color: 0xffffff})
+        let reticule_sprite = new THREE.Sprite(material)
+        reticule_sprite.scale.set(.35, .35, 1)
+
+        reticule_sprite.position.copy(camera.position)
+        reticule_sprite.lookAt(camera.position)
+        reticule_sprite.translateZ(-1)
+
+        reticule_sprite.name = "reticule"
+        scene.add(reticule_sprite)
+    }
+
+    public updateReticuleSprite(scene:THREE.Scene, camera:THREE.PerspectiveCamera, targetPosition:any) {
+        let reticule_sprite : any = scene.getObjectByName('reticule')
+        reticule_sprite.position.copy(camera.position)
+        reticule_sprite.lookAt(camera.position)
+        let targetAxes = new THREE.Vector3().copy(targetPosition).sub(camera.position)
+        reticule_sprite.translateOnAxis(targetAxes, 1)
+
+//         reticule_sprite.position.copy(camera.position)
+//         let rotation_vector = new THREE.Vector3(1, 1, 1).normalize().applyEuler(camera.rotation)
+//         console.log(rotation_vector)
+//         rotation_vector.setZ(-rotation_vector.z)
+//         reticule_sprite.position.add(rotation_vector.setLength(1))
+//         reticule_sprite.lookAt(camera.position)
+//         let temp_position = new THREE.Vector3().copy(controls.position).add(target)
+//         console.log("reticule")
+//         console.log(camera.rotation)
+//         reticule_sprite.rotation.copy(camera.rotation)
+
+//         reticule_sprite.position.copy(controls.object.position).add(target)
+//         reticule_sprite.lookAt(controls.object.position)
+
+    }
+
+
 
 }
