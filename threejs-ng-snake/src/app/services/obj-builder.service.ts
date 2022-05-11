@@ -29,7 +29,7 @@ export class ObjBuilderService {
             // blueCol/greenCol: change color of asteroid based on position in list of all asteroids
             //  the higher the index, the more intense the color
 //             const blueCol = Math.floor(this.norm_range(120, 255, 0, max_val, i));
-            const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 120, 255))
+            const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 60, 255))
 //             const greenCol = Math.floor(this.norm_range(0, 255, 0, max_val, i));
             const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 0, 255));
             let material = new THREE.MeshPhongMaterial({

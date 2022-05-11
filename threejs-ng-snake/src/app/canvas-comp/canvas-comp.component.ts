@@ -59,6 +59,8 @@ export class CanvasCompComponent implements OnInit {
     // todo this just test helper for movement
     public pushDirVec: THREE.Vector3 = new THREE.Vector3(1, 1, 1)
 
+    private laserTest: boolean = false;
+
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
                 private sceneService: SceneHelperService,
@@ -119,6 +121,15 @@ export class CanvasCompComponent implements OnInit {
         if(controlsTarget != undefined){
             this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget)
         }
+
+        // testing laser
+        if (elapsed > 3000){
+            this.laserTest = true
+        }
+        if (this.laserTest == true){
+            this.sceneService.updateLaser(this.scene, controlsTarget)
+        }
+
         //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
         const textObj = this.scene.getObjectByName('wordName');
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
@@ -180,9 +191,6 @@ export class CanvasCompComponent implements OnInit {
 // //                 console.log(asteroid.dirTest)
 //
 //             }
-
-
-
         })
         this.render_all()
         this.stats.update()
@@ -243,6 +251,8 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initStars(this.scene, this.camera.position)
         this.controls = this.sceneService.initControls(this.scene, this.camera)
         this.sceneService.initReticuleSprite(this.scene, this.camera, this.controls)
+
+        this.sceneService.initLaser(this.scene)
 
         // main logic
         this.window_set_size();

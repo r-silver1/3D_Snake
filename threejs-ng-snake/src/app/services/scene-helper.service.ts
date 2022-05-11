@@ -2,14 +2,20 @@ import { Injectable } from '@angular/core';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
 import { TurretControls } from '../js/TurretControls'
+import { LaserRay } from '../classes/laser-ray'
 import * as THREE from 'three';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SceneHelperService {
+    private targetAxes: any;
+    private checked: boolean;
 
-    constructor() { }
+    constructor() {
+        this.checked = false
+        this.targetAxes = undefined
+     }
 
     private generateStarPosition(min_rad:number): THREE.Vector3 {
         let vertAngle = THREE.MathUtils.degToRad(THREE.MathUtils.mapLinear(Math.random(), 0, 1, 0, 360.0))
@@ -95,6 +101,7 @@ export class SceneHelperService {
 //         camera.position.z = 5;
         camera.position.x = 0;
         camera.position.y = 1.2;
+        camera.name = "turretCamera"
         scene.add(camera);
     }
 
@@ -200,9 +207,14 @@ export class SceneHelperService {
     public initReticuleSprite(scene:THREE.Scene, camera:THREE.PerspectiveCamera, controls:any){
         const sprite_uri = ".\\assets\\reticule_small_lens_color.png"
         let sprite_map = new THREE.TextureLoader().load(sprite_uri)
-        let material = new THREE.SpriteMaterial({map: sprite_map, color: 0xffffff})
+        let material = new THREE.SpriteMaterial({map: sprite_map,
+                                                color: 0xffffff,
+                                                transparent: true,
+                                                opacity: .7
+                                                })
         let reticule_sprite = new THREE.Sprite(material)
-        reticule_sprite.scale.set(.35, .35, 1)
+//         reticule_sprite.scale.set(.35, .35, 1)
+        reticule_sprite.scale.set(.1, .1, 1)
 
         reticule_sprite.position.copy(camera.position)
         reticule_sprite.lookAt(camera.position)
@@ -217,21 +229,50 @@ export class SceneHelperService {
         reticule_sprite.position.copy(camera.position)
         reticule_sprite.lookAt(camera.position)
         let targetAxes = new THREE.Vector3().copy(targetPosition).sub(camera.position)
-        reticule_sprite.translateOnAxis(targetAxes, 1)
+//         reticule_sprite.translateOnAxis(targetAxes, 1)
+        reticule_sprite.translateOnAxis(targetAxes, .25)
+        reticule_sprite.setRotationFromEuler(camera.rotation)
 
-//         reticule_sprite.position.copy(camera.position)
-//         let rotation_vector = new THREE.Vector3(1, 1, 1).normalize().applyEuler(camera.rotation)
-//         console.log(rotation_vector)
-//         rotation_vector.setZ(-rotation_vector.z)
-//         reticule_sprite.position.add(rotation_vector.setLength(1))
-//         reticule_sprite.lookAt(camera.position)
-//         let temp_position = new THREE.Vector3().copy(controls.position).add(target)
-//         console.log("reticule")
-//         console.log(camera.rotation)
-//         reticule_sprite.rotation.copy(camera.rotation)
 
-//         reticule_sprite.position.copy(controls.object.position).add(target)
-//         reticule_sprite.lookAt(controls.object.position)
+    }
+
+    public initLaser(scene:THREE.Scene){
+        let camera = scene.getObjectByName("turretCamera")
+        let blueLaser = new LaserRay(camera)
+//         blueLaser.laserSprite.lookAt()
+        blueLaser.laserSprite.name = "blueLaser"
+//         blueLaser.laserSprite.visible = false
+        scene.add(blueLaser.laserSprite)
+        scene.add(blueLaser.upHelper)
+//         scene.add(blueLaser.laserSpriteCombined)
+
+    }
+
+    public updateLaser(scene:THREE.Scene, controlsTarget:any){
+        let camera = scene.getObjectByName("turretCamera")
+        let laser:any = scene.getObjectByName("blueLaser")
+        if(laser != undefined && camera != undefined && controlsTarget != undefined && this.checked != true){
+            LaserRay.updateLaserSprite(camera, laser, controlsTarget)
+        }
+        let laserUpHelper:any = scene.getObjectByName("laserUpHelper")
+        if(laserUpHelper != undefined && camera != undefined && controlsTarget != undefined){
+            laserUpHelper.position.copy(controlsTarget)
+//             laserUpHelper.position.copy(new THREE.Vector3(0, 2, 7))
+//             laserUpHelper.position.x+=.5
+            let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+//             laserUpHelper.translateOnAxis(target_axis, -.05)
+//             laserUpHelper.setDirection(target_axis.normalize())
+//             laserUpHelper.translateOnAxis(target_axis, .5)
+            if(this.checked == false){
+                this.checked = true
+                this.targetAxes = target_axis
+            }
+
+        }
+        if(this.checked == true){
+            laser.position.add(this.targetAxes.setLength(.06))
+        }
+
 
     }
 
