@@ -44,7 +44,7 @@ export class CanvasCompComponent implements OnInit {
     public addArrow: any;
 
     // helper bool box helpers render material
-    private boxHelpers: boolean = false;
+    private boxHelpers: boolean = true;
     // helper bool for rotation and direction helper arrows
     private directionHelpers: boolean = false;
     //
@@ -191,11 +191,12 @@ export class CanvasCompComponent implements OnInit {
 // //                 console.log(asteroid.dirTest)
 //
 //             }
-        })
-        this.render_all()
-        this.stats.update()
+        });
+        this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
+        this.render_all();
+        this.stats.update();
         requestAnimationFrame(this.animate);
-        this.last = timestamp
+        this.last = timestamp;
     }
 
 

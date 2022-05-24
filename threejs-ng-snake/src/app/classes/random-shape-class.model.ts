@@ -313,6 +313,10 @@ export class RandomShapeClass {
         return boxCheck
     }
 
+    checkPointConflict(point:THREE.Vector3):boolean{
+        return this.boxGeo.containsPoint(point)
+    }
+
     setAsteroidDirection() {
 //         let backupY = this.shapeObj.position.y
 //         this.thetaNow += this.thetaDif

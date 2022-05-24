@@ -18,7 +18,7 @@ export class ObjBuilderService {
         const max_radius = .35
         // max_val: max number of asteroids to generate; min val 1
 //         const max_val = 150;
-        const max_val = 200;
+        const max_val = 50;
 
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,
@@ -141,6 +141,28 @@ export class ObjBuilderService {
             }
         }
         return checkBool
+    }
+
+    checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
+//         console.log("hello")
+        let laser:any = scene.getObjectByName("blueLaser")
+        console.log(laser.geometry)
+
+        for (let i = 0; i<shapesArray.length; i++){
+//             console.log(shapesArray[i].boxGeo)
+            if(laser.geometry.boundingSphere != undefined){
+//                 laser.geometry.computeBoundingSphere()
+//                 console.log(laser.geometry.boundingSphere.center)
+//                 console.log(laser.geometry)
+//                 console.log(laser.position)
+                let hitCheck = shapesArray[i].checkPointConflict(laser.position)
+                console.log(hitCheck)
+                if(hitCheck == true){
+                    shapesArray[i].changeBoxHelperCol(true)
+                }
+            }
+
+        }
     }
 
 }

@@ -270,7 +270,8 @@ export class SceneHelperService {
 
         }
         if(this.checked == true){
-            laser.position.add(this.targetAxes.setLength(.06))
+            laser.position.add(this.targetAxes.setLength(.1))
+//             laser.translateOnAxis(this.targetAxes, .1)
         }
 
 

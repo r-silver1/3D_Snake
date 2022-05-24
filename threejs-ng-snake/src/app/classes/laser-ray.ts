@@ -28,7 +28,7 @@ export class LaserRay {
             transparent: true,
             opacity: .5
         })
-        this.laserSprite = new THREE.Sprite(this.laserMat)
+//         this.laserSprite = new THREE.Sprite(this.laserMat)
         this.laserGeo = new THREE.CylinderGeometry(topRadius, bottomRadius, height, segments)
 //         this.laserGeo.translateY(height/2)
         this.laserGeo.applyMatrix4(new THREE.Matrix4().makeTranslation(0, -height/2, 0))
@@ -66,7 +66,7 @@ export class LaserRay {
 //         console.log(temp)
 //         laserSprite.setRotationFromEuler(new THREE.Euler().setFromVector3(temp.sub(controlsTarget)))
         let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
-        laserSprite.translateOnAxis(target_axis, -.17)
+//         laserSprite.translateOnAxis(target_axis, -.17)
 //         laserSprite.position.add(target_axis)
 
 
