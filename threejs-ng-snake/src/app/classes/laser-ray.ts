@@ -35,6 +35,8 @@ export class LaserRay {
         this.laserGeo.applyMatrix4(new THREE.Matrix4().makeRotationX(THREE.MathUtils.degToRad(90)))
 
         this.laserSprite = new THREE.Mesh(this.laserGeo, this.laserMat)
+        this.laserGeo.dispose()
+        this.laserMat.dispose()
 
 //         this.laserSprite.position.set(0, 1.2, 7.5)
         this.laserSprite.position.copy(camera.position)

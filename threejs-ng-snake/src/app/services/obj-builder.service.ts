@@ -144,25 +144,30 @@ export class ObjBuilderService {
     }
 
     checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
-//         console.log("hello")
         let laser:any = scene.getObjectByName("blueLaser")
-        console.log(laser.geometry)
+        if(laser != undefined){
+            console.log(laser.geometry)
 
-        for (let i = 0; i<shapesArray.length; i++){
-//             console.log(shapesArray[i].boxGeo)
-            if(laser.geometry.boundingSphere != undefined){
-//                 laser.geometry.computeBoundingSphere()
-//                 console.log(laser.geometry.boundingSphere.center)
-//                 console.log(laser.geometry)
-//                 console.log(laser.position)
-                let hitCheck = shapesArray[i].checkPointConflict(laser.position)
-                console.log(hitCheck)
-                if(hitCheck == true){
-                    shapesArray[i].changeBoxHelperCol(true)
+            for (let i = 0; i<shapesArray.length; i++){
+                if(laser.geometry.boundingSphere != undefined){
+                    let hitCheck = shapesArray[i].checkPointConflict(laser.position)
+                    console.log(hitCheck)
+                    if(hitCheck == true){
+                        // delete asteroid removes from scene
+                        shapesArray[i].deleteAsteroid()
+                        shapesArray.splice(i, 1)
+                        i-=1
+                        // todo break this into different laser function
+                        laser.geometry.dispose()
+                        laser.material.dispose()
+                        laser.removeFromParent()
+
+
+                    }
                 }
             }
-
         }
     }
+
 
 }

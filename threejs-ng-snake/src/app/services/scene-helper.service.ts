@@ -243,7 +243,7 @@ export class SceneHelperService {
         blueLaser.laserSprite.name = "blueLaser"
 //         blueLaser.laserSprite.visible = false
         scene.add(blueLaser.laserSprite)
-        scene.add(blueLaser.upHelper)
+//         scene.add(blueLaser.upHelper)
 //         scene.add(blueLaser.laserSpriteCombined)
 
     }
@@ -251,29 +251,27 @@ export class SceneHelperService {
     public updateLaser(scene:THREE.Scene, controlsTarget:any){
         let camera = scene.getObjectByName("turretCamera")
         let laser:any = scene.getObjectByName("blueLaser")
-        if(laser != undefined && camera != undefined && controlsTarget != undefined && this.checked != true){
-            LaserRay.updateLaserSprite(camera, laser, controlsTarget)
-        }
-        let laserUpHelper:any = scene.getObjectByName("laserUpHelper")
-        if(laserUpHelper != undefined && camera != undefined && controlsTarget != undefined){
-            laserUpHelper.position.copy(controlsTarget)
-//             laserUpHelper.position.copy(new THREE.Vector3(0, 2, 7))
-//             laserUpHelper.position.x+=.5
-            let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
-//             laserUpHelper.translateOnAxis(target_axis, -.05)
-//             laserUpHelper.setDirection(target_axis.normalize())
-//             laserUpHelper.translateOnAxis(target_axis, .5)
-            if(this.checked == false){
-                this.checked = true
-                this.targetAxes = target_axis
+        if(laser != undefined){
+            if(laser != undefined && camera != undefined && controlsTarget != undefined && this.checked != true){
+                LaserRay.updateLaserSprite(camera, laser, controlsTarget)
             }
+//             let laserUpHelper:any = scene.getObjectByName("laserUpHelper")
+//             if(laserUpHelper != undefined && camera != undefined && controlsTarget != undefined){
+//                 laserUpHelper.position.copy(controlsTarget)
+            // todo uncomment me for up helper
+            if(camera != undefined && controlsTarget != undefined){
+                let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+                if(this.checked == false){
+                    this.checked = true
+                    this.targetAxes = target_axis
+                }
 
+            }
+            if(this.checked == true){
+                laser.position.add(this.targetAxes.setLength(.1))
+    //             laser.translateOnAxis(this.targetAxes, .1)
+            }
         }
-        if(this.checked == true){
-            laser.position.add(this.targetAxes.setLength(.1))
-//             laser.translateOnAxis(this.targetAxes, .1)
-        }
-
 
     }
 

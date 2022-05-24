@@ -48,6 +48,10 @@ export class RandomShapeClass {
             let posVec = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
             let posLength = posVec.length();
             this.shapeObj = new THREE.Mesh(this.geometry, this.material);
+            //todo new logic dispose of this
+            this.geometry.dispose()
+            this.material.dispose()
+
 //             this.geometry.translate(vertices[0], vertices[1], vertices[2])
             this.shapeObj.translateOnAxis(posVec.normalize(), posLength)
             this.shapeObj.castShadow = true;
@@ -276,6 +280,22 @@ export class RandomShapeClass {
         this.boxHelper = this.makeBoxHelper(checkBool)
         this.boxGeo = this.makeBoxGeo();
     }
+
+    deleteAsteroid(){
+        this.boxHelper.material.dispose()
+        this.boxHelper.geometry.dispose()
+// //         this.shapeObj.material.dispose()
+        this.shapeObj.geometry.dispose()
+        this.boxHelper.removeFromParent()
+        this.shapeObj.removeFromParent()
+
+
+// //         this.shapeObj.dispose()
+//         this.boxHelper.material.dispose()
+
+    }
+
+
 
     makeBoxHelper(checkBool: boolean) : THREE.BoxHelper{
         let colChoice = RandomShapeClass.blueColor
