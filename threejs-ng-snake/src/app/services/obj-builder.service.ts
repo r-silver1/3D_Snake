@@ -146,12 +146,9 @@ export class ObjBuilderService {
     checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
         let laser:any = scene.getObjectByName("blueLaser")
         if(laser != undefined){
-            console.log(laser.geometry)
-
             for (let i = 0; i<shapesArray.length; i++){
                 if(laser.geometry.boundingSphere != undefined){
                     let hitCheck = shapesArray[i].checkPointConflict(laser.position)
-                    console.log(hitCheck)
                     if(hitCheck == true){
                         // delete asteroid removes from scene
                         shapesArray[i].deleteAsteroid()

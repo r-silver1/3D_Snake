@@ -235,12 +235,19 @@ export class CanvasCompComponent implements OnInit {
 
 
     ngOnInit(): void {
+        let canvas = document.querySelector('canvas.draw') as HTMLCanvasElement
+        console.log(canvas)
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             logarithmicDepthBuffer: false,
-            canvas: document.querySelector('canvas.draw') as HTMLCanvasElement
+//             canvas: document.querySelector('canvas.draw') as HTMLCanvasElement
+            canvas: canvas
 
         });
+
+
+
+
         this.renderer.shadowMap.enabled = true
         // @ts-ignore
         this.renderer.setClearColor(this.scene.fog.color)
@@ -283,6 +290,11 @@ export class CanvasCompComponent implements OnInit {
             document.body.appendChild( this.stats.domElement );
 
         }
+
+        /* Mouse clicking handling */
+        canvas.addEventListener('mousedown', function(e){
+            console.log("here")
+        }, false)
 
         requestAnimationFrame(this.animate);
   }
