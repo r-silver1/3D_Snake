@@ -18,7 +18,7 @@ export class ObjBuilderService {
         const max_radius = .35
         // max_val: max number of asteroids to generate; min val 1
 //         const max_val = 150;
-        const max_val = 50;
+        const max_val = 100;
 
         for(let i = 0; i<max_val; i++){
             // todo below: functionality for color, material, box radius, position, maxpoints,

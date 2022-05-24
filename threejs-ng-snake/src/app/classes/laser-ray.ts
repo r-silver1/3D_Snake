@@ -15,9 +15,9 @@ export class LaserRay {
     public upHelper: any;
 
     constructor(camera: any){
-        const topRadius = .001;
-        const bottomRadius = .005;
-        const height = .3;
+        const topRadius = .003;
+        const bottomRadius = .0075;
+        const height = .6;
         const segments = 20;
         this.texture = new THREE.TextureLoader().load(this.texture_uri)
 //         this.laserMat = new THREE.SpriteMaterial({
@@ -26,7 +26,7 @@ export class LaserRay {
 //             blending: THREE.AdditiveBlending,
             side: THREE.DoubleSide,
             transparent: true,
-            opacity: .5
+            opacity: .3
         })
 //         this.laserSprite = new THREE.Sprite(this.laserMat)
         this.laserGeo = new THREE.CylinderGeometry(topRadius, bottomRadius, height, segments)
