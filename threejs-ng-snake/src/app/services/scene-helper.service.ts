@@ -11,10 +11,12 @@ import * as THREE from 'three';
 export class SceneHelperService {
     private targetAxes: any;
     private checked: boolean;
+    public clicked: boolean;
 
     constructor() {
         this.checked = false
         this.targetAxes = undefined
+        this.clicked = false
      }
 
     private generateStarPosition(min_rad:number): THREE.Vector3 {
@@ -236,12 +238,23 @@ export class SceneHelperService {
 
     }
 
+    public updateClickedTrue(scene: THREE.Scene){
+        if(this.checked == true && this.clicked == false){
+            this.clicked = true
+            let laser:any = scene.getObjectByName("blueLaser")
+            laser.visible = true
+        }
+    }
+
     public initLaser(scene:THREE.Scene){
         let camera = scene.getObjectByName("turretCamera")
         let blueLaser = new LaserRay(camera)
 //         blueLaser.laserSprite.lookAt()
         blueLaser.laserSprite.name = "blueLaser"
+
+        blueLaser.laserSprite.visible = false
 //         blueLaser.laserSprite.visible = false
+
         scene.add(blueLaser.laserSprite)
 //         scene.add(blueLaser.upHelper)
 //         scene.add(blueLaser.laserSpriteCombined)
@@ -252,25 +265,38 @@ export class SceneHelperService {
         let camera = scene.getObjectByName("turretCamera")
         let laser:any = scene.getObjectByName("blueLaser")
         if(laser != undefined){
-            if(laser != undefined && camera != undefined && controlsTarget != undefined && this.checked != true){
+//             if(laser != undefined && camera != undefined && controlsTarget != undefined && this.checked != true && this.clicked != true){
+            if(laser != undefined && camera != undefined && controlsTarget != undefined && this.clicked != true){
                 LaserRay.updateLaserSprite(camera, laser, controlsTarget)
             }
 //             let laserUpHelper:any = scene.getObjectByName("laserUpHelper")
 //             if(laserUpHelper != undefined && camera != undefined && controlsTarget != undefined){
 //                 laserUpHelper.position.copy(controlsTarget)
             // todo uncomment me for up helper
+
             if(camera != undefined && controlsTarget != undefined){
-                let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+                // todo break this into new function inside laser?
+//                 let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
                 if(this.checked == false){
                     this.checked = true
-                    this.targetAxes = target_axis
+                    // set visible if already clicked
+//                     console.log("HERE!@!!")
+//                     console.log(this.targetAxes)
+// //                     this.targetAxes = target_axis
+//                     console.log(this.targetAxes)
                 }
+                if(this.checked == true && this.clicked == true){
+                    if(this.targetAxes == undefined){
+                        console.log("HERE!!")
+    //                     let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+                        this.targetAxes = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+                    }
+                    // todo break this into new function inside laser?
+                    laser.position.add(this.targetAxes.setLength(.1))
+        //             laser.translateOnAxis(this.targetAxes, .1)
+                }
+            }
 
-            }
-            if(this.checked == true){
-                laser.position.add(this.targetAxes.setLength(.1))
-    //             laser.translateOnAxis(this.targetAxes, .1)
-            }
         }
 
     }

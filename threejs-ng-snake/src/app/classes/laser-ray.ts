@@ -28,10 +28,10 @@ export class LaserRay {
             transparent: true,
             opacity: .3
         })
-//         this.laserSprite = new THREE.Sprite(this.laserMat)
         this.laserGeo = new THREE.CylinderGeometry(topRadius, bottomRadius, height, segments)
-//         this.laserGeo.translateY(height/2)
+        // move center down?
         this.laserGeo.applyMatrix4(new THREE.Matrix4().makeTranslation(0, -height/2, 0))
+        // rotate 90deg x axis
         this.laserGeo.applyMatrix4(new THREE.Matrix4().makeRotationX(THREE.MathUtils.degToRad(90)))
 
         this.laserSprite = new THREE.Mesh(this.laserGeo, this.laserMat)
@@ -40,6 +40,7 @@ export class LaserRay {
 
 //         this.laserSprite.position.set(0, 1.2, 7.5)
         this.laserSprite.position.copy(camera.position)
+        // this should move out of camera view?
         this.laserSprite.z -= 1
 
         this.upHelper = new THREE.ArrowHelper(this.laserSprite.up, new THREE.Vector3(0,0,0), 1, new THREE.Color('rgb(0, 200, 200)'))

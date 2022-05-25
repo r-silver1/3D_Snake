@@ -61,13 +61,16 @@ export class CanvasCompComponent implements OnInit {
 
     private laserTest: boolean = false;
 
+    //
+//     private sceneService: any = undefined;
+
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
                 private sceneService: SceneHelperService,
                 private fontService: FontBuilderService
                 ) {
         this.scene = new THREE.Scene();
-
+//         this.sceneService = sceneService
         const axesSize = 10
         const centerColor = new THREE.Color('rgb(0, 0, 255)')
         if(this.axesHelperBool == true){
@@ -292,9 +295,7 @@ export class CanvasCompComponent implements OnInit {
         }
 
         /* Mouse clicking handling */
-        canvas.addEventListener('mousedown', function(e){
-            console.log("here")
-        }, false)
+        canvas.addEventListener('click', (evt) => this.sceneService.updateClickedTrue(this.scene))
 
         requestAnimationFrame(this.animate);
   }
