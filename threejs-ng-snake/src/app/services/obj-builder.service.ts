@@ -143,26 +143,35 @@ export class ObjBuilderService {
         return checkBool
     }
 
+    // todo new logic here check collisions
     checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
-        let laser:any = scene.getObjectByName("blueLaser")
-        if(laser != undefined){
-            for (let i = 0; i<shapesArray.length; i++){
-                if(laser.geometry.boundingSphere != undefined){
-                    let hitCheck = shapesArray[i].checkPointConflict(laser.position)
-                    if(hitCheck == true){
-                        // delete asteroid removes from scene
-                        shapesArray[i].deleteAsteroid()
-                        shapesArray.splice(i, 1)
-                        i-=1
-                        // todo break this into different laser function
-                        laser.geometry.dispose()
-                        laser.material.dispose()
-                        laser.removeFromParent()
+//         let laser:any = scene.getObjectByName("blueLaser")
+//         if(laser != undefined){
+        let laserGroup = scene.getObjectByName("laserGroup")
+        if(laserGroup != undefined){
+            laserGroup.children.forEach( (laser) => {
+                for (let i = 0; i<shapesArray.length; i++){
+                    // @ts-ignore
+                    if(laser.geometry.boundingSphere != undefined){
+                        let hitCheck = shapesArray[i].checkPointConflict(laser.position)
+                        if(hitCheck == true){
+                            // delete asteroid removes from scene
+                            shapesArray[i].deleteAsteroid()
+                            shapesArray.splice(i, 1)
+                            i-=1
+                            // todo break this into different laser function
+                            // @ts-ignore
+                            laser.geometry.dispose()
+                            // @ts-ignore
+                            laser.material.dispose()
+                            laser.removeFromParent()
 
 
+                        }
                     }
                 }
-            }
+
+            })
         }
     }
 

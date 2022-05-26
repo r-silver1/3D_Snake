@@ -241,21 +241,35 @@ export class SceneHelperService {
     public updateClickedTrue(scene: THREE.Scene){
         if(this.checked == true && this.clicked == false){
             this.clicked = true
-            let laser:any = scene.getObjectByName("blueLaser")
-            laser.visible = true
+//             let laser:any = scene.getObjectByName("blueLaser")
+//             laser.visible = true
         }
     }
 
-    public initLaser(scene:THREE.Scene){
+    public initLaserGroup(scene:THREE.Scene){
+        let laserGroup = new THREE.Group()
+        laserGroup.name = "laserGroup"
+        scene.add(laserGroup)
+    }
+
+//     public initLaser(scene:THREE.Scene){
+    // todo new logic add target when creating laser to add to user data in mesh
+    public initLaser(scene:THREE.Scene, targetAxes:THREE.Vector3){
         let camera = scene.getObjectByName("turretCamera")
-        let blueLaser = new LaserRay(camera)
-//         blueLaser.laserSprite.lookAt()
-        blueLaser.laserSprite.name = "blueLaser"
-
-        blueLaser.laserSprite.visible = false
+        let blueLaser = new LaserRay(camera, targetAxes)
+//         blueLaser.laserSprite.name = "blueLaser"
 //         blueLaser.laserSprite.visible = false
+        // todo new logic user data target axes
+//         blueLaser.userData.targetAxes = targetAxes
+//         scene.add(blueLaser.laserSprite)
+        let laserGroup = scene.getObjectByName("laserGroup")
+        if(laserGroup!=undefined){
+            laserGroup.add(blueLaser.laserSprite)
+        }
+        // todo new logic group
 
-        scene.add(blueLaser.laserSprite)
+
+        // todo logic helpers remove
 //         scene.add(blueLaser.upHelper)
 //         scene.add(blueLaser.laserSpriteCombined)
 
@@ -263,41 +277,45 @@ export class SceneHelperService {
 
     public updateLaser(scene:THREE.Scene, controlsTarget:any){
         let camera = scene.getObjectByName("turretCamera")
-        let laser:any = scene.getObjectByName("blueLaser")
-        if(laser != undefined){
-//             if(laser != undefined && camera != undefined && controlsTarget != undefined && this.checked != true && this.clicked != true){
-            if(laser != undefined && camera != undefined && controlsTarget != undefined && this.clicked != true){
-                LaserRay.updateLaserSprite(camera, laser, controlsTarget)
-            }
+//         let laser:any = scene.getObjectByName("blueLaser")
+//         if(laser != undefined){
+//             if(laser != undefined && camera != undefined && controlsTarget != undefined && this.clicked != true){
+//                 LaserRay.updateLaserSprite(camera, laser, controlsTarget)
+//             }
+// todo uncomment me for up helper
 //             let laserUpHelper:any = scene.getObjectByName("laserUpHelper")
 //             if(laserUpHelper != undefined && camera != undefined && controlsTarget != undefined){
 //                 laserUpHelper.position.copy(controlsTarget)
-            // todo uncomment me for up helper
 
-            if(camera != undefined && controlsTarget != undefined){
+        if(camera != undefined && controlsTarget != undefined){
+            // todo break this into new function inside laser?
+            if(this.checked == false){
+                this.checked = true
+            }
+            if(this.checked == true && this.clicked == true){
+//                 if(this.targetAxes == undefined){
+                // todo new logic create laser
+                // create target axes
+//                 this.targetAxes = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+                let targetAxes = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+                // create laser and add to group
+                this.initLaser(scene, targetAxes)
+                // set clicked to false TODO add cooldown
+                this.clicked = false
+//                 }
                 // todo break this into new function inside laser?
-//                 let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
-                if(this.checked == false){
-                    this.checked = true
-                    // set visible if already clicked
-//                     console.log("HERE!@!!")
-//                     console.log(this.targetAxes)
-// //                     this.targetAxes = target_axis
-//                     console.log(this.targetAxes)
-                }
-                if(this.checked == true && this.clicked == true){
-                    if(this.targetAxes == undefined){
-                        console.log("HERE!!")
-    //                     let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
-                        this.targetAxes = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
-                    }
-                    // todo break this into new function inside laser?
-                    laser.position.add(this.targetAxes.setLength(.1))
-        //             laser.translateOnAxis(this.targetAxes, .1)
-                }
+//                 laser.position.add(this.targetAxes.setLength(.1))
             }
 
         }
+        let laserGroup = scene.getObjectByName("laserGroup")
+        if(laserGroup != undefined){
+            laserGroup.children.forEach( (blueLaser) => {
+                LaserRay.updateLaserPosition(blueLaser)
+            })
+        }
+
+//         }
 
     }
 

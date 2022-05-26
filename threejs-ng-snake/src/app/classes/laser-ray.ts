@@ -14,7 +14,7 @@ export class LaserRay {
 
     public upHelper: any;
 
-    constructor(camera: any){
+    constructor(camera: any, targetAxes: any){
         const topRadius = .003;
         const bottomRadius = .0075;
         const height = .6;
@@ -42,9 +42,12 @@ export class LaserRay {
         this.laserSprite.position.copy(camera.position)
         // this should move out of camera view?
         this.laserSprite.z -= 1
+        // todo new logic user data target axes
+        this.laserSprite.userData.targetAxes = targetAxes
 
-        this.upHelper = new THREE.ArrowHelper(this.laserSprite.up, new THREE.Vector3(0,0,0), 1, new THREE.Color('rgb(0, 200, 200)'))
-        this.upHelper.name = "laserUpHelper"
+        // todo must uncomment for helpers
+//         this.upHelper = new THREE.ArrowHelper(this.laserSprite.up, new THREE.Vector3(0,0,0), 1, new THREE.Color('rgb(0, 200, 200)'))
+//         this.upHelper.name = "laserUpHelper"
 
 //         let temp_vec = new THREE.Vector3().copy(this.laserSprite.position)
 //         temp_vec.sub(camera.position)
@@ -57,24 +60,17 @@ export class LaserRay {
 
     }
 
+    static updateLaserPosition(laserSprite:any){
+        laserSprite.position.add(laserSprite.userData.targetAxes.setLength(.08))
+    }
+
     static updateLaserSprite(camera:any, laserSprite:any, controlsTarget:any) {
         laserSprite.position.copy(camera.position)
-//         laserSprite.setRotationFromEuler(camera.rotation)
-//         laserSprite.up = controlsTarget
-//         laserSprite.lookAt(0,0,0)
-//         laserSprite.lookAt(camera.position)
-//         laserSprite.position.y += .05
-
-//         let temp = new THREE.Vector3().copy(controlsTarget).sub(camera.position).add(laserSprite.position)
-//         console.log(temp)
-//         laserSprite.setRotationFromEuler(new THREE.Euler().setFromVector3(temp.sub(controlsTarget)))
         let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
-//         laserSprite.translateOnAxis(target_axis, -.17)
-//         laserSprite.position.add(target_axis)
-
-
 
     }
+
+
 
 
 

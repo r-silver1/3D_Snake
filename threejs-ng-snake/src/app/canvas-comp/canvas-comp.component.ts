@@ -239,7 +239,7 @@ export class CanvasCompComponent implements OnInit {
 
     ngOnInit(): void {
         let canvas = document.querySelector('canvas.draw') as HTMLCanvasElement
-        console.log(canvas)
+//         console.log(canvas)
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             logarithmicDepthBuffer: false,
@@ -263,7 +263,9 @@ export class CanvasCompComponent implements OnInit {
         this.controls = this.sceneService.initControls(this.scene, this.camera)
         this.sceneService.initReticuleSprite(this.scene, this.camera, this.controls)
 
-        this.sceneService.initLaser(this.scene)
+//         this.sceneService.initLaser(this.scene)
+        // todo new logic grouping lasers
+        this.sceneService.initLaserGroup(this.scene)
 
         // main logic
         this.window_set_size();
