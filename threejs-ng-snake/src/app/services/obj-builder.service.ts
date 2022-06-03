@@ -21,10 +21,7 @@ export class ObjBuilderService {
         const max_val = 100;
 
         for(let i = 0; i<max_val; i++){
-            // todo below: functionality for color, material, box radius, position, maxpoints,
-            //  should be moved to helper functions inside service
 
-            // todo norm_range: same function definition elsewhere? make global helper?
 
             // blueCol/greenCol: change color of asteroid based on position in list of all asteroids
             //  the higher the index, the more intense the color
@@ -48,15 +45,15 @@ export class ObjBuilderService {
             const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, minPointsBound, maxPointsBound))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
 
-            // todo: helper function static inside shape to accept scene param, add shape and helper?
+            // todo shapesArray will be gotten rid of
             shapesArray.push(newShape)
+            // todo we want to add to group not scene
             scene.add(newShape.shapeObj)
             if(boxHelpers == true){
                 scene.add(newShape.boxHelper)
             }
 
-            // todo initial conflict checking/placement: could be made into helper
-            // function accepting scene, shape array, index, shape
+            // todo why adding to scene before checking conflicts
             let conflictCheck = this.checkConflicts(newShape, shapesArray, i, scene, boxHelpers)
             // if conflict found in initial placing of asteroid, loop through all asteroids
             // to find a new position free of collisions
@@ -69,6 +66,7 @@ export class ObjBuilderService {
                 // todo here same as constructor, edit
                 let posVec = new THREE.Vector3(newShape.position[0], newShape.position[1], newShape.position[2])
                 let posLength = posVec.length();
+
                 newShape.shapeObj.translateOnAxis(posVec.normalize(), posLength)
                 let newVec = new THREE.Vector3(new_pos[0], new_pos[1], new_pos[2])
                 let newLength = newVec.length();
