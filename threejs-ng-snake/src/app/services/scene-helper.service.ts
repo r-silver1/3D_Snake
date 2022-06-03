@@ -311,7 +311,9 @@ export class SceneHelperService {
         let laserGroup = scene.getObjectByName("laserGroup")
         if(laserGroup != undefined){
             laserGroup.children.forEach( (blueLaser) => {
-                LaserRay.updateLaserPosition(blueLaser)
+//                 LaserRay.updateLaserPosition(blueLaser)
+                // todo : new logic add function
+                blueLaser.userData.updateLaserPosition()
             })
         }
 

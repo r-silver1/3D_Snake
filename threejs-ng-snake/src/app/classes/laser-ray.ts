@@ -45,6 +45,12 @@ export class LaserRay {
         // todo new logic user data target axes
         this.laserSprite.userData.targetAxes = targetAxes
 
+        // todo : new logic use arrow function versus static function
+        this.laserSprite.userData.updateLaserPosition = () => {
+            this.laserSprite.position.add(this.laserSprite.userData.targetAxes.setLength(.08))
+        }
+
+
         // todo must uncomment for helpers
 //         this.upHelper = new THREE.ArrowHelper(this.laserSprite.up, new THREE.Vector3(0,0,0), 1, new THREE.Color('rgb(0, 200, 200)'))
 //         this.upHelper.name = "laserUpHelper"
@@ -60,15 +66,15 @@ export class LaserRay {
 
     }
 
-    static updateLaserPosition(laserSprite:any){
-        laserSprite.position.add(laserSprite.userData.targetAxes.setLength(.08))
-    }
-
-    static updateLaserSprite(camera:any, laserSprite:any, controlsTarget:any) {
-        laserSprite.position.copy(camera.position)
-        let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
-
-    }
+//     static updateLaserPosition(laserSprite:any){
+//         laserSprite.position.add(laserSprite.userData.targetAxes.setLength(.08))
+//     }
+//     todo : deprecated
+//     static updateLaserSprite(camera:any, laserSprite:any, controlsTarget:any) {
+//         laserSprite.position.copy(camera.position)
+//         let target_axis = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+//
+//     }
 
 
 
