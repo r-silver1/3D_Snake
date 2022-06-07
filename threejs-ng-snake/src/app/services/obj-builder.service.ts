@@ -192,8 +192,8 @@ export class ObjBuilderService {
             // generate color using old values and decreasing
             let new_color = new THREE.Color(
                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.r*.95, old_color.r),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.g*.6, old_color.g),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.b*.5, old_color.b)
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.g*.7, old_color.g),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.b*.7, old_color.b)
             )
 
             // generate material for new asteroid
