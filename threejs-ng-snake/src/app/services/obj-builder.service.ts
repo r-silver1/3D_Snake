@@ -215,9 +215,9 @@ export class ObjBuilderService {
 
             // create a new push direction with random values but based on old
             new_asteroid_gen.pushDir = new THREE.Vector3(
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -2, 1+asteroid.pushDir.x),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.x),
                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, .1, .2+asteroid.pushDir.y),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -2, 2+asteroid.pushDir.z),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.z),
             )
 //             new_asteroid_gen.pushDir = new THREE.Vector3(
 //                 Math.random(),
@@ -227,9 +227,9 @@ export class ObjBuilderService {
 
             // copy old position but also change position slightly to reduce overlap
             new_asteroid_gen.shapeObj.position.copy(asteroid.shapeObj.position)
-            new_asteroid_gen.shapeObj.position.x += asteroid.radius*.5 + Math.random() * asteroid.radius
-            new_asteroid_gen.shapeObj.position.y += asteroid.radius*.5 + Math.random() * asteroid.radius
-            new_asteroid_gen.shapeObj.position.z += asteroid.radius*.5 + Math.random() * asteroid.radius
+            new_asteroid_gen.shapeObj.position.x += Math.random() * asteroid.radius
+            new_asteroid_gen.shapeObj.position.y += Math.random() * asteroid.radius
+            new_asteroid_gen.shapeObj.position.z += Math.random() * asteroid.radius
 
             scene.add(new_asteroid_gen.shapeObj)
             shapesArray.push(new_asteroid_gen)
