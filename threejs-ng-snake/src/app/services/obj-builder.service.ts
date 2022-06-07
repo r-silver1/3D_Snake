@@ -203,7 +203,7 @@ export class ObjBuilderService {
             })
 
             // create asteroid with smaller radius than previous, between .45 and .75 previous
-            let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.45, asteroid.radius*.75)
+            let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.35, asteroid.radius*.55)
 
             // create new asteroid object
             let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
