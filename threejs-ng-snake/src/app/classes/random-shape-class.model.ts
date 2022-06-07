@@ -112,16 +112,16 @@ export class RandomShapeClass {
         return this.direction
     }
 
-    updateDirectionTheta(){
-        let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
-        shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
-        this.worldRadius = shapeObjXZ.length()
-        this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
-        // angle To: finds shortest
-        if(shapeObjXZ.z < 0 ){
-            this.thetaNow *= -1;
-        }
-    }
+//     updateDirectionTheta(){
+//         let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
+//         shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
+//         this.worldRadius = shapeObjXZ.length()
+//         this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
+//         // angle To: finds shortest
+//         if(shapeObjXZ.z < 0 ){
+//             this.thetaNow *= -1;
+//         }
+//     }
 
 
     // https://sites.math.washington.edu/~king/coursedir/m445w04/notes/vector/coord.html

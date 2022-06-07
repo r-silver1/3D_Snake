@@ -209,16 +209,22 @@ export class ObjBuilderService {
             let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
 
             // copy information on direction, current angle etc to line up with old position
-            new_asteroid_gen.thetaDif = asteroid.thetaDif
+//             new_asteroid_gen.thetaDif = asteroid.thetaDif
             new_asteroid_gen.thetaNow = asteroid.thetaNow
             new_asteroid_gen.direction = asteroid.getDirection()
 
             // create a new push direction with random values but based on old
-            new_asteroid_gen.pushDir = new THREE.Vector3(
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.x),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, .1, .2+asteroid.pushDir.y),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.z),
-            )
+//             new_asteroid_gen.pushDir = new THREE.Vector3(
+//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.x),
+//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, .1, .2+asteroid.pushDir.y),
+//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.z),
+//             )
+            new_asteroid_gen.setPushDir([
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 60+asteroid.pushDir.x),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.y),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 60+asteroid.pushDir.z),
+            ])
+
 //             new_asteroid_gen.pushDir = new THREE.Vector3(
 //                 Math.random(),
 //                 Math.random(),
