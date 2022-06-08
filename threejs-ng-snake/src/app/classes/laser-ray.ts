@@ -16,7 +16,7 @@ export class LaserRay {
 
     constructor(camera: any, targetAxes: any){
         const topRadius = .003;
-        const bottomRadius = .0075;
+        const bottomRadius = .00075;
         const height = .1;
         const segments = 20;
         this.texture = new THREE.TextureLoader().load(this.texture_uri)
