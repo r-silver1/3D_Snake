@@ -192,7 +192,7 @@ export class ObjBuilderService {
             // generate color using old values and decreasing
             let new_color = new THREE.Color(
                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.r*.95, old_color.r),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.g*.7, old_color.g),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.g*.9, old_color.g),
                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.b*.7, old_color.b)
             )
 
@@ -203,7 +203,7 @@ export class ObjBuilderService {
             })
 
             // create asteroid with smaller radius than previous, between .45 and .75 previous
-            let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.35, asteroid.radius*.55)
+            let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.30, asteroid.radius*.50)
 
             // create new asteroid object
             let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
