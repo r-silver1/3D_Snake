@@ -25,6 +25,7 @@ export class SceneHelperService {
         let ranVec = new THREE.Vector3(Math.cos(vertAngle)*Math.cos(horzAngle), Math.sin(vertAngle), Math.sin(horzAngle)*Math.cos(vertAngle))
         ranVec.normalize()
         ranVec.setLength(min_rad+Math.random()*min_rad)
+        ranVec.setLength(THREE.MathUtils.mapLinear(Math.random(), 0, 1, min_rad, min_rad*1.5))
         return ranVec
     }
 
@@ -35,8 +36,8 @@ export class SceneHelperService {
         const min_pos_radius = camera_position.length()
         const starSprite = new THREE.TextureLoader().load('assets/disc.png');
 
-        const min_star_size = .01
-        const max_star_size = .1
+        const min_star_size = .002
+        const max_star_size = .01
         for(let i = 0; i<num_stars; i++){
             let temp_vec = this.generateStarPosition(min_pos_radius)
             verts.push(temp_vec.x, temp_vec.y, temp_vec.z)
@@ -62,7 +63,7 @@ export class SceneHelperService {
         // light
         {
             const colorAmb = new THREE.Color('rgb(247,255,246)');
-            const intensity = .4;
+            const intensity = .3;
             const ambLight = new THREE.AmbientLight(colorAmb, intensity);
             scene.add(ambLight);
             //           this.scene.add(ambLight);
@@ -71,8 +72,8 @@ export class SceneHelperService {
         // light 2
         // todo make class variables or add names?
         {
-            const colorDir = new THREE.Color('rgb(191,208,212)');
-            const intensityDir = .6;
+            const colorDir = new THREE.Color('rgb(150,200,255)');
+            const intensityDir = .9;
             const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
             lightDir.position.set(3, 2, 3);
             lightDir.target.position.set(0, 0, 0);
@@ -89,17 +90,17 @@ export class SceneHelperService {
     public initFog(scene:THREE.Scene) : void {
         // fog
         {
-            const color = new THREE.Color('rgb(54,52,70)')
+            const color = new THREE.Color('rgb(34,32,50)')
             const near = 1;
-//             const far = 21;
-            const far = 12;
+            const far = 21;
+//             const far = 18;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-        camera.position.z = 8;
+        camera.position.z = 9;
 //         camera.position.z = 5;
         camera.position.x = 0;
         camera.position.y = 1.2;
