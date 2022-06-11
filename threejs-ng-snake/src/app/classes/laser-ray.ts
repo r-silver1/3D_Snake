@@ -32,7 +32,7 @@ export class LaserRay {
 //             blending: THREE.AdditiveBlending,
             side: THREE.DoubleSide,
             transparent: true,
-            opacity: .45
+            opacity: .75
         })
         this.laserGeo = new THREE.CylinderGeometry(topRadius, bottomRadius, height, segments)
         // move center down?
