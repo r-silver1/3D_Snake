@@ -6,6 +6,11 @@ import * as BFUTILS from '../js/BufferGeometryUtils'
 export class LaserRay {
 //     private texture_uri: any = ".\\assets\\crazier_greens.png"
     private texture_uri: any = ".\\assets\\crazier_greens_2.png"
+    // todo new logic: recharge time milliseconds
+    private static rechargeTime: number = 200
+    private static charged: boolean = true
+    private static lastShot: number = -1
+
     public texture: any;
     public laserMat: any;
     public laserGeo: any;
@@ -16,8 +21,8 @@ export class LaserRay {
     public upHelper: any;
 
     constructor(camera: any, targetAxes: any){
-        const topRadius = .007;
-        const bottomRadius = .001;
+        const topRadius = .004;
+        const bottomRadius = .0005;
         const height = .1;
         const segments = 20;
         this.texture = new THREE.TextureLoader().load(this.texture_uri)
@@ -77,6 +82,24 @@ export class LaserRay {
 
 //         this.laserSprite.rotateX(5)
 
+    }
+
+    static checkIfCharged() : any{
+//         console.log(this.rechargeTime)
+//         console.log(typeof new Date().valueOf())
+        if(this.charged == true){
+            return true
+        }else if((new Date().valueOf() - this.lastShot) >= this.rechargeTime){
+            this.charged = true;
+        }
+
+        return this.charged
+
+    }
+
+    static setDepleted() :any {
+        this.charged = false
+        this.lastShot = new Date().valueOf()
     }
 
 //     static updateLaserPosition(laserSprite:any){

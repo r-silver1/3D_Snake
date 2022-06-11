@@ -240,7 +240,10 @@ export class SceneHelperService {
 
     public updateClickedTrue(scene: THREE.Scene){
         if(this.checked == true && this.clicked == false){
-            this.clicked = true
+            // todo new logic check if charged before setting clicked true
+            if(LaserRay.checkIfCharged() == true){
+                this.clicked = true
+            }
 //             let laser:any = scene.getObjectByName("blueLaser")
 //             laser.visible = true
         }
@@ -276,6 +279,8 @@ export class SceneHelperService {
                 this.initLaser(scene, targetAxes)
                 // set clicked to false TODO add cooldown
                 this.clicked = false
+                // todo new logic: set laser depleted
+                LaserRay.setDepleted()
             }
 
         }

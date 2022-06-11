@@ -178,6 +178,7 @@ export class CanvasCompComponent implements OnInit {
         this.stats.update();
         requestAnimationFrame(this.animate);
         this.last = timestamp;
+//         console.log(typeof timestamp)
     }
 
 
