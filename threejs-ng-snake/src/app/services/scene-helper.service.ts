@@ -2,14 +2,22 @@ import { Injectable } from '@angular/core';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
 import { TurretControls } from '../js/TurretControls'
+import { LaserRay } from '../classes/laser-ray'
 import * as THREE from 'three';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SceneHelperService {
+    private targetAxes: any;
+    private checked: boolean;
+    public clicked: boolean;
 
-    constructor() { }
+    constructor() {
+        this.checked = false
+        this.targetAxes = undefined
+        this.clicked = false
+     }
 
     private generateStarPosition(min_rad:number): THREE.Vector3 {
         let vertAngle = THREE.MathUtils.degToRad(THREE.MathUtils.mapLinear(Math.random(), 0, 1, 0, 360.0))
@@ -83,8 +91,8 @@ export class SceneHelperService {
         {
             const color = new THREE.Color('rgb(54,52,70)')
             const near = 1;
-            const far = 21;
-//             const far = 12;
+//             const far = 21;
+            const far = 12;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }
@@ -95,6 +103,7 @@ export class SceneHelperService {
 //         camera.position.z = 5;
         camera.position.x = 0;
         camera.position.y = 1.2;
+        camera.name = "turretCamera"
         scene.add(camera);
     }
 
@@ -200,9 +209,14 @@ export class SceneHelperService {
     public initReticuleSprite(scene:THREE.Scene, camera:THREE.PerspectiveCamera, controls:any){
         const sprite_uri = ".\\assets\\reticule_small_lens_color.png"
         let sprite_map = new THREE.TextureLoader().load(sprite_uri)
-        let material = new THREE.SpriteMaterial({map: sprite_map, color: 0xffffff})
+        let material = new THREE.SpriteMaterial({map: sprite_map,
+                                                color: 0xffffff,
+                                                transparent: true,
+                                                opacity: .7
+                                                })
         let reticule_sprite = new THREE.Sprite(material)
-        reticule_sprite.scale.set(.35, .35, 1)
+//         reticule_sprite.scale.set(.35, .35, 1)
+        reticule_sprite.scale.set(.1, .1, 1)
 
         reticule_sprite.position.copy(camera.position)
         reticule_sprite.lookAt(camera.position)
@@ -217,22 +231,78 @@ export class SceneHelperService {
         reticule_sprite.position.copy(camera.position)
         reticule_sprite.lookAt(camera.position)
         let targetAxes = new THREE.Vector3().copy(targetPosition).sub(camera.position)
-        reticule_sprite.translateOnAxis(targetAxes, 1)
+//         reticule_sprite.translateOnAxis(targetAxes, 1)
+        reticule_sprite.translateOnAxis(targetAxes, .25)
+        reticule_sprite.setRotationFromEuler(camera.rotation)
 
-//         reticule_sprite.position.copy(camera.position)
-//         let rotation_vector = new THREE.Vector3(1, 1, 1).normalize().applyEuler(camera.rotation)
-//         console.log(rotation_vector)
-//         rotation_vector.setZ(-rotation_vector.z)
-//         reticule_sprite.position.add(rotation_vector.setLength(1))
-//         reticule_sprite.lookAt(camera.position)
-//         let temp_position = new THREE.Vector3().copy(controls.position).add(target)
-//         console.log("reticule")
-//         console.log(camera.rotation)
-//         reticule_sprite.rotation.copy(camera.rotation)
 
-//         reticule_sprite.position.copy(controls.object.position).add(target)
-//         reticule_sprite.lookAt(controls.object.position)
+    }
 
+    public updateClickedTrue(scene: THREE.Scene){
+        if(this.checked == true && this.clicked == false){
+            // todo new logic check if charged before setting clicked true
+            if(LaserRay.checkIfCharged() == true){
+                this.clicked = true
+            }
+//             let laser:any = scene.getObjectByName("blueLaser")
+//             laser.visible = true
+        }
+    }
+
+    public initLaserGroup(scene:THREE.Scene){
+        let laserGroup = new THREE.Group()
+        laserGroup.name = "laserGroup"
+        scene.add(laserGroup)
+    }
+
+//     public initLaser(scene:THREE.Scene){
+    // todo new logic add target when creating laser to add to user data in mesh
+    public initLaser(scene:THREE.Scene, targetAxes:THREE.Vector3){
+        let camera = scene.getObjectByName("turretCamera")
+        let blueLaser = new LaserRay(camera, targetAxes)
+        let laserGroup = scene.getObjectByName("laserGroup")
+        if(laserGroup!=undefined){
+            laserGroup.add(blueLaser.laserSprite)
+        }
+    }
+
+    public updateLaser(scene:THREE.Scene, controlsTarget:any){
+        let camera = scene.getObjectByName("turretCamera")
+        if(camera != undefined && controlsTarget != undefined){
+            // todo break this into new function inside laser?
+            if(this.checked == false){
+                this.checked = true
+            }
+            if(this.checked == true && this.clicked == true){
+                let targetAxes = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
+                // create laser and add to group
+                this.initLaser(scene, targetAxes)
+                // set clicked to false TODO add cooldown
+                this.clicked = false
+                // todo new logic: set laser depleted
+                LaserRay.setDepleted()
+            }
+
+        }
+        let laserGroup = scene.getObjectByName("laserGroup")
+        if(laserGroup != undefined){
+            laserGroup.children.forEach( (blueLaser, index) => {
+                // todo : new logic add function
+                blueLaser.userData.updateLaserPosition()
+                // calculate laser distance and compare to camera, remove laser after travel distance is camera
+                //  position length or longer
+                if(camera != undefined){
+                    if(blueLaser.userData.getLaserTravelDistance(camera) >= camera.position.length()){
+                        blueLaser.userData.deleteLaser()
+                        // @ts-ignore
+                        laserGroup.children.splice(index, 1)
+                    }
+
+                }
+
+
+            })
+        }
     }
 
 

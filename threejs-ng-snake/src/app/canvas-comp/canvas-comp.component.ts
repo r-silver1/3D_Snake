@@ -56,8 +56,11 @@ export class CanvasCompComponent implements OnInit {
     //fps helper
     public stats: any;
 
-    // todo this just test helper for movement
-    public pushDirVec: THREE.Vector3 = new THREE.Vector3(1, 1, 1)
+
+    private laserTest: boolean = false;
+
+    //
+//     private sceneService: any = undefined;
 
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
@@ -65,7 +68,7 @@ export class CanvasCompComponent implements OnInit {
                 private fontService: FontBuilderService
                 ) {
         this.scene = new THREE.Scene();
-
+//         this.sceneService = sceneService
         const axesSize = 10
         const centerColor = new THREE.Color('rgb(0, 0, 255)')
         if(this.axesHelperBool == true){
@@ -105,20 +108,22 @@ export class CanvasCompComponent implements OnInit {
 
     // @ts-ignore
     animate(timestamp): FrameRequestCallback {
-        // controls update: necessary for damping orbit controls
-
-        // note: controls target, useful
         if (this.start === -1){
             this.start = timestamp;
             this.last = timestamp;
         }
         const elapsed = timestamp - this.start;
         // https://threejs.org/examples/?q=Controls#misc_controls_fly
+        // controls update: necessary for damping orbit controls
+        // note: controls target, useful
         const delta = this.clock.getDelta()
         let controlsTarget = this.controls.update(delta)
         if(controlsTarget != undefined){
             this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget)
         }
+
+        this.sceneService.updateLaser(this.scene, controlsTarget)
+
         //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
         const textObj = this.scene.getObjectByName('wordName');
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
@@ -144,28 +149,20 @@ export class CanvasCompComponent implements OnInit {
 
         // main logic asteroids
         // todo move this to obj service, use object methods
-        const upVec = new THREE.Vector3(1, 0, 0);
-
         // todo this just test helper for movement
-        let addBool = false;
-        if(elapsed >= 1 && elapsed % 4000 == 0){
-            addBool = true;
-            this.pushDirVec.multiplyScalar(-1)
-        }
-
         this.shapesArray.forEach((asteroid:any, index:any) => {
+            // todo : move this to a call for the asteroids group, and then loop through each
+            //   function will take in rotation,
 //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
             let tempPos = asteroid.position;
             // todo make helper for translate
+
             let elapsed_modifier = (timestamp-this.last) *.00009
             let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
 
             // todo should make local rotation an internal asteroid function if going to change on collision
             asteroid.shapeObj.rotateY(rotation)
             asteroid.shapeObj.rotateZ(rotation/5)
-
-//             const transX = (index % 10)*.001 + .01
-//             const transZ = (index % 10)*.001 + .01
 
             // set asteroid direction, also update rotation helper if necessary
             asteroid.setAsteroidDirection()
@@ -174,20 +171,14 @@ export class CanvasCompComponent implements OnInit {
 
             this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
 
-            // todo this just test helper for movement
-//             if(addBool == true){
-//                 asteroid.setPushDir([this.pushDirVec.x*Math.random(), this.pushDirVec.y*Math.random(), this.pushDirVec.z*Math.random()])
-// //                 console.log(asteroid.dirTest)
-//
-//             }
 
-
-
-        })
-        this.render_all()
-        this.stats.update()
+        });
+        this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
+        this.render_all();
+        this.stats.update();
         requestAnimationFrame(this.animate);
-        this.last = timestamp
+        this.last = timestamp;
+//         console.log(typeof timestamp)
     }
 
 
@@ -226,12 +217,14 @@ export class CanvasCompComponent implements OnInit {
 
 
     ngOnInit(): void {
+        let canvas = document.querySelector('canvas.draw') as HTMLCanvasElement
         this.renderer = new THREE.WebGLRenderer({
             antialias: true,
             logarithmicDepthBuffer: false,
-            canvas: document.querySelector('canvas.draw') as HTMLCanvasElement
+            canvas: canvas
 
         });
+
         this.renderer.shadowMap.enabled = true
         // @ts-ignore
         this.renderer.setClearColor(this.scene.fog.color)
@@ -239,15 +232,23 @@ export class CanvasCompComponent implements OnInit {
         //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
         // set pixel ratio not recommended
 //         this.renderer.setPixelRatio(window.devicePixelRatio*1.25)
+
         this.sceneService.initCameras(this.scene, this.camera)
+
         this.sceneService.initStars(this.scene, this.camera.position)
+
         this.controls = this.sceneService.initControls(this.scene, this.camera)
+
         this.sceneService.initReticuleSprite(this.scene, this.camera, this.controls)
+
+        // todo new logic grouping lasers
+        this.sceneService.initLaserGroup(this.scene)
 
         // main logic
         this.window_set_size();
         this.window_size_listener();
-//         this.builderService.initBoxes(this.shapesArray, this.scene, this.boxHelpers)
+
+        // todo : logic init asteroids, don't need to pass in anything but scene after using scene group logic
         this.builderService.initBoxes(this.shapesArray, this.scene, this.boxHelpers, this.directionHelpers)
 
         // arrow helper logic
@@ -272,6 +273,9 @@ export class CanvasCompComponent implements OnInit {
             document.body.appendChild( this.stats.domElement );
 
         }
+
+        /* Mouse clicking handling */
+        canvas.addEventListener('click', (evt) => this.sceneService.updateClickedTrue(this.scene))
 
         requestAnimationFrame(this.animate);
   }

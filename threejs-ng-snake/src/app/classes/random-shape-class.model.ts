@@ -26,8 +26,7 @@ export class RandomShapeClass {
     // helper for displaying direction or no
     public directionBool: boolean;
 
-//     public pushDir = new THREE.Vector3(-2, 1, 2)
-//     public pushDir = new THREE.Vector3(Math.random(), Math.random(), Math.random())
+    // todo : pushDir, potential to add to userData
     public pushDir = new THREE.Vector3(0,0,0)
 
     // static members
@@ -38,18 +37,30 @@ export class RandomShapeClass {
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[],
                 maxPoints: number){
+            // todo : material passed into constructor; ideal?
             this.material = material;
+            // todo : material and radius : two fields to add userdata
             this.radius = radius;
+
             this.position = position;
             this.maxPoints = maxPoints
             this.geometry = this.makeRandomGeometry(maxPoints, radius)
+
             // todo necessary for vertices const here? also could have helper
             // to translate given simple pos input
             let posVec = new THREE.Vector3(this.position[0], this.position[1], this.position[2])
             let posLength = posVec.length();
+
+            // todo shapeObj : where to add userdata
             this.shapeObj = new THREE.Mesh(this.geometry, this.material);
+            //todo new logic dispose of this
+            this.geometry.dispose()
+            this.material.dispose()
+
 //             this.geometry.translate(vertices[0], vertices[1], vertices[2])
+            // todo should be no reason translate in constructor
             this.shapeObj.translateOnAxis(posVec.normalize(), posLength)
+
             this.shapeObj.castShadow = true;
             this.shapeObj.receiveShadow = true;
 
@@ -59,6 +70,8 @@ export class RandomShapeClass {
             this.thetaDif = 0;
 
             this.initDirectionTheta()
+
+            // boolean flag display direction helper or no ( DEPRECATED )
             this.directionBool = false;
 
 
@@ -75,17 +88,23 @@ export class RandomShapeClass {
 
     initDirectionTheta() {
         let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
+        // project vector shape position on plane; used to find rotation angle around y axis
         shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
+        // worldRadius : length of vector projected
+        // todo worldRadius : potential userdata field
         this.worldRadius = shapeObjXZ.length()
 
         this.direction = new THREE.Vector3()
-        this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
 
+        // theta now : angle from projected position vector to x axis
+        // todo theta now : potential add to userdata
+        this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
         // angle To: finds shortest
         if(shapeObjXZ.z < 0 ){
             this.thetaNow *= -1;
         }
 
+        // theta dif:
         this.thetaDif = -.0001/this.radius + -.001
     }
 
@@ -93,16 +112,16 @@ export class RandomShapeClass {
         return this.direction
     }
 
-    updateDirectionTheta(){
-        let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
-        shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
-        this.worldRadius = shapeObjXZ.length()
-        this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
-        // angle To: finds shortest
-        if(shapeObjXZ.z < 0 ){
-            this.thetaNow *= -1;
-        }
-    }
+//     updateDirectionTheta(){
+//         let shapeObjXZ = new THREE.Vector3().copy(this.shapeObj.position)
+//         shapeObjXZ.projectOnPlane(new THREE.Vector3(0, 1, 0))
+//         this.worldRadius = shapeObjXZ.length()
+//         this.thetaNow = shapeObjXZ.angleTo(new THREE.Vector3(1, 0, 0));
+//         // angle To: finds shortest
+//         if(shapeObjXZ.z < 0 ){
+//             this.thetaNow *= -1;
+//         }
+//     }
 
 
     // https://sites.math.washington.edu/~king/coursedir/m445w04/notes/vector/coord.html
@@ -253,18 +272,11 @@ export class RandomShapeClass {
 
     updateBoxHelper() : void {
         this.boxHelper.update()
-//         delete this.boxGeo;
-//         this.boxGeo = null;
-//         this.boxGeo = this.makeBoxGeo()
-//             this.boxGeo.setFromObject(this.boxHelper)
         this.boxGeo.setFromObject(this.shapeObj, true)
-//         this.boxGeo.position = this.shapeObj.position;
-//         this.boxGeo.rotation = this.shapeObj.rotation;
     }
 
     makeBoxGeo() : THREE.Box3 {
         let tempBox = new THREE.Box3();
-//         tempBox.setFromObject(this.boxHelper);
         tempBox.setFromObject(this.shapeObj);
         return tempBox
     }
@@ -277,6 +289,17 @@ export class RandomShapeClass {
         this.boxGeo = this.makeBoxGeo();
     }
 
+    deleteAsteroid(){
+        this.boxHelper.material.dispose()
+        this.boxHelper.geometry.dispose()
+        this.shapeObj.geometry.dispose()
+        this.boxHelper.removeFromParent()
+        this.shapeObj.removeFromParent()
+
+    }
+
+
+
     makeBoxHelper(checkBool: boolean) : THREE.BoxHelper{
         let colChoice = RandomShapeClass.blueColor
         if(checkBool == true){
@@ -286,21 +309,13 @@ export class RandomShapeClass {
     }
 
     updatePushOnBump(other:RandomShapeClass) {
-//         console.log(other.getDirection())
-//         let otherTemp = new THREE.Vector3().copy(other.getDirection())
-//         if(this.pushDir.length() < 10){
-//         this.pushDir.add(other.getDirection().multiplyScalar(15))
         let otherTemp = new THREE.Vector3(this.shapeObj.position.x - other.shapeObj.position.x,
                                           this.shapeObj.position.y - other.shapeObj.position.y,
                                           this.shapeObj.position.z - other.shapeObj.position.z,
                                           )
-//             this.pushDir.add(otherTemp.normalize().multiplyScalar(1))
         this.pushDir.add(otherTemp.multiplyScalar(1))
         otherTemp.multiplyScalar(-1)
         other.pushDir.add(otherTemp)
-//         }
-//         other.setPushDir([this.direction.x*6, this.direction.y*6, this.direction.z*6])
-//         this.setPushDir([otherTemp.x*6, otherTemp.y*6, otherTemp.z*6])
     }
 
     checkOtherConflict(other:RandomShapeClass):boolean{
@@ -308,35 +323,32 @@ export class RandomShapeClass {
         // todo movement push: make other function not called here?
         if(boxCheck == true){
             this.updatePushOnBump(other)
-//             other.updatePushOnBump(this)
         }
         return boxCheck
     }
 
-    setAsteroidDirection() {
-//         let backupY = this.shapeObj.position.y
-//         this.thetaNow += this.thetaDif
-//         this.thetaNow %= (2*Math.PI)
+    checkPointConflict(point:THREE.Vector3):boolean{
+        return this.boxGeo.containsPoint(point)
+    }
 
-//         this.worldRadius = this.shapeObj.position.length()
+    setAsteroidDirection() {
         // vector position one theta increment up
         this.thetaNow += this.thetaDif
+        // direction: vector one thetadif rotation more around y axis; next position asteroid should be
         this.direction.set(this.worldRadius * Math.cos(this.thetaNow), this.shapeObj.position.y, (this.worldRadius*.9)*Math.sin(this.thetaNow))
 //         // find difference between new position and current position; direction vector
         this.direction.add(new THREE.Vector3().copy(this.shapeObj.position).multiplyScalar(-1))
 
-//         this.updateDirectionTheta()
-// //         this.direction.set(-this.worldRadius*Math.sin(this.thetaNow), 0, this.worldRadius*Math.cos(this.thetaNow)).normalize().multiplyScalar(-.001/this.radius)
-//         this.direction.set(-this.worldRadius*Math.sin(this.thetaNow), 0, this.worldRadius*Math.cos(this.thetaNow))
+        // pushdir: the "bounce" between asteroids; only present if bounce happens
         if(this.pushDir.length() > .01){
             let newPushVec = new THREE.Vector3().copy(this.pushDir).multiplyScalar(.01)
             this.direction.add(newPushVec)
             this.pushDir.add(newPushVec.multiplyScalar(-1))
         }
 
+        // direction: at this point, literally the vector with direction and magnitude equal to what should be pushed
         this.shapeObj.position.add(this.direction)
-//         this.shapeObj.position.setComponent(1, backupY)
-        // todo change tis with directionBool
+
         if(this.directionBool == true){
             this.updateRotationHelper(this.direction)
             this.updateDirectionHelper(this.direction)
