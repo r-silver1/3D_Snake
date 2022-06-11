@@ -215,8 +215,8 @@ export class SceneHelperService {
                                                 opacity: .7
                                                 })
         let reticule_sprite = new THREE.Sprite(material)
-//         reticule_sprite.scale.set(.35, .35, 1)
-        reticule_sprite.scale.set(.1, .1, 1)
+        reticule_sprite.scale.set(.075, .075, 1)
+//         reticule_sprite.scale.set(.1, .1, 1)
 
         reticule_sprite.position.copy(camera.position)
         reticule_sprite.lookAt(camera.position)
