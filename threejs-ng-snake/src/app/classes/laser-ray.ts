@@ -4,7 +4,8 @@ import * as BFUTILS from '../js/BufferGeometryUtils'
 
 
 export class LaserRay {
-    private texture_uri: any = ".\\assets\\crazier_greens.png"
+//     private texture_uri: any = ".\\assets\\crazier_greens.png"
+    private texture_uri: any = ".\\assets\\crazier_greens_2.png"
     public texture: any;
     public laserMat: any;
     public laserGeo: any;
@@ -15,8 +16,8 @@ export class LaserRay {
     public upHelper: any;
 
     constructor(camera: any, targetAxes: any){
-        const topRadius = .003;
-        const bottomRadius = .00075;
+        const topRadius = .007;
+        const bottomRadius = .001;
         const height = .1;
         const segments = 20;
         this.texture = new THREE.TextureLoader().load(this.texture_uri)
@@ -26,7 +27,7 @@ export class LaserRay {
 //             blending: THREE.AdditiveBlending,
             side: THREE.DoubleSide,
             transparent: true,
-            opacity: .3
+            opacity: .25
         })
         this.laserGeo = new THREE.CylinderGeometry(topRadius, bottomRadius, height, segments)
         // move center down?
@@ -48,6 +49,18 @@ export class LaserRay {
         // todo : new logic use arrow function versus static function
         this.laserSprite.userData.updateLaserPosition = () => {
             this.laserSprite.position.add(this.laserSprite.userData.targetAxes.setLength(.08))
+        }
+
+        this.laserSprite.userData.getLaserTravelDistance = (camera: any) => {
+            return this.laserSprite.position.distanceTo(camera.position)
+        }
+
+        this.laserSprite.userData.deleteLaser = () => {
+            // @ts-ignore
+            this.laserSprite.geometry.dispose()
+            // @ts-ignore
+            this.laserSprite.material.dispose()
+            this.laserSprite.removeFromParent()
         }
 
 

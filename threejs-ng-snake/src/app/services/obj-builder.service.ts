@@ -143,11 +143,9 @@ export class ObjBuilderService {
 
     // todo new logic here check collisions
     checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
-//         let laser:any = scene.getObjectByName("blueLaser")
-//         if(laser != undefined){
         let laserGroup = scene.getObjectByName("laserGroup")
         if(laserGroup != undefined){
-            laserGroup.children.forEach( (laser) => {
+            laserGroup.children.forEach( (laser, index) => {
                 for (let i = 0; i<shapesArray.length; i++){
                     // @ts-ignore
                     if(laser.geometry.boundingSphere != undefined){
@@ -161,11 +159,14 @@ export class ObjBuilderService {
                             i-=1
                             // todo break this into different laser function
                             // @ts-ignore
-                            laser.geometry.dispose()
+//                             laser.geometry.dispose()
+//                             // @ts-ignore
+//                             laser.material.dispose()
+//                             laser.removeFromParent()
+                            // new logic delete using laser function and splice group
+                            laser.userData.deleteLaser()
                             // @ts-ignore
-                            laser.material.dispose()
-                            laser.removeFromParent()
-
+                            laserGroup.children.splice(index, 1)
 
                         }
                     }
@@ -203,7 +204,7 @@ export class ObjBuilderService {
             })
 
             // create asteroid with smaller radius than previous, between .45 and .75 previous
-            let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.30, asteroid.radius*.50)
+            let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.20, asteroid.radius*.40)
 
             // create new asteroid object
             let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
@@ -220,9 +221,9 @@ export class ObjBuilderService {
 //                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.z),
 //             )
             new_asteroid_gen.setPushDir([
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 60+asteroid.pushDir.x),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.x),
                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.y),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 60+asteroid.pushDir.z),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.z),
             ])
 
 //             new_asteroid_gen.pushDir = new THREE.Vector3(
