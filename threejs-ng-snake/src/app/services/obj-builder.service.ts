@@ -206,40 +206,32 @@ export class ObjBuilderService {
             // create asteroid with smaller radius than previous, between .45 and .75 previous
             let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.20, asteroid.radius*.40)
 
-            // create new asteroid object
-            let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
+            // todo new logic: don't want asteroids that are too small, only create new if box_rad above minimum
+            let minimum_asteroid_size = .02
+            if(box_rad >= minimum_asteroid_size){
+                // create new asteroid object
+                let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
 
-            // copy information on direction, current angle etc to line up with old position
-//             new_asteroid_gen.thetaDif = asteroid.thetaDif
-            new_asteroid_gen.thetaNow = asteroid.thetaNow
-            new_asteroid_gen.direction = asteroid.getDirection()
+                // copy information on direction, current angle etc to line up with old position
+                new_asteroid_gen.thetaNow = asteroid.thetaNow
+                new_asteroid_gen.direction = asteroid.getDirection()
 
-            // create a new push direction with random values but based on old
-//             new_asteroid_gen.pushDir = new THREE.Vector3(
-//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.x),
-//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, .1, .2+asteroid.pushDir.y),
-//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.z),
-//             )
-            new_asteroid_gen.setPushDir([
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.x),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.y),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.z),
-            ])
+                // create a new push direction with random values but based on old
+                new_asteroid_gen.setPushDir([
+                    THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.x),
+                    THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.y),
+                    THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.z),
+                ])
 
-//             new_asteroid_gen.pushDir = new THREE.Vector3(
-//                 Math.random(),
-//                 Math.random(),
-//                 Math.random()
-//             )
+                // copy old position but also change position slightly to reduce overlap
+                new_asteroid_gen.shapeObj.position.copy(asteroid.shapeObj.position)
+                new_asteroid_gen.shapeObj.position.x += Math.random() * asteroid.radius
+                new_asteroid_gen.shapeObj.position.y += Math.random() * asteroid.radius
+                new_asteroid_gen.shapeObj.position.z += Math.random() * asteroid.radius
 
-            // copy old position but also change position slightly to reduce overlap
-            new_asteroid_gen.shapeObj.position.copy(asteroid.shapeObj.position)
-            new_asteroid_gen.shapeObj.position.x += Math.random() * asteroid.radius
-            new_asteroid_gen.shapeObj.position.y += Math.random() * asteroid.radius
-            new_asteroid_gen.shapeObj.position.z += Math.random() * asteroid.radius
-
-            scene.add(new_asteroid_gen.shapeObj)
-            shapesArray.push(new_asteroid_gen)
+                scene.add(new_asteroid_gen.shapeObj)
+                shapesArray.push(new_asteroid_gen)
+            }
         }
     }
 
