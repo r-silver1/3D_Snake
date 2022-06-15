@@ -10,6 +10,8 @@ import { FontBuilderService } from '../services/font-builder.service'
 
 import { Stats } from '../js/stats'
 
+import { environment } from '../environments/environment'
+
 @Component({
     selector: 'app-canvas-comp',
     templateUrl: './canvas-comp.component.html',
@@ -36,13 +38,15 @@ export class CanvasCompComponent implements OnInit {
 
     public clock: THREE.Clock;
 
-//     // todo here all arrows: just helpers
-    private cameraHelpers: boolean = false;
     public controlArrow: any;
     public posArrow: any;
     public oldArrow: any;
     public addArrow: any;
+    //fps helper
+    public stats: any;
 
+    // todo here all arrows: just helpers
+    private cameraHelpers: boolean = false;
     // helper bool box helpers render material
     private boxHelpers: boolean = false;
     // helper bool for rotation and direction helper arrows
@@ -52,10 +56,6 @@ export class CanvasCompComponent implements OnInit {
     private gridHelperBool: boolean = false;
     //
     private lightDirHelper: boolean = false;
-
-    //fps helper
-    public stats: any;
-
 
     private laserTest: boolean = false;
 
@@ -93,8 +93,13 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initFog(this.scene)
 
         //for font
-//         this.fontService.addFont("Hello\nWorld", this.scene)
+
+
+        // todo new logic font
         this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
+        // todo no longer pass in font, rely on scene group
+//         this.fontService.addFont("Asteroids 3D\nDemo")
+
 
         this.clock = new THREE.Clock()
 
@@ -125,6 +130,7 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.updateLaser(this.scene, controlsTarget)
 
         //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
+        // todo new logic modularize this some
         const textObj = this.scene.getObjectByName('wordName');
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
         in console log*/
@@ -242,7 +248,9 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initReticuleSprite(this.scene, this.camera, this.controls)
 
         // todo new logic grouping lasers
-        this.sceneService.initLaserGroup(this.scene)
+        // todo new logic renaming this and using generalized name
+//         this.sceneService.initLaserGroup(this.scene)
+        this.sceneService.initSceneGroup(this.scene, environment.laserGroupName)
 
         // main logic
         this.window_set_size();

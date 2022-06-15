@@ -5,6 +5,8 @@ import { TurretControls } from '../js/TurretControls'
 import { LaserRay } from '../classes/laser-ray'
 import * as THREE from 'three';
 
+import { environment } from '../environments/environment'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -250,9 +252,12 @@ export class SceneHelperService {
         }
     }
 
-    public initLaserGroup(scene:THREE.Scene){
+    // todo new logic: generalize group creation
+//     public initLaserGroup(scene:THREE.Scene){
+    public initSceneGroup(scene:THREE.Scene, name:string){
         let laserGroup = new THREE.Group()
-        laserGroup.name = "laserGroup"
+//         laserGroup.name = "laserGroup"
+        laserGroup.name = name
         scene.add(laserGroup)
     }
 
@@ -261,7 +266,9 @@ export class SceneHelperService {
     public initLaser(scene:THREE.Scene, targetAxes:THREE.Vector3){
         let camera = scene.getObjectByName("turretCamera")
         let blueLaser = new LaserRay(camera, targetAxes)
-        let laserGroup = scene.getObjectByName("laserGroup")
+        // todo new logic use environment variable for laser group
+//         let laserGroup = scene.getObjectByName("laserGroup")
+        let laserGroup = scene.getObjectByName(environment.laserGroupName)
         if(laserGroup!=undefined){
             laserGroup.add(blueLaser.laserSprite)
         }
@@ -285,7 +292,9 @@ export class SceneHelperService {
             }
 
         }
-        let laserGroup = scene.getObjectByName("laserGroup")
+        // todo new logic use environment variable for group name
+//         let laserGroup = scene.getObjectByName("laserGroup")
+        let laserGroup = scene.getObjectByName(environment.laserGroupName)
         if(laserGroup != undefined){
             laserGroup.children.forEach( (blueLaser, index) => {
                 // todo : new logic add function

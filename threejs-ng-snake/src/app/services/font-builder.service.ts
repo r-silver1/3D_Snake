@@ -13,6 +13,9 @@ export class FontBuilderService {
         this.loader = new FontLoader();
     }
 
+//     public deleteFont() : void {
+//     }
+
     public addFont(msg: string, scene:THREE.Scene) : void {
         // text
         // https://threejs.org/examples/?q=text#webgl_geometry_text_shapes
@@ -41,6 +44,9 @@ export class FontBuilderService {
 //             text.position.x = -.5;
             text.position.x = -1;
             scene.add(text);
+            let textBox = new THREE.BoxHelper(text, fontColor)
+            scene.add(textBox)
+
         });
     }
 

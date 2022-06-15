@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { RandomShapeClass } from '../classes/random-shape-class.model'
+import { environment } from '../environments/environment'
 
 @Injectable({
     providedIn: 'root'
@@ -143,7 +144,9 @@ export class ObjBuilderService {
 
     // todo new logic here check collisions
     checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
-        let laserGroup = scene.getObjectByName("laserGroup")
+        // todo new logic use environment file
+//         let laserGroup = scene.getObjectByName("laserGroup")
+        let laserGroup = scene.getObjectByName(environment.laserGroupName)
         if(laserGroup != undefined){
             laserGroup.children.forEach( (laser, index) => {
                 for (let i = 0; i<shapesArray.length; i++){
