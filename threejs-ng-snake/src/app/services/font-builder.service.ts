@@ -58,6 +58,14 @@ export class FontBuilderService {
 //             scene.add(textBox)
             // todo might be unecessary but storing font color
             text.userData.fontColor = fontColor
+
+            // new logic - userdata function
+            text.userData.deleteText = () => {
+                text.geometry.dispose()
+                text.material.dispose()
+                text.removeFromParent()
+            }
+
             let wordGroup = scene.getObjectByName(sceneGroupName)
             if(wordGroup != undefined){
                 wordGroup.add(text)

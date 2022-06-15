@@ -140,10 +140,16 @@ export class CanvasCompComponent implements OnInit {
 //         if (elapsed % 1500 == 0 && textObj!=undefined){
         if (elapsed % 1500 == 0 && textGroupObj!=undefined){
             this.getWordApi()
+            textGroupObj.children.forEach((child:any) => {
+                                child.userData.deleteText()
+                            })
             // todo this shouldn't be a global probably
             if(this.wordGet!=undefined){
                 // todo need to test logic here...
 //                 this.scene.remove(textObj)
+                textGroupObj.children.forEach((child:any) => {
+                    child.userData.deleteText()
+                })
                 textGroupObj.children = []
                 // todo new logic
 //                 this.fontService.addFont(this.wordGet, this.scene)
