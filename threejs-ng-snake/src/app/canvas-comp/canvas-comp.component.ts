@@ -96,9 +96,10 @@ export class CanvasCompComponent implements OnInit {
 
 
         // todo new logic font
-        this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
+        this.sceneService.initSceneGroup(this.scene, environment.wordGroupName)
+//         this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
         // todo no longer pass in font, rely on scene group
-//         this.fontService.addFont("Asteroids 3D\nDemo")
+        this.fontService.addFont("Asteroids 3D\nDemo", this.scene, environment.wordGroupName)
 
 
         this.clock = new THREE.Clock()
@@ -131,15 +132,22 @@ export class CanvasCompComponent implements OnInit {
 
         //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
         // todo new logic modularize this some
-        const textObj = this.scene.getObjectByName('wordName');
+//         const textObj = this.scene.getObjectByName('wordName');
+        // todo new logic using groups
+        const textGroupObj = this.scene.getObjectByName(environment.wordGroupName)
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
         in console log*/
-        if (elapsed % 1500 == 0 && textObj!=undefined){
+//         if (elapsed % 1500 == 0 && textObj!=undefined){
+        if (elapsed % 1500 == 0 && textGroupObj!=undefined){
             this.getWordApi()
             // todo this shouldn't be a global probably
             if(this.wordGet!=undefined){
-                this.scene.remove(textObj)
-                this.fontService.addFont(this.wordGet, this.scene)
+                // todo need to test logic here...
+//                 this.scene.remove(textObj)
+                textGroupObj.children = []
+                // todo new logic
+//                 this.fontService.addFont(this.wordGet, this.scene)
+                this.fontService.addFont("Asteroids 3D\nDemo", this.scene, environment.wordGroupName)
             }
 
         }
