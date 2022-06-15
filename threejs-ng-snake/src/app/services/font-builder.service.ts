@@ -17,7 +17,7 @@ export class FontBuilderService {
 //     }
 
     // todo new logic no longer take in scene, return object
-    public addFont(msg: string, scene:THREE.Scene, sceneGroupName: string) : void {
+    public addFont(msg: string, scene:THREE.Scene, sceneGroupName: string, positionScale: THREE.Vector3) : void {
 //     public addFont(msg: string) : void {
         // text
         // https://threejs.org/examples/?q=text#webgl_geometry_text_shapes
@@ -48,11 +48,12 @@ export class FontBuilderService {
             matLite.dispose()
 
 //             text.name = 'wordName';
-            text.position.z = 1;
+            // new logic use scale
+            text.position.z = 1 + positionScale.x;
 //             text.position.y = .5;
-            text.position.y = 1;
+            text.position.y = 1 + positionScale.y;
 //             text.position.x = -.5;
-            text.position.x = -1;
+            text.position.x = -1 + positionScale.z;
 //             scene.add(text);
 //             let textBox = new THREE.BoxHelper(text, fontColor)
 //             scene.add(textBox)

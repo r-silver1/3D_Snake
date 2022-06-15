@@ -59,6 +59,10 @@ export class CanvasCompComponent implements OnInit {
 
     private laserTest: boolean = false;
 
+    // todo timer
+    private timerElapsed = 0
+    private timerMax = 90
+
     //
 //     private sceneService: any = undefined;
 
@@ -99,7 +103,9 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initSceneGroup(this.scene, environment.wordGroupName)
 //         this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
         // todo no longer pass in font, rely on scene group
-        this.fontService.addFont("Asteroids 3D\nDemo", this.scene, environment.wordGroupName)
+        this.fontService.addFont("Asteroids 3D\nDemo", this.scene, environment.wordGroupName, environment.wordGroupPos)
+
+        // todo new logic timer font group
 
 
         this.clock = new THREE.Clock()
@@ -134,17 +140,26 @@ export class CanvasCompComponent implements OnInit {
         // todo new logic modularize this some
 //         const textObj = this.scene.getObjectByName('wordName');
         // todo new logic using groups
+
+        // todo new logic timer
+        if(elapsed % 1000 == 0){
+            this.timerElapsed += 1
+            console.log("elapsed")
+            console.log(this.timerElapsed)
+        }
+
         const textGroupObj = this.scene.getObjectByName(environment.wordGroupName)
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
         in console log*/
 //         if (elapsed % 1500 == 0 && textObj!=undefined){
+
         if (elapsed % 1500 == 0 && textGroupObj!=undefined){
             this.getWordApi()
-            textGroupObj.children.forEach((child:any) => {
-                                child.userData.deleteText()
-                            })
             // todo this shouldn't be a global probably
             if(this.wordGet!=undefined){
+                console.log("wordGet")
+                console.log(this.wordGet)
+
                 // todo need to test logic here...
 //                 this.scene.remove(textObj)
                 textGroupObj.children.forEach((child:any) => {
@@ -153,7 +168,7 @@ export class CanvasCompComponent implements OnInit {
                 textGroupObj.children = []
                 // todo new logic
 //                 this.fontService.addFont(this.wordGet, this.scene)
-                this.fontService.addFont("Asteroids 3D\nDemo", this.scene, environment.wordGroupName)
+                this.fontService.addFont(this.wordGet, this.scene, environment.wordGroupName, environment.wordGroupPos)
             }
 
         }
