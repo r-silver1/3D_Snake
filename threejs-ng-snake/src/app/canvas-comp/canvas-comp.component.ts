@@ -62,7 +62,8 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 91
+    private timerMax = 46
+    private userScorePrev = -1
 
     //
 //     private sceneService: any = undefined;
@@ -108,6 +109,10 @@ export class CanvasCompComponent implements OnInit {
 
         // todo new logic timer font group
         this.sceneService.initSceneGroup(this.scene, environment.timeWordGroupName)
+
+        // todo new logic score gorup
+        this.sceneService.initSceneGroup(this.scene, environment.scoreGroupName)
+        this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
 
 
         this.clock = new THREE.Clock()
@@ -167,7 +172,6 @@ export class CanvasCompComponent implements OnInit {
                 this.lastSecondStart = timestamp
             }
             if(this.timerMax - this.timerElapsed <= 0 && environment.gameStart == true){
-                console.log("deleting text")
                 environment.gameStart = false
                 timerGroupObj.children.forEach((child:any) => {
                     child.userData.deleteText()
@@ -183,8 +187,17 @@ export class CanvasCompComponent implements OnInit {
         if(this.timerElapsed > 0 && environment.gameStart == false){
             if(timerGroupObj != undefined && timerGroupObj.children.length == 0){
                 this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
-                console.log("added font")
             }
+        }
+
+        let scoreGroup = this.scene.getObjectByName(environment.scoreGroupName)
+        if(scoreGroup != undefined && this.userScorePrev != environment.userScore){
+            this.userScorePrev = environment.userScore
+            scoreGroup.children.forEach((child:any) => {
+                child.userData.deleteText()
+            })
+            scoreGroup.children = []
+            this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
         }
 
 //         this.secondsElapsed = timestamp - this.lastSecondStart

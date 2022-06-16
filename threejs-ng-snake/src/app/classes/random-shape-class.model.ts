@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-
+import { environment } from '../environments/environment'
 
 // https://www.typescriptlang.org/docs/handbook/interfaces.html
 // https://www.cloudhadoop.com/angular-model-class-interface/
@@ -32,6 +32,8 @@ export class RandomShapeClass {
     // static members
     static blueColor: THREE.Color = new THREE.Color('rgb(0,120,255)')
     static redColor: THREE.Color = new THREE.Color('rgb(255,120,0)')
+    static minScore = 10
+    static maxScore = 150
 
     // todo here take box colors bool as param
     constructor(material: THREE.MeshPhongMaterial,
@@ -56,6 +58,9 @@ export class RandomShapeClass {
             //todo new logic dispose of this
             this.geometry.dispose()
             this.material.dispose()
+
+            // todo new logic score
+            this.shapeObj.userData.points = RandomShapeClass.maxScore - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
 
 //             this.geometry.translate(vertices[0], vertices[1], vertices[2])
             // todo should be no reason translate in constructor
