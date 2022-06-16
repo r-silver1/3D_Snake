@@ -60,7 +60,6 @@ export class CanvasCompComponent implements OnInit {
     private laserTest: boolean = false;
 
     // todo timer
-    private secondsElapsed = 0
     private lastSecondStart = 0
     private timerElapsed = 0
     private timerMax = 90
@@ -146,7 +145,10 @@ export class CanvasCompComponent implements OnInit {
 
         // todo new logic timer
         let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
-        if(this.secondsElapsed > 1000 && timerGroupObj != undefined){
+        if(this.lastSecondStart == 0){
+            this.lastSecondStart = timestamp
+        }
+        if((elapsed-this.lastSecondStart) > 1000 && timerGroupObj != undefined){
             this.timerElapsed += 1
             console.log(this.timerElapsed)
             timerGroupObj.children.forEach((child:any) => {
@@ -158,10 +160,8 @@ export class CanvasCompComponent implements OnInit {
             this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
             this.lastSecondStart = timestamp
         }
-        if(this.lastSecondStart == 0){
-            this.lastSecondStart = timestamp
-        }
-        this.secondsElapsed = timestamp - this.lastSecondStart
+
+//         this.secondsElapsed = timestamp - this.lastSecondStart
 
         // todo commenting this out for now
 //         let textGroupObj = this.scene.getObjectByName(environment.wordGroupName)
