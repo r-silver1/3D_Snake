@@ -281,7 +281,9 @@ export class SceneHelperService {
             if(this.checked == false){
                 this.checked = true
             }
-            if(this.checked == true && this.clicked == true){
+//             if(this.checked == true && this.clicked == true){
+            // todo new logic game start
+            if(this.checked == true && this.clicked == true && environment.gameStart == true){
                 let targetAxes = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
                 // create laser and add to group
                 this.initLaser(scene, targetAxes)

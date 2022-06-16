@@ -62,7 +62,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 90
+    private timerMax = 3
 
     //
 //     private sceneService: any = undefined;
@@ -148,17 +148,33 @@ export class CanvasCompComponent implements OnInit {
         if(this.lastSecondStart == 0){
             this.lastSecondStart = timestamp
         }
-        if((elapsed-this.lastSecondStart) > 1000 && timerGroupObj != undefined){
-            this.timerElapsed += 1
-            console.log(this.timerElapsed)
-            timerGroupObj.children.forEach((child:any) => {
-                child.userData.deleteText()
-            })
-            timerGroupObj.children = []
-            // todo new logic
-    //                 this.fontService.addFont(this.wordGet, this.scene)
-            this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
-            this.lastSecondStart = timestamp
+        if((elapsed-this.lastSecondStart) > 900 && timerGroupObj != undefined){
+            if(this.timerElapsed == 0){
+                environment.gameStart = true
+            }
+
+            if(environment.gameStart == true){
+                this.timerElapsed += 1
+                timerGroupObj.children.forEach((child:any) => {
+                    child.userData.deleteText()
+                })
+                timerGroupObj.children = []
+                // todo new logic
+        //                 this.fontService.addFont(this.wordGet, this.scene)
+                this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                this.lastSecondStart = timestamp
+            }
+            if(this.timerMax - this.timerElapsed == 0){
+                environment.gameStart = false
+                timerGroupObj.children.forEach((child:any) => {
+                    child.userData.deleteText()
+                })
+                timerGroupObj.children = []
+                this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                this.timerElapsed+=1
+
+            }
+
         }
 
 //         this.secondsElapsed = timestamp - this.lastSecondStart
@@ -220,7 +236,9 @@ export class CanvasCompComponent implements OnInit {
 
 
         });
-        this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
+        if(environment.gameStart == true){
+            this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
+        }
         this.render_all();
         this.stats.update();
         requestAnimationFrame(this.animate);
