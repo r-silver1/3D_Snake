@@ -62,7 +62,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 3
+    private timerMax = 91
 
     //
 //     private sceneService: any = undefined;
