@@ -49,11 +49,11 @@ export class FontBuilderService {
 
 //             text.name = 'wordName';
             // new logic use scale
-            text.position.z = 1 + positionScale.x;
+            text.position.x = -1 + positionScale.x;
 //             text.position.y = .5;
             text.position.y = 1 + positionScale.y;
 //             text.position.x = -.5;
-            text.position.x = -1 + positionScale.z;
+            text.position.z = 1 + positionScale.z;
 //             scene.add(text);
 //             let textBox = new THREE.BoxHelper(text, fontColor)
 //             scene.add(textBox)

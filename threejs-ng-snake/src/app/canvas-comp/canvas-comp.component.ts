@@ -60,6 +60,8 @@ export class CanvasCompComponent implements OnInit {
     private laserTest: boolean = false;
 
     // todo timer
+    private secondsElapsed = 0
+    private lastSecondStart = 0
     private timerElapsed = 0
     private timerMax = 90
 
@@ -103,9 +105,10 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initSceneGroup(this.scene, environment.wordGroupName)
 //         this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
         // todo no longer pass in font, rely on scene group
-        this.fontService.addFont("Asteroids 3D\nDemo", this.scene, environment.wordGroupName, environment.wordGroupPos)
+        this.fontService.addFont("Asteroids 3D Demo", this.scene, environment.wordGroupName, environment.wordGroupPos)
 
         // todo new logic timer font group
+        this.sceneService.initSceneGroup(this.scene, environment.timeWordGroupName)
 
 
         this.clock = new THREE.Clock()
@@ -142,36 +145,45 @@ export class CanvasCompComponent implements OnInit {
         // todo new logic using groups
 
         // todo new logic timer
-        if(elapsed % 1000 == 0){
+        let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
+        if(this.secondsElapsed > 1000 && timerGroupObj != undefined){
             this.timerElapsed += 1
-            console.log("elapsed")
             console.log(this.timerElapsed)
+            timerGroupObj.children.forEach((child:any) => {
+                child.userData.deleteText()
+            })
+            timerGroupObj.children = []
+            // todo new logic
+    //                 this.fontService.addFont(this.wordGet, this.scene)
+            this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+            this.lastSecondStart = timestamp
         }
+        if(this.lastSecondStart == 0){
+            this.lastSecondStart = timestamp
+        }
+        this.secondsElapsed = timestamp - this.lastSecondStart
 
-        const textGroupObj = this.scene.getObjectByName(environment.wordGroupName)
+        // todo commenting this out for now
+//         let textGroupObj = this.scene.getObjectByName(environment.wordGroupName)
         /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
         in console log*/
 //         if (elapsed % 1500 == 0 && textObj!=undefined){
-
-        if (elapsed % 1500 == 0 && textGroupObj!=undefined){
-            this.getWordApi()
-            // todo this shouldn't be a global probably
-            if(this.wordGet!=undefined){
-                console.log("wordGet")
-                console.log(this.wordGet)
-
-                // todo need to test logic here...
-//                 this.scene.remove(textObj)
-                textGroupObj.children.forEach((child:any) => {
-                    child.userData.deleteText()
-                })
-                textGroupObj.children = []
-                // todo new logic
-//                 this.fontService.addFont(this.wordGet, this.scene)
-                this.fontService.addFont(this.wordGet, this.scene, environment.wordGroupName, environment.wordGroupPos)
-            }
-
-        }
+//         if (elapsed % 1500 == 0 && textGroupObj!=undefined){
+//             this.getWordApi()
+//             // todo this shouldn't be a global probably
+//             if(this.wordGet!=undefined){
+//                 // todo need to test logic here...
+// //                 this.scene.remove(textObj)
+//                 textGroupObj.children.forEach((child:any) => {
+//                     child.userData.deleteText()
+//                 })
+//                 textGroupObj.children = []
+//                 // todo new logic
+// //                 this.fontService.addFont(this.wordGet, this.scene)
+//                 this.fontService.addFont(this.wordGet, this.scene, environment.wordGroupName, environment.wordGroupPos)
+//             }
+//
+//         }
 
         // logic arrow helpers
         if(this.cameraHelpers == true){
