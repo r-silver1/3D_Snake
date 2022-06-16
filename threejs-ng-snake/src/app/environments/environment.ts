@@ -3,6 +3,7 @@ import { Vector3 } from "three"
 export const environment = {
     production: false,
     gameStart: false,
+    gameEnd: false,
     wordGroupName: "wordTestGroup",
     wordGroupPos: new Vector3(-2,2,0),
     timeWordGroupName: "timerGroup",

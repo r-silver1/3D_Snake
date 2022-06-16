@@ -148,11 +148,11 @@ export class CanvasCompComponent implements OnInit {
         if(this.lastSecondStart == 0){
             this.lastSecondStart = timestamp
         }
+        // todo move this outside loop
+        if(this.timerElapsed == 0){
+            environment.gameStart = true
+        }
         if((elapsed-this.lastSecondStart) > 900 && timerGroupObj != undefined){
-            if(this.timerElapsed == 0){
-                environment.gameStart = true
-            }
-
             if(environment.gameStart == true){
                 this.timerElapsed += 1
                 timerGroupObj.children.forEach((child:any) => {
@@ -161,20 +161,30 @@ export class CanvasCompComponent implements OnInit {
                 timerGroupObj.children = []
                 // todo new logic
         //                 this.fontService.addFont(this.wordGet, this.scene)
-                this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                if(this.timerMax-this.timerElapsed != 0){
+                    this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                }
                 this.lastSecondStart = timestamp
             }
-            if(this.timerMax - this.timerElapsed == 0){
+            if(this.timerMax - this.timerElapsed <= 0 && environment.gameStart == true){
+                console.log("deleting text")
                 environment.gameStart = false
                 timerGroupObj.children.forEach((child:any) => {
                     child.userData.deleteText()
                 })
                 timerGroupObj.children = []
-                this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+//                 this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
                 this.timerElapsed+=1
 
             }
 
+        }
+
+        if(this.timerElapsed > 0 && environment.gameStart == false){
+            if(timerGroupObj != undefined && timerGroupObj.children.length == 0){
+                this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                console.log("added font")
+            }
         }
 
 //         this.secondsElapsed = timestamp - this.lastSecondStart
