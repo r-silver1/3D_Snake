@@ -109,6 +109,7 @@ export class CanvasCompComponent implements OnInit {
 
         // todo new logic timer font group
         this.sceneService.initSceneGroup(this.scene, environment.timeWordGroupName)
+        this.fontService.addFont(String(this.timerMax-1), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
 
         // todo new logic score gorup
         this.sceneService.initSceneGroup(this.scene, environment.scoreGroupName)
@@ -191,7 +192,7 @@ export class CanvasCompComponent implements OnInit {
         }
 
         let scoreGroup = this.scene.getObjectByName(environment.scoreGroupName)
-        if(scoreGroup != undefined && this.userScorePrev != environment.userScore){
+        if(scoreGroup != undefined && this.userScorePrev != environment.userScore && environment.gameStart == true){
             this.userScorePrev = environment.userScore
             scoreGroup.children.forEach((child:any) => {
                 child.userData.deleteText()
