@@ -33,6 +33,7 @@ export class FontBuilderService {
                 transparent: true,
                 opacity: .5,
                 side: THREE.DoubleSide,
+                wireframe: true
             });
             const message = msg
 //             const shape = font.generateShapes(message, .2);
@@ -43,22 +44,55 @@ export class FontBuilderService {
 
             // do some logic for move center of text using bounding box
             const text = new THREE.Mesh(textGeo, matLite);
-            // todo new logic dispose like with laser ray
-            textGeo.dispose()
-            matLite.dispose()
+
 
 //             text.name = 'wordName';
             // new logic use scale
-            text.position.x = -1 + positionScale.x;
+            text.position.x = positionScale.x;
 //             text.position.y = .5;
-            text.position.y = 1 + positionScale.y;
+            text.position.y = positionScale.y;
 //             text.position.x = -.5;
-            text.position.z = 1 + positionScale.z;
+            text.position.z = positionScale.z;
 //             scene.add(text);
 //             let textBox = new THREE.BoxHelper(text, fontColor)
 //             scene.add(textBox)
             // todo might be unecessary but storing font color
             text.userData.fontColor = fontColor
+
+            let matBox = new THREE.MeshBasicMaterial().copy(matLite)
+            let boxHelper = new THREE.Box3().setFromObject(text)
+//             console.log(boxHelper)
+            const boxWidth = (boxHelper.max.x-boxHelper.min.x)
+            const boxHeight = boxHelper.max.y-boxHelper.min.y
+            const boxDepth = boxHelper.max.z-boxHelper.min.z
+            let boxGeo = new THREE.BoxGeometry(
+                boxWidth,
+                boxHeight,
+                boxDepth
+            )
+//             let boxGeo = new THREE.BoxGeometry().copy(boxHelper.geometry)
+            matBox.color.b+=.5
+            matBox.color.g-=.5
+            matBox.transparent = true
+            matBox.opacity = .3
+            let boxMesh = new THREE.Mesh(boxGeo, matBox)
+//             boxMesh.position.copy(text.position)
+            boxGeo.scale(1.5, 1.4, 1)
+            // todo slight tweaks to line up better
+            boxMesh.position.x = (positionScale.x + boxWidth/2) *1.1
+            boxMesh.position.y = (positionScale.y + boxHeight/2)
+            boxMesh.position.z = (positionScale.z + boxDepth/2) - .5
+
+            // todo new logic move this into userdata
+            text.userData.boxMesh = boxMesh
+            matBox.dispose()
+            boxGeo.dispose()
+
+            // todo new logic dispose like with laser ray
+            textGeo.dispose()
+            matLite.dispose()
+
+
 
             // new logic - userdata function
             text.userData.deleteText = () => {
@@ -70,6 +104,7 @@ export class FontBuilderService {
             let wordGroup = scene.getObjectByName(sceneGroupName)
             if(wordGroup != undefined){
                 wordGroup.add(text)
+                wordGroup.add(boxMesh)
             }
 
         });
