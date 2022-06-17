@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 // import BufferGeometryUtils from '../js/BufferGeometryUtils'
-import * as BFUTILS from '../js/BufferGeometryUtils'
+// import * as BFUTILS from '../js/BufferGeometryUtils'
 
 
 export class LaserRay {

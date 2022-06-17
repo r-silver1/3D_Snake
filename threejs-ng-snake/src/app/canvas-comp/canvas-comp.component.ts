@@ -64,6 +64,8 @@ export class CanvasCompComponent implements OnInit {
     private timerElapsed = 0
     private timerMax = 46
     private userScorePrev = -1
+    // todo new rotation logic
+    private lastRotationTime = 0
 
     //
 //     private sceneService: any = undefined;
@@ -244,8 +246,10 @@ export class CanvasCompComponent implements OnInit {
             let tempPos = asteroid.position;
             // todo make helper for translate
 
-            let elapsed_modifier = (timestamp-this.last) *.00009
-            let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
+//             let elapsed_modifier = (timestamp-this.last) *.00009
+//             let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
+            let rotation = .0002*((this.shapesArray.length-index)/this.shapesArray.length)
+
 
             // todo should make local rotation an internal asteroid function if going to change on collision
             asteroid.shapeObj.rotateY(rotation)
