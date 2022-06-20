@@ -101,6 +101,20 @@ export class FontBuilderService {
                 text.removeFromParent()
             }
 
+            // new logic - laser collision
+            text.userData.checkPointConflict = (point:THREE.Vector3) => {
+                // @ts-ignore
+                if(text.geometry.boundingSphere.containsPoint(point)){
+                    text.material.wireframe = false
+                    text.userData.boxMesh.material.wireframe = false
+                }
+            }
+            // todo new logic refresh wireFrame
+            text.userData.refreshTextWireframe = () => {
+                text.material.wireframe = true
+                text.userData.boxMesh.material.wireframe = true
+            }
+
             let wordGroup = scene.getObjectByName(sceneGroupName)
             if(wordGroup != undefined){
                 wordGroup.add(text)

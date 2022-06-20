@@ -161,6 +161,8 @@ export class ObjBuilderService {
 //         let laserGroup = scene.getObjectByName("laserGroup")
         let laserGroup = scene.getObjectByName(environment.laserGroupName)
         if(laserGroup != undefined){
+            // todo new logic button hits
+            let buttonGroup = scene.getObjectByName(environment.buttonGroupName)
             laserGroup.children.forEach( (laser, index) => {
                 for (let i = 0; i<shapesArray.length; i++){
                     // @ts-ignore
@@ -183,9 +185,15 @@ export class ObjBuilderService {
                             laser.userData.deleteLaser()
                             // @ts-ignore
                             laserGroup.children.splice(index, 1)
-
                         }
                     }
+                }
+                if(buttonGroup != undefined){
+                    buttonGroup.children.forEach( (child:any) => {
+                        if(child.userData.checkPointConflict != undefined){
+                            child.userData.checkPointConflict(laser.position)
+                        }
+                    })
                 }
 
             })

@@ -68,6 +68,9 @@ export class CanvasCompComponent implements OnInit {
     // todo new logic rotation timing
     private lastRotationStart = 0
 
+    // todo new logic refresh timing
+    private lastKeyRefresh = 0
+
     //
 //     private sceneService: any = undefined;
 
@@ -118,6 +121,9 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initSceneGroup(this.scene, environment.scoreGroupName)
         this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
 
+        this.sceneService.initSceneGroup(this.scene, environment.buttonGroupName)
+        this.fontService.addFont("START", this.scene, environment.buttonGroupName, environment.buttonGroupPos)
+
 
         this.clock = new THREE.Clock()
 
@@ -160,6 +166,9 @@ export class CanvasCompComponent implements OnInit {
         if(this.lastRotationStart == 0){
             this.lastRotationStart = timestamp
         }
+        if(this.lastKeyRefresh == 0){
+            this.lastKeyRefresh = timestamp
+        }
 
         // todo move this outside loop
         if(this.timerElapsed == 0){
@@ -190,6 +199,18 @@ export class CanvasCompComponent implements OnInit {
 
             }
 
+        }
+        // todo new logic refresh keys
+        if((timestamp-this.lastKeyRefresh) > environment.keyRefreshRate){
+            // todo new logic refresh button color
+            let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
+            if(buttonGroup != undefined){
+                buttonGroup.children.forEach( (child:any) => {
+                    if(child.userData.refreshTextWireframe != undefined){
+                        child.userData.refreshTextWireframe()
+                    }
+                })
+            }
         }
 
         if(this.timerElapsed > 0 && environment.gameStart == false){
@@ -245,7 +266,6 @@ export class CanvasCompComponent implements OnInit {
         // todo move this to obj service, use object methods
         // todo this just test helper for movement
         if(timestamp-this.lastRotationStart > environment.rotationFramerate){
-            console.log(timestamp-this.lastRotationStart)
             this.lastRotationStart = timestamp
             this.shapesArray.forEach((asteroid:any, index:any) => {
                 // todo : move this to a call for the asteroids group, and then loop through each
@@ -268,9 +288,11 @@ export class CanvasCompComponent implements OnInit {
 
                 this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
 
-
             });
         }
+
+
+
         if(environment.gameStart == true){
             this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
         }
