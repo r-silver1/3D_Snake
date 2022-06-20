@@ -164,34 +164,46 @@ export class ObjBuilderService {
             // todo new logic button hits
             let buttonGroup = scene.getObjectByName(environment.buttonGroupName)
             laserGroup.children.forEach( (laser, index) => {
-                for (let i = 0; i<shapesArray.length; i++){
-                    // @ts-ignore
-                    if(laser.geometry.boundingSphere != undefined){
-                        let hitCheck = shapesArray[i].checkPointConflict(laser.position)
-                        if(hitCheck == true){
-                            // new logic: break asteroid into smaller chunks
-                            this.blowUpAsteroid(shapesArray, i, scene)
-                            // delete asteroid removes from scene
-                            shapesArray[i].deleteAsteroid()
-                            shapesArray.splice(i, 1)
-                            i-=1
-                            // todo break this into different laser function
-                            // @ts-ignore
-//                             laser.geometry.dispose()
-//                             // @ts-ignore
-//                             laser.material.dispose()
-//                             laser.removeFromParent()
-                            // new logic delete using laser function and splice group
-                            laser.userData.deleteLaser()
-                            // @ts-ignore
-                            laserGroup.children.splice(index, 1)
+                if(environment.gameStart == true){
+                    for (let i = 0; i<shapesArray.length; i++){
+                        // @ts-ignore
+                        if(laser.geometry.boundingSphere != undefined){
+                            let hitCheck = shapesArray[i].checkPointConflict(laser.position)
+                            if(hitCheck == true){
+                                // new logic: break asteroid into smaller chunks
+                                this.blowUpAsteroid(shapesArray, i, scene)
+                                // delete asteroid removes from scene
+                                shapesArray[i].deleteAsteroid()
+                                shapesArray.splice(i, 1)
+                                i-=1
+                                // todo break this into different laser function
+                                // @ts-ignore
+    //                             laser.geometry.dispose()
+    //                             // @ts-ignore
+    //                             laser.material.dispose()
+    //                             laser.removeFromParent()
+                                // new logic delete using laser function and splice group
+                                laser.userData.deleteLaser()
+                                // @ts-ignore
+                                laserGroup.children.splice(index, 1)
+                            }
                         }
                     }
                 }
                 if(buttonGroup != undefined){
                     buttonGroup.children.forEach( (child:any) => {
                         if(child.userData.checkPointConflict != undefined){
-                            child.userData.checkPointConflict(laser.position)
+                            let retConf = child.userData.checkPointConflict(laser.position)
+                            if(retConf == true){
+                                if(child.userData.message == "START" ){
+                                    environment.gameStart = true
+                                    child.userData.deleteText()
+
+                                    // @ts-ignore
+                                    buttonGroup.children.splice(0, buttonGroup.children.length)
+                                    return
+                                }
+                            }
                         }
                     })
                 }

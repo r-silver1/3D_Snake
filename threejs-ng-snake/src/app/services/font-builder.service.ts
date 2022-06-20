@@ -92,10 +92,18 @@ export class FontBuilderService {
             textGeo.dispose()
             matLite.dispose()
 
+            // new logic store msg in userdata
+            text.userData.message = message
+
 
 
             // new logic - userdata function
             text.userData.deleteText = () => {
+                // delete box
+                text.userData.boxMesh.geometry.dispose()
+                text.userData.boxMesh.material.dispose()
+                text.userData.boxMesh.removeFromParent()
+
                 text.geometry.dispose()
                 text.material.dispose()
                 text.removeFromParent()
@@ -107,7 +115,9 @@ export class FontBuilderService {
                 if(text.geometry.boundingSphere.containsPoint(point)){
                     text.material.wireframe = false
                     text.userData.boxMesh.material.wireframe = false
+                    return true
                 }
+                return false
             }
             // todo new logic refresh wireFrame
             text.userData.refreshTextWireframe = () => {

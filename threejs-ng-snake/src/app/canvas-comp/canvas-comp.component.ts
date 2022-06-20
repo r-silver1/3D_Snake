@@ -62,7 +62,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 46
+    private timerMax = 3
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -115,11 +115,11 @@ export class CanvasCompComponent implements OnInit {
 
         // todo new logic timer font group
         this.sceneService.initSceneGroup(this.scene, environment.timeWordGroupName)
-        this.fontService.addFont(String(this.timerMax-1), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+//         this.fontService.addFont(String(this.timerMax-1), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
 
         // todo new logic score gorup
         this.sceneService.initSceneGroup(this.scene, environment.scoreGroupName)
-        this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
+//         this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
 
 
         // todo comment or uncomment to include start testing button
@@ -173,9 +173,9 @@ export class CanvasCompComponent implements OnInit {
         }
 
         // todo move this outside loop
-        if(this.timerElapsed == 0){
-            environment.gameStart = true
-        }
+//         if(this.timerElapsed == 0){
+//             environment.gameStart = true
+//         }
         if((elapsed-this.lastSecondStart) > 950 && timerGroupObj != undefined){
             if(environment.gameStart == true){
                 this.timerElapsed += 1
@@ -233,27 +233,6 @@ export class CanvasCompComponent implements OnInit {
 
 //         this.secondsElapsed = timestamp - this.lastSecondStart
 
-        // todo commenting this out for now
-//         let textGroupObj = this.scene.getObjectByName(environment.wordGroupName)
-        /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
-        in console log*/
-//         if (elapsed % 1500 == 0 && textObj!=undefined){
-//         if (elapsed % 1500 == 0 && textGroupObj!=undefined){
-//             this.getWordApi()
-//             // todo this shouldn't be a global probably
-//             if(this.wordGet!=undefined){
-//                 // todo need to test logic here...
-// //                 this.scene.remove(textObj)
-//                 textGroupObj.children.forEach((child:any) => {
-//                     child.userData.deleteText()
-//                 })
-//                 textGroupObj.children = []
-//                 // todo new logic
-// //                 this.fontService.addFont(this.wordGet, this.scene)
-//                 this.fontService.addFont(this.wordGet, this.scene, environment.wordGroupName, environment.wordGroupPos)
-//             }
-//
-//         }
 
         // logic arrow helpers
         if(this.cameraHelpers == true){
@@ -295,9 +274,9 @@ export class CanvasCompComponent implements OnInit {
 
 
 
-        if(environment.gameStart == true){
-            this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
-        }
+//         if(environment.gameStart == true){
+        this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
+//         }
         this.render_all();
         this.stats.update();
         requestAnimationFrame(this.animate);

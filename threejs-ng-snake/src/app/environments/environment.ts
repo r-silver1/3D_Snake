@@ -31,6 +31,7 @@ export const environment = {
 
     // todo new logic button group with fonts
     buttonGroupName: "buttonGroup",
-    buttonGroupPos: new Vector3(-.25, -1, 0)
+    buttonGroupPos: new Vector3(-.25, -1, 0),
+
 }
 //         const fontUri = '..\\assets\\Gravity_Bold.json'
