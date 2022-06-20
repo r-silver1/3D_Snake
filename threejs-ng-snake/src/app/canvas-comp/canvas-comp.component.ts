@@ -121,6 +121,8 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initSceneGroup(this.scene, environment.scoreGroupName)
         this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
 
+
+        // todo comment or uncomment to include start testing button
         this.sceneService.initSceneGroup(this.scene, environment.buttonGroupName)
         this.fontService.addFont("START", this.scene, environment.buttonGroupName, environment.buttonGroupPos)
 
