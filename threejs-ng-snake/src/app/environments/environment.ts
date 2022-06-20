@@ -26,6 +26,6 @@ export const environment = {
 
     // todo testing this, limit rotation speed if faster system
     // higher values slow asteroids
-    rotationFramerate: 15
+    rotationFramerate: 12
 }
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

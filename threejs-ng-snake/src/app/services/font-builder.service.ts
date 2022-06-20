@@ -27,7 +27,7 @@ export class FontBuilderService {
 //         const fontUri = '..\\assets\\Gravity_Bold.json'
 //         this.loader.load(fontUri, font => {
         this.loader.load(environment.fontUri, font => {
-            const fontColor = new THREE.Color('rgb(0, 255, 0)');
+            const fontColor = new THREE.Color('rgb(0, 200, 200)');
             const matLite = new THREE.MeshBasicMaterial({
                 color: fontColor,
                 transparent: true,

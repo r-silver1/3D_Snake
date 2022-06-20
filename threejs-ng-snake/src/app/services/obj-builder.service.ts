@@ -30,8 +30,11 @@ export class ObjBuilderService {
             // todo new logic enviro var
 //             const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 60, 255))
 //             const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 0, 255));
-            const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 60, 255))
-            const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 0, 255));
+//             const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 60, 255))
+//             const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 0, 255));
+            // todo new change try to make smaller asteroids brigher
+            const blueCol = 255 - Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 0, 80))
+            const greenCol = 220 -Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 30, 60));
             let material = new THREE.MeshPhongMaterial({
                                      color: new THREE.Color('rgb(100,'+greenCol+','+blueCol+')'),
 //                                      side: THREE.DoubleSide
@@ -209,8 +212,8 @@ export class ObjBuilderService {
             // generate color using old values and decreasing
             let new_color = new THREE.Color(
                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.r*.95, old_color.r),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.g*.9, old_color.g),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.b*.7, old_color.b)
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.g*1.25, old_color.g),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.b*1.4, old_color.b)
             )
 
             // generate material for new asteroid
