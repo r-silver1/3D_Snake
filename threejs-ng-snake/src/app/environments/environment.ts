@@ -22,6 +22,10 @@ export const environment = {
     // asteroid global params
     min_asteroid_radius: .06,
     max_asteroid_radius: .35,
-    max_asteroids: 100
+    max_asteroids: 100,
+
+    // todo testing this, limit rotation speed if faster system
+    // higher values slow asteroids
+    rotationFramerate: 15
 }
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

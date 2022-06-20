@@ -65,6 +65,9 @@ export class CanvasCompComponent implements OnInit {
     private timerMax = 46
     private userScorePrev = -1
 
+    // todo new logic rotation timing
+    private lastRotationStart = 0
+
     //
 //     private sceneService: any = undefined;
 
@@ -154,11 +157,15 @@ export class CanvasCompComponent implements OnInit {
         if(this.lastSecondStart == 0){
             this.lastSecondStart = timestamp
         }
+        if(this.lastRotationStart == 0){
+            this.lastRotationStart = timestamp
+        }
+
         // todo move this outside loop
         if(this.timerElapsed == 0){
             environment.gameStart = true
         }
-        if((elapsed-this.lastSecondStart) > 900 && timerGroupObj != undefined){
+        if((elapsed-this.lastSecondStart) > 950 && timerGroupObj != undefined){
             if(environment.gameStart == true){
                 this.timerElapsed += 1
                 timerGroupObj.children.forEach((child:any) => {
@@ -237,29 +244,33 @@ export class CanvasCompComponent implements OnInit {
         // main logic asteroids
         // todo move this to obj service, use object methods
         // todo this just test helper for movement
-        this.shapesArray.forEach((asteroid:any, index:any) => {
-            // todo : move this to a call for the asteroids group, and then loop through each
-            //   function will take in rotation,
-//             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
-            let tempPos = asteroid.position;
-            // todo make helper for translate
+        if(timestamp-this.lastRotationStart > environment.rotationFramerate){
+            console.log(timestamp-this.lastRotationStart)
+            this.lastRotationStart = timestamp
+            this.shapesArray.forEach((asteroid:any, index:any) => {
+                // todo : move this to a call for the asteroids group, and then loop through each
+                //   function will take in rotation,
+    //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
+                let tempPos = asteroid.position;
+                // todo make helper for translate
 
-            let elapsed_modifier = (timestamp-this.last) *.00009
-            let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
+                let elapsed_modifier = (timestamp-this.last) *.00009
+                let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
 
-            // todo should make local rotation an internal asteroid function if going to change on collision
-            asteroid.shapeObj.rotateY(rotation)
-            asteroid.shapeObj.rotateZ(rotation/5)
+                // todo should make local rotation an internal asteroid function if going to change on collision
+                asteroid.shapeObj.rotateY(rotation)
+                asteroid.shapeObj.rotateZ(rotation/5)
 
-            // set asteroid direction, also update rotation helper if necessary
-            asteroid.setAsteroidDirection()
-            // update box helper, or box helper won't change in size with rotation etc
-            asteroid.updateBoxHelper()
+                // set asteroid direction, also update rotation helper if necessary
+                asteroid.setAsteroidDirection()
+                // update box helper, or box helper won't change in size with rotation etc
+                asteroid.updateBoxHelper()
 
-            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
+                this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
 
 
-        });
+            });
+        }
         if(environment.gameStart == true){
             this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
         }
