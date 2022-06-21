@@ -71,6 +71,9 @@ export class CanvasCompComponent implements OnInit {
     // todo new logic refresh timing
     private lastKeyRefresh = 0
 
+    // todo new logic game stop time
+    private gameStopTime = 0
+
     //
 //     private sceneService: any = undefined;
 
@@ -215,10 +218,28 @@ export class CanvasCompComponent implements OnInit {
             }
         }
 
-        if(this.timerElapsed > 0 && environment.gameStart == false){
-            if(timerGroupObj != undefined && timerGroupObj.children.length == 0){
-                this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+        if(this.timerElapsed > 0 && environment.gameStart == false && this.gameStopTime >= 0){
+            if(this.gameStopTime == 0){
+                this.gameStopTime = timestamp
+                if(timerGroupObj != undefined && timerGroupObj.children.length == 0){
+                    this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                }
+            }else if(timestamp - this.gameStopTime > 2000){
+                if(timerGroupObj != undefined){
+                    timerGroupObj.children.forEach((child:any, i:number)=>{
+
+                        child.userData.deleteText()
+                        // @ts-ignore
+                        timerGroupObj.children.splice(i, 1)
+
+                        this.fontService.addFont("Enter Name:", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                        // todo logic avoid whole block
+                        this.gameStopTime = -1
+                    })
+                }
             }
+
+
         }
 
         let scoreGroup = this.scene.getObjectByName(environment.scoreGroupName)

@@ -191,7 +191,7 @@ export class ObjBuilderService {
                     }
                 }
                 if(buttonGroup != undefined){
-                    buttonGroup.children.forEach( (child:any) => {
+                    buttonGroup.children.forEach( (child:any, i:number) => {
                         if(child.userData.checkPointConflict != undefined){
                             let retConf = child.userData.checkPointConflict(laser.position)
                             if(retConf == true){
@@ -200,8 +200,7 @@ export class ObjBuilderService {
                                     child.userData.deleteText()
 
                                     // @ts-ignore
-                                    buttonGroup.children.splice(0, buttonGroup.children.length)
-                                    return
+                                    buttonGroup.children.splice(0, i)
                                 }
                             }
                         }

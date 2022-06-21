@@ -12,11 +12,11 @@ export const environment = {
     wordGroupPos: new Vector3(-2,2,0),
     // timer word object
     timeWordGroupName: "timerGroup",
-    timerGroupPos: new Vector3(.25,1,0),
+    timerGroupPos: new Vector3(-.25,0,0),
     // user score for asteroids
     userScore: 0,
     scoreGroupName: "wordScoreGroup",
-    scoreGroupPos: new Vector3(.25,0,0),
+    scoreGroupPos: new Vector3(-.25,1,0),
     // laser group
     laserGroupName: "laserGroup",
     // asteroid global params
