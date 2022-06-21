@@ -31,7 +31,7 @@ export const environment = {
 
     // todo new logic button group with fonts
     buttonGroupName: "buttonGroup",
-    buttonGroupPos: new Vector3(-.25, -1, 0),
+    buttonGroupPos: new Vector3(-.25, -1, 2),
     // .5 under timer
 //     nameDisplayPos: new Vector3(-.25,-1,0),
 
@@ -42,8 +42,12 @@ export const environment = {
     modeName2: "Entry",
     modeName3: "Scoreboard",
 
-    // todo new logic word alphabet
-    keysAlphabet: String.fromCharCode(...Array(123).keys()).slice(65, 91) + String.fromCharCode(...Array(123).keys()).slice(48, 58)
+    // todo new logic word alphabet for keyboard
+    keysAlphabet: String.fromCharCode(...Array(123).keys()).slice(65, 91) + String.fromCharCode(...Array(123).keys()).slice(48, 58),
+
+    // todo new logic big and small font size
+    largeFontSize: .5,
+    smallFontSize: .25
 }
 
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

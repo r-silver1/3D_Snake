@@ -17,7 +17,9 @@ export class FontBuilderService {
 //     }
 
     // todo new logic no longer take in scene, return object
-    public addFont(msg: string, scene:THREE.Scene, sceneGroupName: string, positionScale: THREE.Vector3) : void {
+//     public addFont(msg: string, scene:THREE.Scene, sceneGroupName: string, positionScale: THREE.Vector3) : void {
+    // todo new logic size
+    public addFont(msg: string, scene:THREE.Scene, sceneGroupName: string, positionScale: THREE.Vector3, size:number) : void {
 //     public addFont(msg: string) : void {
         // text
         // https://threejs.org/examples/?q=text#webgl_geometry_text_shapes
@@ -36,8 +38,9 @@ export class FontBuilderService {
                 wireframe: true
             });
             const message = msg
-//             const shape = font.generateShapes(message, .2);
-            const shape = font.generateShapes(message, .5);
+            // todo new logic use size passed in value
+//             const shape = font.generateShapes(message, .5);
+            const shape = font.generateShapes(message, size);
             const textGeo = new THREE.ShapeGeometry(shape);
 
 //             textGeo.computeBoundingBox();
@@ -45,19 +48,22 @@ export class FontBuilderService {
             // do some logic for move center of text using bounding box
             const text = new THREE.Mesh(textGeo, matLite);
 
-
 //             text.name = 'wordName';
             // new logic use scale
-            text.position.x = positionScale.x;
-//             text.position.y = .5;
-            text.position.y = positionScale.y;
-//             text.position.x = -.5;
-            text.position.z = positionScale.z;
+//             text.position.x = positionScale.x;
+// //             text.position.y = .5;
+//             text.position.y = positionScale.y;
+// //             text.position.x = -.5;
+//             text.position.z = positionScale.z;
+            text.position.set(positionScale.x, positionScale.y, positionScale.z)
 //             scene.add(text);
 //             let textBox = new THREE.BoxHelper(text, fontColor)
 //             scene.add(textBox)
             // todo might be unecessary but storing font color
             text.userData.fontColor = fontColor
+
+
+
 
             let matBox = new THREE.MeshBasicMaterial().copy(matLite)
             let boxHelper = new THREE.Box3().setFromObject(text)
@@ -112,7 +118,11 @@ export class FontBuilderService {
             // new logic - laser collision
             text.userData.checkPointConflict = (point:THREE.Vector3) => {
                 // @ts-ignore
-                if(text.geometry.boundingSphere.containsPoint(point)){
+//                 if(text.geometry.boundingSphere.containsPoint(point)){
+                if((point.z <= boxHelper.min.z) &&
+                   (boxHelper.min.x <= point.x && boxHelper.max.x >= point.x) &&
+                   (boxHelper.min.y <= point.y && boxHelper.max.y >= point.y)
+                   ){
                     text.material.wireframe = false
                     text.userData.boxMesh.material.wireframe = false
                     return true

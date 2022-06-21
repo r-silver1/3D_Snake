@@ -62,7 +62,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 3
+    private timerMax = 46
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -114,7 +114,7 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initSceneGroup(this.scene, environment.wordGroupName)
 //         this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
         // todo no longer pass in font, rely on scene group
-        this.fontService.addFont("Asteroids 3D Demo", this.scene, environment.wordGroupName, environment.wordGroupPos)
+        this.fontService.addFont("Asteroids 3D Demo", this.scene, environment.wordGroupName, environment.wordGroupPos, environment.largeFontSize)
 
         // todo new logic timer font group
         this.sceneService.initSceneGroup(this.scene, environment.timeWordGroupName)
@@ -127,7 +127,7 @@ export class CanvasCompComponent implements OnInit {
 
         // todo comment or uncomment to include start testing button
         this.sceneService.initSceneGroup(this.scene, environment.buttonGroupName)
-        this.fontService.addFont("START", this.scene, environment.buttonGroupName, environment.buttonGroupPos)
+        this.fontService.addFont("START", this.scene, environment.buttonGroupName, environment.buttonGroupPos, environment.smallFontSize)
 
 
         this.clock = new THREE.Clock()
@@ -189,7 +189,7 @@ export class CanvasCompComponent implements OnInit {
                 // todo new logic
         //                 this.fontService.addFont(this.wordGet, this.scene)
                 if(this.timerMax-this.timerElapsed != 0){
-                    this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                    this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                 }
                 this.lastSecondStart = timestamp
             }
@@ -232,7 +232,7 @@ export class CanvasCompComponent implements OnInit {
             // timesUp mode
             if(environment.postGameMode == environment.modeName1){
                 if(timerGroupObj != undefined){
-                    this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                    this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                 }
                 // Entry mode
                 environment.postGameMode = environment.modeName2
@@ -254,10 +254,10 @@ export class CanvasCompComponent implements OnInit {
                             this.gameStopTime = -1
                         })
                         // todo logic add enter name group
-                        this.fontService.addFont("Name: *******", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                        this.fontService.addFont("Name: *******", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
 //                         console.log(environment.keysAlphabet.slice(65, 91))
 //                         console.log(environment.keysAlphabet.slice(48, 58))
-                        console.log(environment.keysAlphabet)
+//                         console.log(environment.keysAlphabet)
 
 
 
@@ -277,7 +277,7 @@ export class CanvasCompComponent implements OnInit {
                 child.userData.deleteText()
             })
             scoreGroup.children = []
-            this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
+            this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos, environment.largeFontSize)
         }
 
 //         this.secondsElapsed = timestamp - this.lastSecondStart
