@@ -67,6 +67,8 @@ export class FontBuilderService {
 
             let matBox = new THREE.MeshBasicMaterial().copy(matLite)
             let boxHelper = new THREE.Box3().setFromObject(text)
+            // todo new logic userdata
+            text.userData.boxHelper = boxHelper
 //             console.log(boxHelper)
             const boxWidth = (boxHelper.max.x-boxHelper.min.x)
             const boxHeight = boxHelper.max.y-boxHelper.min.y
@@ -105,6 +107,7 @@ export class FontBuilderService {
 
             // new logic - userdata function
             text.userData.deleteText = () => {
+                text.userData.boxHelper = null
                 // delete box
                 text.userData.boxMesh.geometry.dispose()
                 text.userData.boxMesh.material.dispose()
@@ -119,9 +122,9 @@ export class FontBuilderService {
             text.userData.checkPointConflict = (point:THREE.Vector3) => {
                 // @ts-ignore
 //                 if(text.geometry.boundingSphere.containsPoint(point)){
-                if((point.z <= boxHelper.min.z) &&
-                   (boxHelper.min.x <= point.x && boxHelper.max.x >= point.x) &&
-                   (boxHelper.min.y <= point.y && boxHelper.max.y >= point.y)
+                if((point.z <= text.userData.boxHelper.min.z) &&
+                   (text.userData.boxHelper.min.x <= point.x && text.userData.boxHelper.max.x >= point.x) &&
+                   (text.userData.boxHelper.min.y <= point.y && text.userData.boxHelper.max.y >= point.y)
                    ){
                     text.material.wireframe = false
                     text.userData.boxMesh.material.wireframe = false
