@@ -62,7 +62,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 46
+    private timerMax = 3
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -195,6 +195,7 @@ export class CanvasCompComponent implements OnInit {
             }
             if(this.timerMax - this.timerElapsed <= 0 && environment.gameStart == true){
                 environment.gameStart = false
+                environment.postGameMode = environment.modeName1
                 timerGroupObj.children.forEach((child:any) => {
                     child.userData.deleteText()
                 })
@@ -218,24 +219,51 @@ export class CanvasCompComponent implements OnInit {
             }
         }
 
-        if(this.timerElapsed > 0 && environment.gameStart == false && this.gameStopTime >= 0){
+        // here: logic for game over and enter name prompt
+//         if(this.timerElapsed > 0 && environment.gameStart == false && this.gameStopTime >= 0){
+        // todo new logic here for game mode
+        if(environment.postGameMode != ""){
             if(this.gameStopTime == 0){
                 this.gameStopTime = timestamp
-                if(timerGroupObj != undefined && timerGroupObj.children.length == 0){
+//                 if(timerGroupObj != undefined && timerGroupObj.children.length == 0){
+//                     this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+//                 }
+            }
+            // timesUp mode
+            if(environment.postGameMode == environment.modeName1){
+                if(timerGroupObj != undefined){
                     this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
                 }
-            }else if(timestamp - this.gameStopTime > 2000){
-                if(timerGroupObj != undefined){
-                    timerGroupObj.children.forEach((child:any, i:number)=>{
+                // Entry mode
+                environment.postGameMode = environment.modeName2
+            }
 
-                        child.userData.deleteText()
-                        // @ts-ignore
-                        timerGroupObj.children.splice(i, 1)
+            // todo new logic environment mode
+//             else if(timestamp - this.gameStopTime > 2000){
+            if(timestamp - this.gameStopTime > 2000){
+                if(environment.postGameMode == environment.modeName2){
+                    if(timerGroupObj != undefined){
+                        timerGroupObj.children.forEach((child:any, i:number)=>{
 
-                        this.fontService.addFont("Enter Name:", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
-                        // todo logic avoid whole block
-                        this.gameStopTime = -1
-                    })
+                            child.userData.deleteText()
+                            // @ts-ignore
+                            timerGroupObj.children.splice(i, 1)
+
+
+                            // todo logic avoid whole block
+                            this.gameStopTime = -1
+                        })
+                        // todo logic add enter name group
+                        this.fontService.addFont("Name: *******", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+//                         console.log(environment.keysAlphabet.slice(65, 91))
+//                         console.log(environment.keysAlphabet.slice(48, 58))
+                        console.log(environment.keysAlphabet)
+
+
+
+                        // mode 3 scoreboard
+                        environment.postGameMode = environment.modeName3
+                    }
                 }
             }
 

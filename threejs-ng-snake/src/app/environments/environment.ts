@@ -32,6 +32,18 @@ export const environment = {
     // todo new logic button group with fonts
     buttonGroupName: "buttonGroup",
     buttonGroupPos: new Vector3(-.25, -1, 0),
+    // .5 under timer
+//     nameDisplayPos: new Vector3(-.25,-1,0),
 
+    // post_game_mode : avoid if statements using environment
+    // Undefined, TimesUp, Entry, Scoreboard
+    postGameMode: "",
+    modeName1: "TimesUp",
+    modeName2: "Entry",
+    modeName3: "Scoreboard",
+
+    // todo new logic word alphabet
+    keysAlphabet: String.fromCharCode(...Array(123).keys()).slice(65, 91) + String.fromCharCode(...Array(123).keys()).slice(48, 58)
 }
+
 //         const fontUri = '..\\assets\\Gravity_Bold.json'
