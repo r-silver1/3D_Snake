@@ -12,11 +12,11 @@ export const environment = {
     wordGroupPos: new Vector3(-2,2,0),
     // timer word object
     timeWordGroupName: "timerGroup",
-    timerGroupPos: new Vector3(-.25,0,0),
+    timerGroupPos: new Vector3(-.25,.5,0),
     // user score for asteroids
     userScore: 0,
     scoreGroupName: "wordScoreGroup",
-    scoreGroupPos: new Vector3(-.25,1,0),
+    scoreGroupPos: new Vector3(-.25,1.4,0),
     // laser group
     laserGroupName: "laserGroup",
     // asteroid global params
@@ -27,11 +27,11 @@ export const environment = {
     // todo testing this, limit rotation speed if faster system
     // higher values slow asteroids
     rotationFramerate: 12,
-    keyRefreshRate: 50,
+    keyRefreshRate: 75,
 
     // todo new logic button group with fonts
     buttonGroupName: "buttonGroup",
-    buttonGroupPos: new Vector3(-.25, -1, 2),
+    buttonGroupPos: new Vector3(-.25, .25, 5),
     // .5 under timer
 //     nameDisplayPos: new Vector3(-.25,-1,0),
 
@@ -43,11 +43,15 @@ export const environment = {
     modeName3: "Scoreboard",
 
     // todo new logic word alphabet for keyboard
-    keysAlphabet: String.fromCharCode(...Array(123).keys()).slice(65, 91) + String.fromCharCode(...Array(123).keys()).slice(48, 58),
+    keysAlphabet: (String.fromCharCode(...Array(123).keys()).slice(65, 91) + String.fromCharCode(...Array(123).keys()).slice(48, 58)).split(''),
 
     // todo new logic big and small font size
-    largeFontSize: .5,
-    smallFontSize: .25
+    largeFontSize: .4,
+    smallFontSize: .25,
+    xSmallFontSize: .15,
+
+    // todo new logic camera pos
+    cameraPos: new Vector3(0, 1.2, 8)
 }
 
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

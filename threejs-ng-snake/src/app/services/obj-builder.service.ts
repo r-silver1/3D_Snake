@@ -201,6 +201,9 @@ export class ObjBuilderService {
 
                                     // @ts-ignore
                                     buttonGroup.children.splice(0, i)
+                                    laser.userData.deleteLaser()
+                                    // @ts-ignore
+                                    laserGroup.children.splice(index, 1)
                                 }
                             }
                         }

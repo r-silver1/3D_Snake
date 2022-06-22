@@ -254,10 +254,23 @@ export class CanvasCompComponent implements OnInit {
                             this.gameStopTime = -1
                         })
                         // todo logic add enter name group
-                        this.fontService.addFont("Name: *******", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                        this.fontService.addFont("Name: ", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
 //                         console.log(environment.keysAlphabet.slice(65, 91))
 //                         console.log(environment.keysAlphabet.slice(48, 58))
-//                         console.log(environment.keysAlphabet)
+
+                        // create keyboard
+                        let maxChars = Math.floor(environment.keysAlphabet.length/4)
+                        let curX = environment.buttonGroupPos.x + (maxChars*.25*environment.buttonGroupPos.x)
+                        let curY = environment.buttonGroupPos.y
+                        environment.keysAlphabet.forEach((characterVal:string, index:any) => {
+                            if(index > 0 && index % maxChars == 0){
+                                curX = environment.buttonGroupPos.x + (maxChars*.25*environment.buttonGroupPos.x)
+                                curY -= environment.xSmallFontSize * 2.5
+                            }
+                            this.fontService.addFont(characterVal, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.buttonGroupPos.x+curX, environment.buttonGroupPos.y+curY, environment.buttonGroupPos.z), environment.xSmallFontSize)
+                            curX += environment.xSmallFontSize * 2.5
+
+                        })
 
 
 

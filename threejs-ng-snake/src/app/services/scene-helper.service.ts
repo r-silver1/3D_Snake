@@ -102,10 +102,14 @@ export class SceneHelperService {
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-        camera.position.z = 8;
-//         camera.position.z = 5;
-        camera.position.x = 0;
-        camera.position.y = 1.2;
+//         camera.position.z = 8;
+// //         camera.position.z = 5;
+//         camera.position.x = 0;
+//         camera.position.y = 1.2;
+        // todo use new environmental variable for this
+        camera.position.x = environment.cameraPos.x;
+        camera.position.y = environment.cameraPos.y;
+        camera.position.z = environment.cameraPos.z;
         camera.name = "turretCamera"
         scene.add(camera);
     }

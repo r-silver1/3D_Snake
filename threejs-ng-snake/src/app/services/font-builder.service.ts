@@ -87,9 +87,15 @@ export class FontBuilderService {
 //             boxMesh.position.copy(text.position)
             boxGeo.scale(1.5, 1.4, 1)
             // todo slight tweaks to line up better
-            boxMesh.position.x = (positionScale.x + boxWidth/2) *1.1
+//             boxMesh.position.x = (positionScale.x + boxWidth/2) *1.1
+//             boxMesh.position.y = (positionScale.y + boxHeight/2)
+//             boxMesh.position.z = (positionScale.z + boxDepth/2) - .5
+            boxMesh.position.x = (positionScale.x + boxWidth/2)
             boxMesh.position.y = (positionScale.y + boxHeight/2)
-            boxMesh.position.z = (positionScale.z + boxDepth/2) - .5
+            boxMesh.position.z = (positionScale.z + boxDepth/2)
+            let tempVec = new THREE.Vector3()
+            boxHelper.getCenter(tempVec)
+            boxMesh.translateOnAxis(tempVec.add(environment.cameraPos.multiplyScalar(-1)).normalize(), -size/2)
 
             // todo new logic move this into userdata
             text.userData.boxMesh = boxMesh
@@ -122,7 +128,7 @@ export class FontBuilderService {
             text.userData.checkPointConflict = (point:THREE.Vector3) => {
                 // @ts-ignore
 //                 if(text.geometry.boundingSphere.containsPoint(point)){
-                if((point.z <= text.userData.boxHelper.min.z) &&
+                if((point.z <= text.userData.boxHelper.min.z && point.z > text.userData.boxHelper.min.z*.8) &&
                    (text.userData.boxHelper.min.x <= point.x && text.userData.boxHelper.max.x >= point.x) &&
                    (text.userData.boxHelper.min.y <= point.y && text.userData.boxHelper.max.y >= point.y)
                    ){
