@@ -191,23 +191,26 @@ export class ObjBuilderService {
                     }
                 }
                 if(buttonGroup != undefined){
-                    buttonGroup.children.forEach( (child:any, i:number) => {
-                        if(child.userData.checkPointConflict != undefined){
-                            let retConf = child.userData.checkPointConflict(laser.position)
-                            if(retConf == true){
-                                if(child.userData.message == "START" ){
-                                    environment.gameStart = true
-                                    child.userData.deleteText()
+                    // todo new logic only need button group in two modes
+                    if(environment.postGameMode == "" || environment.postGameMode == environment.modeName3){
+                        buttonGroup.children.forEach( (child:any, i:number) => {
+                            if(child.userData.checkPointConflict != undefined){
+                                let retConf = child.userData.checkPointConflict(laser.position)
+                                if(retConf == true){
+                                    if(child.userData.message == "START" ){
+                                        environment.gameStart = true
+                                        child.userData.deleteText()
 
-                                    // @ts-ignore
-                                    buttonGroup.children.splice(0, i)
-                                    laser.userData.deleteLaser()
-                                    // @ts-ignore
-                                    laserGroup.children.splice(index, 1)
+                                        // @ts-ignore
+                                        buttonGroup.children.splice(0, i)
+                                        laser.userData.deleteLaser()
+                                        // @ts-ignore
+                                        laserGroup.children.splice(index, 1)
+                                    }
                                 }
                             }
-                        }
-                    })
+                        })
+                    }
                 }
 
             })

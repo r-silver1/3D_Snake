@@ -27,7 +27,7 @@ export const environment = {
     // todo testing this, limit rotation speed if faster system
     // higher values slow asteroids
     rotationFramerate: 12,
-    keyRefreshRate: 75,
+    keyRefreshRate: 200,
 
     // todo new logic button group with fonts
     buttonGroupName: "buttonGroup",
@@ -39,8 +39,9 @@ export const environment = {
     // Undefined, TimesUp, Entry, Scoreboard
     postGameMode: "",
     modeName1: "TimesUp",
-    modeName2: "Entry",
-    modeName3: "Scoreboard",
+    modeName2: "EntryStart",
+    modeName3: "NameEntrykeyboard",
+    modeName4: "Scoreboard",
 
     // todo new logic word alphabet for keyboard
     keysAlphabet: (String.fromCharCode(...Array(123).keys()).slice(65, 91) + String.fromCharCode(...Array(123).keys()).slice(48, 58)).split(''),

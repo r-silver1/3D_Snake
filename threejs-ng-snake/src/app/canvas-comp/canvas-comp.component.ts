@@ -62,7 +62,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 46
+    private timerMax = 3
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -207,7 +207,10 @@ export class CanvasCompComponent implements OnInit {
 
         }
         // todo new logic refresh keys
-        if((timestamp-this.lastKeyRefresh) > environment.keyRefreshRate){
+//         if((timestamp-this.lastKeyRefresh) > environment.keyRefreshRate){
+        // todo new logic only need two mdoes for refresh wireframe
+        if((environment.postGameMode == "" || environment.postGameMode == environment.modeName3) && (timestamp-this.lastKeyRefresh > environment.keyRefreshRate)){
+            this.lastKeyRefresh = timestamp
             // todo new logic refresh button color
             let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
             if(buttonGroup != undefined){
@@ -241,6 +244,7 @@ export class CanvasCompComponent implements OnInit {
             // todo new logic environment mode
 //             else if(timestamp - this.gameStopTime > 2000){
             if(timestamp - this.gameStopTime > 2000){
+
                 if(environment.postGameMode == environment.modeName2){
                     if(timerGroupObj != undefined){
                         timerGroupObj.children.forEach((child:any, i:number)=>{
@@ -277,6 +281,9 @@ export class CanvasCompComponent implements OnInit {
                         // mode 3 scoreboard
                         environment.postGameMode = environment.modeName3
                     }
+                }
+                if(environment.postGameMode == environment.modeName3){
+                    console.log("y766here!!!")
                 }
             }
 
