@@ -26,7 +26,7 @@ export const environment = {
 
     // todo testing this, limit rotation speed if faster system
     // higher values slow asteroids
-    rotationFramerate: 12,
+    rotationFramerate: 9,
     keyRefreshRate: 200,
 
     // todo new logic button group with fonts
@@ -52,9 +52,11 @@ export const environment = {
     xSmallFontSize: .15,
 
     // todo new logic camera pos
-    cameraPos: new Vector3(0, 1.2, 8)
+    cameraPos: new Vector3(0, 1.2, 8),
 
     // todo new logic currWord
+    currWordEntry: "",
+    maxEntryLength: 8
 }
 
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

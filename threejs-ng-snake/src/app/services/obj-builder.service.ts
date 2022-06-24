@@ -231,6 +231,12 @@ export class ObjBuilderService {
                             let retConf = child.userData.checkPointConflict(laser.position)
                             if(retConf == true){
                                 console.log(child.userData.message)
+                                // logic if length current name over max then splice first char off
+                                if(environment.currWordEntry.length >= environment.maxEntryLength){
+                                    environment.currWordEntry = environment.currWordEntry.slice(1, environment.currWordEntry.length-1)
+                                }
+                                environment.currWordEntry += child.userData.message
+                                console.log(environment.currWordEntry)
                             }
                         }
                     })
