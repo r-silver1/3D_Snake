@@ -230,6 +230,12 @@ export class ObjBuilderService {
                         if(child.userData.checkPointConflict != undefined){
                             let retConf = child.userData.checkPointConflict(laser.position)
                             if(retConf == true){
+                                // todo new logic test for "ENTER message"
+                                if(child.userData.message == "ENTER"){
+                                    // after enter hit hit new environment
+                                    environment.postGameMode = environment.modeName4
+                                    return
+                                }
                                 // logic if length current name over max then splice first char off
                                 if(environment.currWordEntry.length >= environment.maxEntryLength){
                                     environment.currWordEntry = environment.currWordEntry.slice(1, environment.currWordEntry.length-1)

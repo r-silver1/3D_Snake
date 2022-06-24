@@ -209,7 +209,7 @@ export class CanvasCompComponent implements OnInit {
         // todo new logic refresh keys
 //         if((timestamp-this.lastKeyRefresh) > environment.keyRefreshRate){
         // todo new logic only need two mdoes for refresh wireframe
-        if((environment.postGameMode == "" || environment.postGameMode == environment.modeName3) && (timestamp-this.lastKeyRefresh > environment.keyRefreshRate)){
+        if((environment.postGameMode == "" || environment.postGameMode == environment.modeName3 || environment.postGameMode == environment.modeName4) && (timestamp-this.lastKeyRefresh > environment.keyRefreshRate)){
             this.lastKeyRefresh = timestamp
             // todo new logic refresh button color
             let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
@@ -310,6 +310,19 @@ export class CanvasCompComponent implements OnInit {
 
                     //
 
+                }
+
+                if(environment.postGameMode == environment.modeName4){
+                    let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
+                    if(buttonGroup != undefined && buttonGroup.children != []){
+                        buttonGroup.children.forEach( (child:any, i:number) => {
+                            if(child.userData.deleteText != undefined){
+                                child.userData.deleteText()
+                            }
+                            // @ts-ignore
+                            buttonGroup.children.splice(0, i)
+                        })
+                    }
                 }
             }
 
