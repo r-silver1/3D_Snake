@@ -285,6 +285,25 @@ export class CanvasCompComponent implements OnInit {
                 if(environment.postGameMode == environment.modeName3){
                     // todo new logic check keyboard collide
                     this.builderService.checkLaserKeyboardCollisions(this.scene)
+                    //
+//                     let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
+                    if(timerGroupObj != undefined){
+                        // todo logic only refresh these if necessary
+                        timerGroupObj.children.forEach((child:any, i:number)=>{
+                            if(child.userData.message != undefined && child.userData.message.substr(0, 5) == "Name:" && child.userData.message.slice(6, child.userData.message.length) != environment.currWordEntry){
+                                if(child.userData.deleteText != undefined){
+                                    child.userData.deleteText()
+                                }
+                                // @ts-ignore
+                                timerGroupObj.children.splice(i, 1)
+                                this.fontService.addFont("Name: " + environment.currWordEntry, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                                return
+                            }
+                        })
+
+                    }
+
+                    //
 
                 }
             }
