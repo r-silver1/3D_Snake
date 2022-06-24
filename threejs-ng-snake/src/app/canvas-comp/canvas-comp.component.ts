@@ -62,7 +62,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 46
+    private timerMax = 3
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -275,6 +275,11 @@ export class CanvasCompComponent implements OnInit {
                             curX += environment.xSmallFontSize * 2.5
 
                         })
+                        // todo new enter button logic
+                        curY -= environment.xSmallFontSize * 2.5
+                        curX/=2
+                        this.fontService.addFont("ENTER", this.scene, environment.buttonGroupName, new THREE.Vector3(environment.buttonGroupPos.x+curX, environment.buttonGroupPos.y+curY, environment.buttonGroupPos.z), environment.xSmallFontSize)
+
 
 
 
