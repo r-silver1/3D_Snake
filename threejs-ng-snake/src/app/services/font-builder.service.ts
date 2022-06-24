@@ -70,7 +70,12 @@ export class FontBuilderService {
             // todo new logic userdata
             text.userData.boxHelper = boxHelper
 //             console.log(boxHelper)
-            const boxWidth = (boxHelper.max.x-boxHelper.min.x)
+            let boxWidth = (boxHelper.max.x-boxHelper.min.x)
+            // todo new logic avoid overly small sizes like with letter I
+            if(boxWidth < size/3){
+                boxWidth += size/2
+            }
+
             const boxHeight = boxHelper.max.y-boxHelper.min.y
             const boxDepth = boxHelper.max.z-boxHelper.min.z
             let boxGeo = new THREE.BoxGeometry(
@@ -109,6 +114,13 @@ export class FontBuilderService {
             // new logic store msg in userdata
             text.userData.message = message
 
+            let boxHelperMesh = new THREE.Box3().setFromObject(boxMesh)
+            // todo new logic userdata set boxhelper from mesh not text
+            text.userData.boxHelper = boxHelperMesh
+            // todo new logic set z plane from boxhelper set from text not mesh
+            text.userData.textZPlane = text.userData.boxHelper.min.z
+
+
 
 
             // new logic - userdata function
@@ -128,7 +140,9 @@ export class FontBuilderService {
             text.userData.checkPointConflict = (point:THREE.Vector3) => {
                 // @ts-ignore
 //                 if(text.geometry.boundingSphere.containsPoint(point)){
-                if((point.z <= text.userData.boxHelper.min.z && point.z > text.userData.boxHelper.min.z*.8) &&
+//                 if((point.z <= text.userData.boxHelper.min.z && point.z >= text.userData.boxHelper.min.z*.99) &&
+                // todo new logic new z plane from text and other from box
+                if((point.z <= text.userData.textZPlane && point.z >= text.userData.textZPlane*.99) &&
                    (text.userData.boxHelper.min.x <= point.x && text.userData.boxHelper.max.x >= point.x) &&
                    (text.userData.boxHelper.min.y <= point.y && text.userData.boxHelper.max.y >= point.y)
                    ){

@@ -190,9 +190,11 @@ export class ObjBuilderService {
                         }
                     }
                 }
-                if(buttonGroup != undefined){
+                if(buttonGroup != undefined && environment.postGameMode == ""){
                     // todo new logic only need button group in two modes
-                    if(environment.postGameMode == "" || environment.postGameMode == environment.modeName3){
+//                     if(environment.postGameMode == "" || environment.postGameMode == environment.modeName3){
+                    // todo new logic this only for start
+//                     if(environment.postGameMode == ""){
                         buttonGroup.children.forEach( (child:any, i:number) => {
                             if(child.userData.checkPointConflict != undefined){
                                 let retConf = child.userData.checkPointConflict(laser.position)
@@ -210,7 +212,28 @@ export class ObjBuilderService {
                                 }
                             }
                         })
-                    }
+//                     }
+
+                }
+
+            })
+        }
+    }
+
+    checkLaserKeyboardCollisions(scene: THREE.Scene) :any {
+        let laserGroup = scene.getObjectByName(environment.laserGroupName)
+        let buttonGroup = scene.getObjectByName(environment.buttonGroupName)
+        if(laserGroup != undefined){
+            laserGroup.children.forEach( (laser, index) => {
+                if(buttonGroup != undefined){
+                    buttonGroup.children.forEach( (child:any, i:number) => {
+                        if(child.userData.checkPointConflict != undefined){
+                            let retConf = child.userData.checkPointConflict(laser.position)
+                            if(retConf == true){
+                                console.log(child.userData.message)
+                            }
+                        }
+                    })
                 }
 
             })

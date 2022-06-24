@@ -53,6 +53,8 @@ export const environment = {
 
     // todo new logic camera pos
     cameraPos: new Vector3(0, 1.2, 8)
+
+    // todo new logic currWord
 }
 
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

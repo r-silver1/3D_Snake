@@ -62,7 +62,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 3
+    private timerMax = 46
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -283,7 +283,9 @@ export class CanvasCompComponent implements OnInit {
                     }
                 }
                 if(environment.postGameMode == environment.modeName3){
-                    console.log("y766here!!!")
+                    // todo new logic check keyboard collide
+                    this.builderService.checkLaserKeyboardCollisions(this.scene)
+
                 }
             }
 
