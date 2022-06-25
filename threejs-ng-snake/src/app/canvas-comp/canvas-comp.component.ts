@@ -314,7 +314,7 @@ export class CanvasCompComponent implements OnInit {
 
                 if(environment.postGameMode == environment.modeName4){
                     let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
-                    if(buttonGroup != undefined && buttonGroup.children != []){
+                    if(buttonGroup != undefined && buttonGroup.children.length!=0){
                         buttonGroup.children.forEach( (child:any, i:number) => {
                             if(child.userData.deleteText != undefined){
                                 child.userData.deleteText()
@@ -322,6 +322,9 @@ export class CanvasCompComponent implements OnInit {
                             // @ts-ignore
                             buttonGroup.children.splice(0, i)
                         })
+                        console.log(environment.currWordEntry)
+                        console.log(environment.userScore)
+
                     }
                 }
             }
