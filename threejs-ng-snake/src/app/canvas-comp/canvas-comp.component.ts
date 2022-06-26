@@ -184,8 +184,16 @@ export class CanvasCompComponent implements OnInit {
         if((elapsed-this.lastSecondStart) > 950 && timerGroupObj != undefined){
             if(environment.gameStart == true){
                 this.timerElapsed += 1
-                timerGroupObj.children.forEach((child:any) => {
-                    child.userData.deleteText()
+//                 timerGroupObj.children.forEach((child:any) => {
+//                     child.userData.deleteText()
+//                 })
+                // todo new logic splice
+                timerGroupObj.children.forEach((child:any, i:number) => {
+                    if(child.userData.deleteText != undefined){
+                        child.userData.deleteText()
+                    }
+                    // @ts-ignore
+                    timerGroupObj.children.splice(i, 1)
                 })
                 timerGroupObj.children = []
                 // todo new logic
@@ -335,10 +343,52 @@ export class CanvasCompComponent implements OnInit {
                     }else if(environment.scoreboardObject[0] == -2){
                         // getting scoreboard
                         this.scoreboardService.getScoreBoardHelper()
-                    }else{
+//                         let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
+                        if(timerGroupObj != undefined){
+                            timerGroupObj.children.forEach((child:any, i:number)=>{
+                                if(child.userData.deleteText != undefined){
+                                    child.userData.deleteText()
+                                }
+                                // @ts-ignore
+                                timerGroupObj.children.splice(i, 1)
+                            })
+                            // todo logic add enter name group
+//                             if(timerGroupObj.children.length == 0){
+//                                this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+//                             }
+                        }
+                        let scoreGroup = this.scene.getObjectByName(environment.scoreGroupName)
+                        if(scoreGroup != undefined){
+                            scoreGroup.children.forEach((child:any, i:number) => {
+                                if(child.userData.deleteText != undefined){
+                                    child.userData.deleteText()
+                                }
+                                // @ts-ignore
+                                scoreGroup.children.splice(i, 1)
+                            })
+                        }
+//                     }else{
+                    }else if(environment.scoreboardObject[0] == 1){
                         // this: scoreboard object [0] == 1, displaying scoreboard
+                        if(timerGroupObj != undefined){
+                            if(timerGroupObj.children.length != 0){
+                                timerGroupObj.children.forEach((child:any, i:number)=>{
+                                    if(child.userData.deleteText != undefined){
+                                        child.userData.deleteText()
+                                    }
+                                    // @ts-ignore
+                                    timerGroupObj.children.splice(i, 1)
+                                })
+                                // todo logic add enter name group
+    //                             if(timerGroupObj.children.length == 0){
+                            }else{
+                               this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                            }
+                        }
                         console.log(environment.scoreboardObject)
+                        environment.scoreboardObject[0] = 2
                     }
+                    // block after here: scoreboard object 0 == 2, displaying scoreboard
                 }
             }
 
@@ -348,8 +398,16 @@ export class CanvasCompComponent implements OnInit {
         let scoreGroup = this.scene.getObjectByName(environment.scoreGroupName)
         if(scoreGroup != undefined && this.userScorePrev != environment.userScore && environment.gameStart == true){
             this.userScorePrev = environment.userScore
-            scoreGroup.children.forEach((child:any) => {
-                child.userData.deleteText()
+//             scoreGroup.children.forEach((child:any) => {
+//                 child.userData.deleteText()
+//             })
+//             todo new logic splice
+            scoreGroup.children.forEach((child:any, i:number) => {
+                if(child.userData.deleteText != undefined){
+                    child.userData.deleteText()
+                }
+                //@ts-ignore
+                scoreGroup.children.splice(i, 1)
             })
             scoreGroup.children = []
             this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos, environment.largeFontSize)
