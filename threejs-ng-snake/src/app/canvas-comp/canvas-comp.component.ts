@@ -7,6 +7,7 @@ import { WordApiService } from '../word-api.service';
 import { ObjBuilderService } from '../services/obj-builder.service'
 import { SceneHelperService } from '../services/scene-helper.service'
 import { FontBuilderService } from '../services/font-builder.service'
+import { ScoreboardHelperService } from '../services/scoreboard-helper.service'
 
 import { Stats } from '../js/stats'
 
@@ -80,7 +81,8 @@ export class CanvasCompComponent implements OnInit {
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
                 private sceneService: SceneHelperService,
-                private fontService: FontBuilderService
+                private fontService: FontBuilderService,
+                private scoreboardService: ScoreboardHelperService
                 ) {
         this.scene = new THREE.Scene();
 //         this.sceneService = sceneService
@@ -322,9 +324,20 @@ export class CanvasCompComponent implements OnInit {
                             // @ts-ignore
                             buttonGroup.children.splice(0, i)
                         })
-                        console.log(environment.currWordEntry)
-                        console.log(environment.userScore)
-
+//                         this.getWordApi()
+                        // todo make new function for get scoreboard api
+                    }
+                    // todo here temporary logic might not want to use this method of first element scoreboard
+                    if(environment.scoreboardObject[0] == -1){
+                        // posting score
+                        this.scoreboardService.postScoreHelper(environment.currWordEntry, environment.userScore)
+                        environment.scoreboardObject = [-2]
+                    }else if(environment.scoreboardObject[0] == -2){
+                        // getting scoreboard
+                        this.scoreboardService.getScoreBoardHelper()
+                    }else{
+                        // this: scoreboard object [0] == 1, displaying scoreboard
+                        console.log(environment.scoreboardObject)
                     }
                 }
             }
@@ -405,6 +418,8 @@ export class CanvasCompComponent implements OnInit {
             this.wordGet = pickleWord
         })
     }
+
+    // todo new logic post word API
 
     window_set_size(): void {
         //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html

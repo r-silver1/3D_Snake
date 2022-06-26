@@ -1,5 +1,10 @@
 import { Vector3 } from "three"
 
+interface scoreObject {
+    status: String,
+    scoreDict: Array<any>
+}
+
 export const environment = {
     // production: built in to environment threejs
     production: false,
@@ -56,7 +61,8 @@ export const environment = {
 
     // todo new logic currWord
     currWordEntry: "",
-    maxEntryLength: 8
+    maxEntryLength: 8,
+    scoreboardObject: [-1, undefined]
 }
 
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

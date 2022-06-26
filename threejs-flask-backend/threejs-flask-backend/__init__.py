@@ -9,20 +9,27 @@ from waitress import serve
 
 from session_wrapper.session_id import session_id_handler
 
+
 app = Flask(__name__)
 # with app.appcontext: necessary
 #  https://flask.palletsprojects.com/en/2.0.x/appcontext/#creating-an-application-context
 #  https://stackoverflow.com/questions/31444036/runtimeerror-working-outside-of-application-context
 with app.app_context():
+    CORS(app, supports_credentials=True)
+    # app.secret_key = b'helllooo0000oooo00o0o0o0o0o'
+    app.config['SECRET_KEY'] = b'helllooo0000oooo00o0o0o0o0o'
     from db_dao.word_db import check_tables, close_connection, create_table, \
         drop_table, insert_row, get_table, commit_db, get_one_row, update_row, \
         delete_row
-CORS(app, supports_credentials=True)
-# app.secret_key = b'helllooo0000oooo00o0o0o0o0o'
-app.config['SECRET_KEY'] = b'helllooo0000oooo00o0o0o0o0o'
+    # todo new logic blueprint for scoreboard api
+    from scoreboard.scoreboard_api import scoreboard_api_blueprint
+    app.register_blueprint(scoreboard_api_blueprint)
+
 
 # https://medium.com/@mushtaque87/flask-in-pycharm-community-edition-c0f68400d91e
 # https://testdriven.io/courses/learn-flask/setting-up-a-flask-project/
+
+
 
 
 @app.route('/')
