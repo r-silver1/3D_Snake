@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, jsonify, request, session, redirect, url_for, current_app
-
+from operator import itemgetter
 # from db_dao.word_db import check_tables
 from session_wrapper.session_id import session_id_handler
 
@@ -11,6 +11,21 @@ with current_app.app_context():
 scoreboard_api_blueprint = Blueprint('scoreboard_api', __name__, url_prefix="/scoreboard_api")
 
 
+@scoreboard_api_blueprint.route('/delete_scoreboard')
+@session_id_handler
+def delete_scoreboard():
+    # todo new logic drop scoreboard more conveniently, should remove this probably
+    if request.method == "GET":
+        tables_ret = check_tables()
+        score_table_name = "SCORETABLE"
+        if score_table_name in [x[0] for x in tables_ret]:
+            drop_table(score_table_name)
+            close_connection()
+            return jsonify({"msg": "Dropped table scoretable"})
+        return jsonify({"error": "No scoretable to drop"})
+    return jsonify({"error": "invalid request type"})
+
+
 @scoreboard_api_blueprint.route('/get_scoreboard')
 @session_id_handler
 def get_scoreboard():
@@ -20,9 +35,11 @@ def get_scoreboard():
         if score_table_name in [x[0] for x in tables_ret]:
             # print("table return")
             score_table_ret = get_table(score_table_name)
-            close_connection()
-            # print(score_table_ret)
-            return jsonify(score_table_ret)
+            if score_table_ret:
+                # print(score_table_ret)
+                sort_scores = sorted(score_table_ret, key=itemgetter(2), reverse=True)
+                close_connection()
+                return jsonify(sort_scores)
         close_connection()
         return jsonify({"error": "score table not found"})
     return jsonify({"error": "invalid request type"})

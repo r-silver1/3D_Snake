@@ -381,11 +381,13 @@ export class CanvasCompComponent implements OnInit {
                                 })
                                 // todo logic add enter name group
     //                             if(timerGroupObj.children.length == 0){
-                            }else{
-                               this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                             }
+//                             }else{
+//                                this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+//                             }
                         }
                         console.log(environment.scoreboardObject)
+                        this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                         environment.scoreboardObject[0] = 2
                     }
                     // block after here: scoreboard object 0 == 2, displaying scoreboard
