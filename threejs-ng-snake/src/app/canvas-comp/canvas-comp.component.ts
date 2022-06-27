@@ -386,8 +386,20 @@ export class CanvasCompComponent implements OnInit {
 //                                this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
 //                             }
                         }
-                        console.log(environment.scoreboardObject)
+//                         console.log(environment.scoreboardObject[1])
                         this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                        let curY = environment.timerGroupPos.y
+                        curY -= environment.largeFontSize*2
+                        let scoresList = environment.scoreboardObject[1]
+                        //@ts-ignore
+                        scoresList.forEach((scoreInfo: Array<any>, i:number) => {
+                            const nameVal = scoreInfo[1]
+                            const scoreVal = scoreInfo[2]
+//                             console.log(nameVal + " " + scoreVal)
+                            const scoreMsg = nameVal + ":    " + scoreVal
+                            curY -= environment.smallFontSize * 1.5
+                            this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
+                        })
                         environment.scoreboardObject[0] = 2
                     }
                     // block after here: scoreboard object 0 == 2, displaying scoreboard

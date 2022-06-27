@@ -48,8 +48,8 @@ export class ScoreboardHelperService {
 
   public postScoreHelper(name: String, score:number){
     this.postScore(name, score).subscribe(data => {
-        console.log("data")
-        console.log(data)
+//         console.log("data")
+//         console.log(data)
     })
   }
 
