@@ -396,7 +396,7 @@ export class CanvasCompComponent implements OnInit {
                             const nameVal = scoreInfo[1]
                             const scoreVal = scoreInfo[2]
 //                             console.log(nameVal + " " + scoreVal)
-                            const scoreMsg = nameVal + ":    " + scoreVal
+                            const scoreMsg = String(i) + " " + nameVal + ":    " + scoreVal
                             curY -= environment.smallFontSize * 1.5
                             this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
                         })
