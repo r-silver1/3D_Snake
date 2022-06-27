@@ -63,7 +63,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 46
+    private timerMax = 3
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -396,7 +396,7 @@ export class CanvasCompComponent implements OnInit {
                             const nameVal = scoreInfo[1]
                             const scoreVal = scoreInfo[2]
 //                             console.log(nameVal + " " + scoreVal)
-                            const scoreMsg = String(i) + " " + nameVal + ":    " + scoreVal
+                            const scoreMsg = String(i+1) + " " + nameVal + ":    " + scoreVal
                             curY -= environment.smallFontSize * 1.5
                             this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
                         })
