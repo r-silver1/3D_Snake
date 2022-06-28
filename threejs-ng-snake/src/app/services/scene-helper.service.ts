@@ -315,8 +315,9 @@ export class SceneHelperService {
     //                     if(blueLaser.userData.getLaserTravelDistance(camera) >= camera.position.length()){
                     if(blueLaser.userData.getLaserTravelDistance(camera) >= maxLaserDist){
                         blueLaser.userData.deleteLaser()
+                        // todo splice not necessary causes delete others
                         // @ts-ignore
-                        laserGroup.children.splice(index, 1)
+//                         laserGroup.children.splice(index, 1)
                     }
                 })
             }

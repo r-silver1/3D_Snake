@@ -192,8 +192,9 @@ export class CanvasCompComponent implements OnInit {
                     if(child.userData.deleteText != undefined){
                         child.userData.deleteText()
                     }
+                    // todo splice not be necessary
                     // @ts-ignore
-                    timerGroupObj.children.splice(i, 1)
+//                     timerGroupObj.children.splice(i, 1)
                 })
                 timerGroupObj.children = []
                 // todo new logic
@@ -261,7 +262,7 @@ export class CanvasCompComponent implements OnInit {
 
                             child.userData.deleteText()
                             // @ts-ignore
-                            timerGroupObj.children.splice(i, 1)
+//                             timerGroupObj.children.splice(i, 1)
 
 
                             // todo logic avoid whole block
@@ -310,7 +311,7 @@ export class CanvasCompComponent implements OnInit {
                                     child.userData.deleteText()
                                 }
                                 // @ts-ignore
-                                timerGroupObj.children.splice(i, 1)
+//                                 timerGroupObj.children.splice(i, 1)
                                 this.fontService.addFont("Name: " + environment.currWordEntry, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                                 return
                             }
@@ -329,8 +330,9 @@ export class CanvasCompComponent implements OnInit {
                             if(child.userData.deleteText != undefined){
                                 child.userData.deleteText()
                             }
+                            // todo new logic here: splice not necessary, results in kind of cool laggy transition
                             // @ts-ignore
-                            buttonGroup.children.splice(0, i)
+//                             buttonGroup.children.splice(0, i)
                         })
 //                         this.getWordApi()
                         // todo make new function for get scoreboard api
@@ -350,7 +352,8 @@ export class CanvasCompComponent implements OnInit {
                                     child.userData.deleteText()
                                 }
                                 // @ts-ignore
-                                timerGroupObj.children.splice(i, 1)
+                                // todo new logic don't splice
+//                                 timerGroupObj.children.splice(i, 1)
                             })
                             // todo logic add enter name group
 //                             if(timerGroupObj.children.length == 0){
@@ -364,7 +367,7 @@ export class CanvasCompComponent implements OnInit {
                                     child.userData.deleteText()
                                 }
                                 // @ts-ignore
-                                scoreGroup.children.splice(i, 1)
+//                                 scoreGroup.children.splice(i, 1)
                             })
                         }
 //                     }else{
@@ -377,7 +380,7 @@ export class CanvasCompComponent implements OnInit {
                                         child.userData.deleteText()
                                     }
                                     // @ts-ignore
-                                    timerGroupObj.children.splice(i, 1)
+//                                     timerGroupObj.children.splice(i, 1)
                                 })
                                 // todo logic add enter name group
     //                             if(timerGroupObj.children.length == 0){
@@ -434,7 +437,7 @@ export class CanvasCompComponent implements OnInit {
                     child.userData.deleteText()
                 }
                 //@ts-ignore
-                scoreGroup.children.splice(i, 1)
+//                 scoreGroup.children.splice(i, 1)
             })
             scoreGroup.children = []
             this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos, environment.largeFontSize)

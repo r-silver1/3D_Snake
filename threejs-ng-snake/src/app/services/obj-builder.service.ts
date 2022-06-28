@@ -174,6 +174,7 @@ export class ObjBuilderService {
                                 this.blowUpAsteroid(shapesArray, i, scene)
                                 // delete asteroid removes from scene
                                 shapesArray[i].deleteAsteroid()
+                                // todo splice necessary here because splicing array, not children object
                                 shapesArray.splice(i, 1)
                                 i-=1
                                 // todo break this into different laser function
@@ -184,8 +185,9 @@ export class ObjBuilderService {
     //                             laser.removeFromParent()
                                 // new logic delete using laser function and splice group
                                 laser.userData.deleteLaser()
-                                // @ts-ignore
-                                laserGroup.children.splice(index, 1)
+                                // todo new logic: no splice, avoid error deleting all lasers on hit, remove parent delete
+//                                 // @ts-ignore
+//                                 laserGroup.children.splice(index, 1)
                             }
                         }
                     }
@@ -206,8 +208,9 @@ export class ObjBuilderService {
                                         // @ts-ignore
                                         buttonGroup.children.splice(0, i)
                                         laser.userData.deleteLaser()
-                                        // @ts-ignore
-                                        laserGroup.children.splice(index, 1)
+                                        // todo new logic: no splice, avoid error deleting all lasers on hit
+//                                         // @ts-ignore
+//                                         laserGroup.children.splice(index, 1)
                                     }
                                 }
                             }
