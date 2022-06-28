@@ -25,7 +25,7 @@ export const environment = {
     // laser group
     laserGroupName: "laserGroup",
     // asteroid global params
-    min_asteroid_radius: .06,
+    min_asteroid_radius: .02,
     max_asteroid_radius: .35,
     max_asteroids: 100,
 

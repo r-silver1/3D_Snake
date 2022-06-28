@@ -63,7 +63,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 3
+    private timerMax = 46
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -386,23 +386,36 @@ export class CanvasCompComponent implements OnInit {
 //                                this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
 //                             }
                         }
-//                         console.log(environment.scoreboardObject[1])
-                        this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
-                        let curY = environment.timerGroupPos.y
-                        curY -= environment.largeFontSize*2
-                        let scoresList = environment.scoreboardObject[1]
+                        // todo new logic only put in high score if length 0
                         //@ts-ignore
-                        scoresList.forEach((scoreInfo: Array<any>, i:number) => {
-                            const nameVal = scoreInfo[1]
-                            const scoreVal = scoreInfo[2]
-//                             console.log(nameVal + " " + scoreVal)
-                            const scoreMsg = String(i+1) + " " + nameVal + ":    " + scoreVal
-                            curY -= environment.smallFontSize * 1.5
-                            this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
-                        })
-                        environment.scoreboardObject[0] = 2
+                        if(timerGroupObj.children.length == 0){
+                            this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                            let curY = environment.timerGroupPos.y
+                            curY -= environment.largeFontSize*2
+                            let scoresList = environment.scoreboardObject[1]
+                            //@ts-ignore
+                            scoresList.forEach((scoreInfo: Array<any>, i:number) => {
+                                const nameVal = scoreInfo[1]
+                                const scoreVal = scoreInfo[2]
+                                const scoreMsg = String(i+1) + " " + nameVal + ":    " + scoreVal
+                                curY -= environment.smallFontSize * 2
+                                this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
+//                                 console.log(environment.temp_obj)
+//                                 let temp_str = "radius, score\n"
+//                                 environment.temp_obj.forEach((val) =>{
+//                                     temp_str += String(val[0]) +"," + String(val[1]) +"\n"
+//                                 })
+//                                 console.log(temp_str)
+                            })
+                            environment.scoreboardObject[0] = 2
+                        }
                     }
+                    // todo new logic
                     // block after here: scoreboard object 0 == 2, displaying scoreboard
+//                     }else if(environment.scoreboardObject[0] == 2){
+//                         console.log("HERE!!!")
+//                     }
+
                 }
             }
 

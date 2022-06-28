@@ -303,22 +303,23 @@ export class SceneHelperService {
 //         let laserGroup = scene.getObjectByName("laserGroup")
         let laserGroup = scene.getObjectByName(environment.laserGroupName)
         if(laserGroup != undefined){
-            laserGroup.children.forEach( (blueLaser, index) => {
-                // todo : new logic add function
-                blueLaser.userData.updateLaserPosition()
-                // calculate laser distance and compare to camera, remove laser after travel distance is camera
-                //  position length or longer
-                if(camera != undefined){
-                    if(blueLaser.userData.getLaserTravelDistance(camera) >= camera.position.length()){
+            // todo new logic move this other var and increase
+            if(camera != undefined){
+                const maxLaserDist = camera.position.length() * 1.2
+                laserGroup.children.forEach( (blueLaser, index) => {
+                    // todo : new logic add function
+                    blueLaser.userData.updateLaserPosition()
+                    // calculate laser distance and compare to camera, remove laser after travel distance is camera
+                    //  position length or longer
+
+    //                     if(blueLaser.userData.getLaserTravelDistance(camera) >= camera.position.length()){
+                    if(blueLaser.userData.getLaserTravelDistance(camera) >= maxLaserDist){
                         blueLaser.userData.deleteLaser()
                         // @ts-ignore
                         laserGroup.children.splice(index, 1)
                     }
-
-                }
-
-
-            })
+                })
+            }
         }
     }
 

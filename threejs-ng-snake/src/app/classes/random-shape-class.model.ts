@@ -32,8 +32,11 @@ export class RandomShapeClass {
     // static members
     static blueColor: THREE.Color = new THREE.Color('rgb(0,120,255)')
     static redColor: THREE.Color = new THREE.Color('rgb(255,120,0)')
-    static minScore = 10
-    static maxScore = 150
+    static minScore = 1
+    static maxScore = 20000
+    // todo new logic base score to have as minimum
+    static baseScore = Math.sqrt(RandomShapeClass.maxScore)/5
+
 
     // todo here take box colors bool as param
     constructor(material: THREE.MeshPhongMaterial,
@@ -60,7 +63,10 @@ export class RandomShapeClass {
             this.material.dispose()
 
             // todo new logic score
-            this.shapeObj.userData.points = RandomShapeClass.maxScore - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
+//             this.shapeObj.userData.points = RandomShapeClass.maxScore - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
+            // todo new logic use base score + inverse sqrt function
+            this.shapeObj.userData.points = RandomShapeClass.baseScore + (Math.sqrt(RandomShapeClass.maxScore) + -(Math.sqrt(THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)+1)))
+//             this.shapeObj.userData.points = THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
 
 //             this.geometry.translate(vertices[0], vertices[1], vertices[2])
             // todo should be no reason translate in constructor

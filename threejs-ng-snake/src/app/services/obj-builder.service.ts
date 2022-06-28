@@ -281,11 +281,15 @@ export class ObjBuilderService {
             })
 
             // create asteroid with smaller radius than previous, between .45 and .75 previous
+            // todo use min here to avoid Nan scores
             let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.20, asteroid.radius*.40)
+//             let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, Math.max(environment.min_asteroid_radius, asteroid.radius*.20), Math.max(environment.min_asteroid_radius, asteroid.radius*.40))
 
             // todo new logic: don't want asteroids that are too small, only create new if box_rad above minimum
-            let minimum_asteroid_size = .02
-            if(box_rad >= minimum_asteroid_size){
+//             let minimum_asteroid_size = .02
+//             if(box_rad >= minimum_asteroid_size){
+            // todo new logic use environment asteroid size
+            if(box_rad >= environment.min_asteroid_radius){
                 // create new asteroid object
                 let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
 
