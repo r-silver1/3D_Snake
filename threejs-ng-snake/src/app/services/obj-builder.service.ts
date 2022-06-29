@@ -159,44 +159,36 @@ export class ObjBuilderService {
     checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
         // todo new logic use environment file
 //         let laserGroup = scene.getObjectByName("laserGroup")
-        let laserGroup = scene.getObjectByName(environment.laserGroupName)
-        if(laserGroup != undefined){
-            // todo new logic button hits
-            let buttonGroup = scene.getObjectByName(environment.buttonGroupName)
-            laserGroup.children.forEach( (laser, index) => {
-                if(environment.gameStart == true){
-                    for (let i = 0; i<shapesArray.length; i++){
-                        // @ts-ignore
-                        if(laser.geometry.boundingSphere != undefined){
-                            let hitCheck = shapesArray[i].checkPointConflict(laser.position)
-                            if(hitCheck == true){
-                                // new logic: break asteroid into smaller chunks
-                                this.blowUpAsteroid(shapesArray, i, scene)
-                                // delete asteroid removes from scene
-                                shapesArray[i].deleteAsteroid()
-                                // todo splice necessary here because splicing array, not children object
-                                shapesArray.splice(i, 1)
-                                i-=1
-                                // todo break this into different laser function
-                                // @ts-ignore
-    //                             laser.geometry.dispose()
-    //                             // @ts-ignore
-    //                             laser.material.dispose()
-    //                             laser.removeFromParent()
-                                // new logic delete using laser function and splice group
-                                laser.userData.deleteLaser()
-                                // todo new logic: no splice, avoid error deleting all lasers on hit, remove parent delete
-//                                 // @ts-ignore
-//                                 laserGroup.children.splice(index, 1)
+        // todo new logic only hit this in start or mode name 2
+        if(environment.postGameMode == ""){
+            let laserGroup = scene.getObjectByName(environment.laserGroupName)
+            if(laserGroup != undefined){
+                // todo new logic button hits
+                let buttonGroup = scene.getObjectByName(environment.buttonGroupName)
+                laserGroup.children.forEach( (laser, index) => {
+                    if(environment.gameStart == true){
+                        for (let i = 0; i<shapesArray.length; i++){
+                            // @ts-ignore
+                            if(laser.geometry.boundingSphere != undefined){
+                                let hitCheck = shapesArray[i].checkPointConflict(laser.position)
+                                if(hitCheck == true){
+                                    // new logic: break asteroid into smaller chunks
+                                    this.blowUpAsteroid(shapesArray, i, scene)
+                                    // delete asteroid removes from scene
+                                    shapesArray[i].deleteAsteroid()
+                                    // todo splice necessary here because splicing array, not children object
+                                    shapesArray.splice(i, 1)
+                                    i-=1
+
+                                    // new logic delete using laser function and splice group
+                                    laser.userData.deleteLaser()
+                                    // todo new logic: no splice, avoid error deleting all lasers on hit, remove parent delete
+                                }
                             }
                         }
                     }
-                }
-                if(buttonGroup != undefined && environment.postGameMode == ""){
-                    // todo new logic only need button group in two modes
-//                     if(environment.postGameMode == "" || environment.postGameMode == environment.modeName3){
-                    // todo new logic this only for start
-//                     if(environment.postGameMode == ""){
+//                     if(buttonGroup != undefined && environment.postGameMode == ""){
+                    if(buttonGroup != undefined){
                         buttonGroup.children.forEach( (child:any, i:number) => {
                             if(child.userData.checkPointConflict != undefined){
                                 let retConf = child.userData.checkPointConflict(laser.position)
@@ -206,20 +198,18 @@ export class ObjBuilderService {
                                         child.userData.deleteText()
 
                                         // @ts-ignore
-                                        buttonGroup.children.splice(0, i)
+//                                             buttonGroup.children.splice(0, i)
+
                                         laser.userData.deleteLaser()
                                         // todo new logic: no splice, avoid error deleting all lasers on hit
-//                                         // @ts-ignore
-//                                         laserGroup.children.splice(index, 1)
                                     }
                                 }
                             }
                         })
-//                     }
+                    }
 
-                }
-
-            })
+                })
+            }
         }
     }
 
@@ -286,11 +276,6 @@ export class ObjBuilderService {
             // create asteroid with smaller radius than previous, between .45 and .75 previous
             // todo use min here to avoid Nan scores
             let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.20, asteroid.radius*.40)
-//             let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, Math.max(environment.min_asteroid_radius, asteroid.radius*.20), Math.max(environment.min_asteroid_radius, asteroid.radius*.40))
-
-            // todo new logic: don't want asteroids that are too small, only create new if box_rad above minimum
-//             let minimum_asteroid_size = .02
-//             if(box_rad >= minimum_asteroid_size){
             // todo new logic use environment asteroid size
             if(box_rad >= environment.min_asteroid_radius){
                 // create new asteroid object

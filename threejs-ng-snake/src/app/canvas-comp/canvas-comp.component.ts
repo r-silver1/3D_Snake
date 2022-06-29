@@ -220,7 +220,9 @@ export class CanvasCompComponent implements OnInit {
         // todo new logic refresh keys
 //         if((timestamp-this.lastKeyRefresh) > environment.keyRefreshRate){
         // todo new logic only need two mdoes for refresh wireframe
-        if((environment.postGameMode == "" || environment.postGameMode == environment.modeName3 || environment.postGameMode == environment.modeName4) && (timestamp-this.lastKeyRefresh > environment.keyRefreshRate)){
+//         if((environment.postGameMode == "" || environment.postGameMode == environment.modeName3 || environment.postGameMode == environment.modeName4) && (timestamp-this.lastKeyRefresh > environment.keyRefreshRate)){
+        // todo new logic exclude game mode 3 gameplay else refresh
+        if(environment.postGameMode != environment.modeName2 && (timestamp-this.lastKeyRefresh) > environment.keyRefreshRate){
             this.lastKeyRefresh = timestamp
             // todo new logic refresh button color
             let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
@@ -233,15 +235,9 @@ export class CanvasCompComponent implements OnInit {
             }
         }
 
-        // here: logic for game over and enter name prompt
-//         if(this.timerElapsed > 0 && environment.gameStart == false && this.gameStopTime >= 0){
-        // todo new logic here for game mode
         if(environment.postGameMode != ""){
             if(this.gameStopTime == 0){
                 this.gameStopTime = timestamp
-//                 if(timerGroupObj != undefined && timerGroupObj.children.length == 0){
-//                     this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
-//                 }
             }
             // timesUp mode
             if(environment.postGameMode == environment.modeName1){
@@ -262,17 +258,11 @@ export class CanvasCompComponent implements OnInit {
 
                             child.userData.deleteText()
                             // @ts-ignore
-//                             timerGroupObj.children.splice(i, 1)
-
-
                             // todo logic avoid whole block
                             this.gameStopTime = -1
                         })
                         // todo logic add enter name group
                         this.fontService.addFont("Name: ", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
-//                         console.log(environment.keysAlphabet.slice(65, 91))
-//                         console.log(environment.keysAlphabet.slice(48, 58))
-
                         // create keyboard
                         let maxChars = Math.floor(environment.keysAlphabet.length/4)
                         let curX = environment.buttonGroupPos.x + (maxChars*.25*environment.buttonGroupPos.x)
