@@ -129,7 +129,7 @@ export class CanvasCompComponent implements OnInit {
 
         // todo comment or uncomment to include start testing button
         this.sceneService.initSceneGroup(this.scene, environment.buttonGroupName)
-        this.fontService.addFont("START", this.scene, environment.buttonGroupName, environment.buttonGroupPos, environment.smallFontSize)
+        this.fontService.addFont(environment.startString, this.scene, environment.buttonGroupName, environment.buttonGroupPos, environment.smallFontSize)
 
 
         this.clock = new THREE.Clock()
@@ -262,11 +262,16 @@ export class CanvasCompComponent implements OnInit {
                             this.gameStopTime = -1
                         })
                         // todo logic add enter name group
-                        this.fontService.addFont("Name: ", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                        this.fontService.addFont(environment.nameEntryString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                         // create keyboard
                         let maxChars = Math.floor(environment.keysAlphabet.length/4)
                         let curX = environment.buttonGroupPos.x + (maxChars*.25*environment.buttonGroupPos.x)
                         let curY = environment.buttonGroupPos.y
+
+                        // todo new logic add play again button
+                        // todo new logic using env var not "PLAY AGAIN" hardcode
+                        this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
+
                         environment.keysAlphabet.forEach((characterVal:string, index:any) => {
                             if(index > 0 && index % maxChars == 0){
                                 curX = environment.buttonGroupPos.x + (maxChars*.25*environment.buttonGroupPos.x)
@@ -279,10 +284,8 @@ export class CanvasCompComponent implements OnInit {
                         // todo new enter button logic
                         curY -= environment.xSmallFontSize * 2.5
                         curX/=2
-                        this.fontService.addFont("ENTER", this.scene, environment.buttonGroupName, new THREE.Vector3(environment.buttonGroupPos.x+curX, environment.buttonGroupPos.y+curY, environment.buttonGroupPos.z), environment.xSmallFontSize)
-
-
-
+                        // todo new logic user env var not "ENTER" hardcode
+                        this.fontService.addFont(environment.enterString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.buttonGroupPos.x+curX, environment.buttonGroupPos.y+curY, environment.buttonGroupPos.z), environment.xSmallFontSize)
 
                         // mode 3 scoreboard
                         environment.postGameMode = environment.modeName3
@@ -296,13 +299,14 @@ export class CanvasCompComponent implements OnInit {
                     if(timerGroupObj != undefined){
                         // todo logic only refresh these if necessary
                         timerGroupObj.children.forEach((child:any, i:number)=>{
-                            if(child.userData.message != undefined && child.userData.message.substr(0, 5) == "Name:" && child.userData.message.slice(6, child.userData.message.length) != environment.currWordEntry){
+                            // todo new logic check if message beginning == NAME:
+                            if(child.userData.message != undefined && child.userData.message.substr(0, 5) == environment.nameEntryString.substr(0, 5) && child.userData.message.slice(6, child.userData.message.length) != environment.currWordEntry){
                                 if(child.userData.deleteText != undefined){
                                     child.userData.deleteText()
                                 }
                                 // @ts-ignore
 //                                 timerGroupObj.children.splice(i, 1)
-                                this.fontService.addFont("Name: " + environment.currWordEntry, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                                this.fontService.addFont(environment.nameEntryString + environment.currWordEntry, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                                 return
                             }
                         })
@@ -315,16 +319,12 @@ export class CanvasCompComponent implements OnInit {
 
                 if(environment.postGameMode == environment.modeName4){
                     let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
-                    if(buttonGroup != undefined && buttonGroup.children.length!=0){
+                    if(buttonGroup != undefined && buttonGroup.children.length!=0 && environment.scoreboardObject[0] != 2){
                         buttonGroup.children.forEach( (child:any, i:number) => {
                             if(child.userData.deleteText != undefined){
                                 child.userData.deleteText()
                             }
-                            // todo new logic here: splice not necessary, results in kind of cool laggy transition
-                            // @ts-ignore
-//                             buttonGroup.children.splice(0, i)
                         })
-//                         this.getWordApi()
                         // todo make new function for get scoreboard api
                     }
                     // todo here temporary logic might not want to use this method of first element scoreboard
@@ -335,20 +335,12 @@ export class CanvasCompComponent implements OnInit {
                     }else if(environment.scoreboardObject[0] == -2){
                         // getting scoreboard
                         this.scoreboardService.getScoreBoardHelper()
-//                         let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
                         if(timerGroupObj != undefined){
                             timerGroupObj.children.forEach((child:any, i:number)=>{
                                 if(child.userData.deleteText != undefined){
                                     child.userData.deleteText()
                                 }
-                                // @ts-ignore
-                                // todo new logic don't splice
-//                                 timerGroupObj.children.splice(i, 1)
                             })
-                            // todo logic add enter name group
-//                             if(timerGroupObj.children.length == 0){
-//                                this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
-//                             }
                         }
                         let scoreGroup = this.scene.getObjectByName(environment.scoreGroupName)
                         if(scoreGroup != undefined){
@@ -356,11 +348,8 @@ export class CanvasCompComponent implements OnInit {
                                 if(child.userData.deleteText != undefined){
                                     child.userData.deleteText()
                                 }
-                                // @ts-ignore
-//                                 scoreGroup.children.splice(i, 1)
                             })
                         }
-//                     }else{
                     }else if(environment.scoreboardObject[0] == 1){
                         // this: scoreboard object [0] == 1, displaying scoreboard
                         if(timerGroupObj != undefined){
@@ -369,20 +358,16 @@ export class CanvasCompComponent implements OnInit {
                                     if(child.userData.deleteText != undefined){
                                         child.userData.deleteText()
                                     }
-                                    // @ts-ignore
-//                                     timerGroupObj.children.splice(i, 1)
                                 })
-                                // todo logic add enter name group
-    //                             if(timerGroupObj.children.length == 0){
                             }
-//                             }else{
-//                                this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
-//                             }
                         }
                         // todo new logic only put in high score if length 0
                         //@ts-ignore
                         if(timerGroupObj.children.length == 0){
-                            this.fontService.addFont("HIGH SCORES", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                            // todo add msg "HIGH SCORES" using environment var not hard code
+                            this.fontService.addFont(environment.highScoresString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                            // todo add msg "PLAY AGAIN" using environment var not hard code
+                            this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
                             let curY = environment.timerGroupPos.y
                             curY -= environment.largeFontSize*2
                             let scoresList = environment.scoreboardObject[1]
@@ -402,12 +387,14 @@ export class CanvasCompComponent implements OnInit {
                             })
                             environment.scoreboardObject[0] = 2
                         }
-                    }
+
                     // todo new logic
                     // block after here: scoreboard object 0 == 2, displaying scoreboard
-//                     }else if(environment.scoreboardObject[0] == 2){
+                    }else if(environment.scoreboardObject[0] == 2){
 //                         console.log("HERE!!!")
-//                     }
+                        this.builderService.checkLaserKeyboardCollisions(this.scene)
+
+                    }
 
                 }
             }

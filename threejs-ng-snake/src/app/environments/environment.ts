@@ -62,7 +62,14 @@ export const environment = {
     // todo new logic currWord
     currWordEntry: "",
     maxEntryLength: 8,
-    scoreboardObject: [-1, undefined]
+    scoreboardObject: [-1, undefined],
+
+    // todo new logic avoid hardcoding strings
+    nameEntryString: "NAME: ",
+    highScoresString: "HIGH SCORES",
+    playAgainString: "PLAY AGAIN",
+    startString: "START",
+    enterString: "ENTER"
 }
 
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

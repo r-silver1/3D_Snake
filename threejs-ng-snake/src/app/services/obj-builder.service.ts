@@ -193,7 +193,8 @@ export class ObjBuilderService {
                             if(child.userData.checkPointConflict != undefined){
                                 let retConf = child.userData.checkPointConflict(laser.position)
                                 if(retConf == true){
-                                    if(child.userData.message == "START" ){
+                                    // todo use env var not "START" hardcode
+                                    if(child.userData.message == environment.startString){
                                         environment.gameStart = true
                                         child.userData.deleteText()
 
@@ -224,7 +225,7 @@ export class ObjBuilderService {
                             let retConf = child.userData.checkPointConflict(laser.position)
                             if(retConf == true){
                                 // todo new logic test for "ENTER message"
-                                if(child.userData.message == "ENTER"){
+                                if(child.userData.message == environment.enterString){
                                     // after enter hit hit new environment
                                     environment.postGameMode = environment.modeName4
                                     return
