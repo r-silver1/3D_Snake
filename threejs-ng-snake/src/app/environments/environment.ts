@@ -38,7 +38,7 @@ export const environment = {
     buttonGroupName: "buttonGroup",
 //     buttonGroupPos: new Vector3(-.25, .25, 5),
     // todo new logic moving keys closer and smaller
-    buttonGroupPos: new Vector3(-.25, .3, 6),
+    buttonGroupPos: new Vector3(-.25, .35, 6),
 
     // .5 under timer
 //     nameDisplayPos: new Vector3(-.25,-1,0),

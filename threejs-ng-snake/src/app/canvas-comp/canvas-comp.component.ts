@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+// todo new logic refresh
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FontLoader } from 'three/src/loaders/FontLoader';
@@ -82,7 +85,10 @@ export class CanvasCompComponent implements OnInit {
                 private builderService: ObjBuilderService,
                 private sceneService: SceneHelperService,
                 private fontService: FontBuilderService,
-                private scoreboardService: ScoreboardHelperService
+                private scoreboardService: ScoreboardHelperService,
+                // new logic refresh
+                private router: Router,
+                private location: Location
                 ) {
         this.scene = new THREE.Scene();
 //         this.sceneService = sceneService
@@ -394,6 +400,8 @@ export class CanvasCompComponent implements OnInit {
 //                         console.log("HERE!!!")
                         this.builderService.checkLaserKeyboardCollisions(this.scene)
 
+                    }else if (environment.scoreboardObject[0] == 3){
+                        this.refreshPagePlayAgain()
                     }
 
                 }
@@ -473,7 +481,16 @@ export class CanvasCompComponent implements OnInit {
 //         console.log(typeof timestamp)
     }
 
-
+    refreshPagePlayAgain() : void{
+//         this.router.navigateByUrl("/refresh", { skipLocationChange: true }).then(() => {
+//             console.log(decodeURI(this.location.path()))
+//             this.router.navigate([decodeURI(this.location.path())])
+//         })
+//         location.reload()
+        window.location.reload()
+        // must set scoreboard object to avoid looping and reloading multiple times
+        environment.scoreboardObject[0] = 4
+    }
 
     getWordApi() : void {
         this.wordService.getWord().subscribe(data => {

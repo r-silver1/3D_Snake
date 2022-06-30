@@ -229,6 +229,11 @@ export class ObjBuilderService {
                                     // after enter hit hit new environment
                                     environment.postGameMode = environment.modeName4
                                     return
+                                }else if(child.userData.message == environment.playAgainString){
+                                    // refresh page
+                                    environment.scoreboardObject[0] = 3
+                                    environment.postGameMode = environment.modeName4
+                                    return
                                 }
                                 // logic if length current name over max then splice first char off
                                 if(environment.currWordEntry.length >= environment.maxEntryLength){
