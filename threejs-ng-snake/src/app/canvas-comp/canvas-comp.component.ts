@@ -181,7 +181,7 @@ export class CanvasCompComponent implements OnInit {
 //         if(this.timerElapsed == 0){
 //             environment.gameStart = true
 //         }
-        if((elapsed-this.lastSecondStart) > 950 && timerGroupObj != undefined){
+        if((elapsed-this.lastSecondStart) > 900 && timerGroupObj != undefined){
             if(environment.gameStart == true){
                 this.timerElapsed += 1
 //                 timerGroupObj.children.forEach((child:any) => {

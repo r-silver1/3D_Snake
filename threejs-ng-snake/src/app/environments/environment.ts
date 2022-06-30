@@ -36,7 +36,10 @@ export const environment = {
 
     // todo new logic button group with fonts
     buttonGroupName: "buttonGroup",
-    buttonGroupPos: new Vector3(-.25, .25, 5),
+//     buttonGroupPos: new Vector3(-.25, .25, 5),
+    // todo new logic moving keys closer and smaller
+    buttonGroupPos: new Vector3(-.25, .3, 6),
+
     // .5 under timer
 //     nameDisplayPos: new Vector3(-.25,-1,0),
 
@@ -53,8 +56,8 @@ export const environment = {
 
     // todo new logic big and small font size
     largeFontSize: .4,
-    smallFontSize: .25,
-    xSmallFontSize: .15,
+    smallFontSize: .2,
+    xSmallFontSize: .1,
 
     // todo new logic camera pos
     cameraPos: new Vector3(0, 1.2, 8),
