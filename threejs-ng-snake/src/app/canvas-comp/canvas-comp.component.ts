@@ -378,7 +378,7 @@ export class CanvasCompComponent implements OnInit {
                             curY -= environment.largeFontSize*2
                             let scoresList = environment.scoreboardObject[1]
                             //@ts-ignore
-                            scoresList.forEach((scoreInfo: Array<any>, i:number) => {
+                            scoresList.slice(environment.scoreStartIndex, environment.scoreStartIndex+environment.scoreSliceAmt).forEach((scoreInfo: Array<any>, i:number) => {
                                 const nameVal = scoreInfo[1]
                                 const scoreVal = scoreInfo[2]
                                 const scoreMsg = String(i+1) + " " + nameVal + ":    " + scoreVal
@@ -392,13 +392,57 @@ export class CanvasCompComponent implements OnInit {
 //                                 console.log(temp_str)
                             })
                             environment.scoreboardObject[0] = 2
+                            // new logic time of displaying last scores
+                            environment.timeStampDisplay = timestamp
+                            // new logic update scoreStartIndex
+                            environment.scoreStartIndex += environment.scoreSliceAmt
+
                         }
 
                     // todo new logic
                     // block after here: scoreboard object 0 == 2, displaying scoreboard
                     }else if(environment.scoreboardObject[0] == 2){
+                        // todo here: basically same logic as scoreboard object post game mode 1, need to find ways to DRY this
 //                         console.log("HERE!!!")
                         this.builderService.checkLaserKeyboardCollisions(this.scene)
+//                         let scoresList = environment.scoreboardObject[1]
+                        //@ts-ignore
+                        if(environment.scoreStartIndex < environment.scoreboardObject[1].length && timestamp - environment.timeStampDisplay > 3000){
+                            if(timerGroupObj != undefined){
+                                if(timerGroupObj.children.length != 0){
+                                    timerGroupObj.children.forEach((child:any, i:number)=>{
+                                        // todo new logic avoid high score string update
+                                        if(child.userData.deleteText != undefined && child.userData.message != environment.highScoresString){
+                                            child.userData.deleteText()
+                                        }
+                                    })
+                                }
+                            }
+                            // todo new logic only put in high score if length 0
+                            //@ts-ignore
+                            // todo add msg "HIGH SCORES" using environment var not hard code
+                            let curY = environment.timerGroupPos.y
+                            curY -= environment.largeFontSize*2
+                            let scoresList = environment.scoreboardObject[1]
+                            // todo new logic try to avoid not deleting, cant check if == 0 because high scores object with 2 objects in children list
+                            //@ts-ignore
+                            if(timerGroupObj.children.length <= 2){
+                                //@ts-ignore
+                                scoresList.slice(environment.scoreStartIndex, environment.scoreStartIndex+environment.scoreSliceAmt).forEach((scoreInfo: Array<any>, i:number) => {
+                                    const nameVal = scoreInfo[1]
+                                    const scoreVal = scoreInfo[2]
+                                    // todo new logic incorporate score start index
+                                    const scoreMsg = String(i+1+environment.scoreStartIndex) + " " + nameVal + ":    " + scoreVal
+                                    curY -= environment.smallFontSize * 2
+                                    this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
+                                })
+                                // new logic time of displaying last scores
+                                environment.timeStampDisplay = timestamp
+                                // new logic update scoreStartIndex
+                                environment.scoreStartIndex += environment.scoreSliceAmt
+                            }
+
+                        }
 
                     }else if (environment.scoreboardObject[0] == 3){
                         this.refreshPagePlayAgain()

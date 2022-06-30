@@ -66,6 +66,10 @@ export const environment = {
     currWordEntry: "",
     maxEntryLength: 8,
     scoreboardObject: [-1, undefined],
+    // todo new logic limit number of high scores displayed
+    scoreStartIndex: 0,
+    scoreSliceAmt: 10,
+    timeStampDisplay: -1,
 
     // todo new logic avoid hardcoding strings
     nameEntryString: "NAME: ",
