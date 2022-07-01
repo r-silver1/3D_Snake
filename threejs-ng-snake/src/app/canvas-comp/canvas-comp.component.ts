@@ -370,32 +370,32 @@ export class CanvasCompComponent implements OnInit {
                         // todo new logic only put in high score if length 0
                         //@ts-ignore
                         if(timerGroupObj.children.length == 0){
-                            // todo add msg "HIGH SCORES" using environment var not hard code
-                            this.fontService.addFont(environment.highScoresString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
-                            // todo add msg "PLAY AGAIN" using environment var not hard code
-                            this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
-                            let curY = environment.timerGroupPos.y
-                            curY -= environment.largeFontSize*2
-                            let scoresList = environment.scoreboardObject[1]
-                            //@ts-ignore
-                            scoresList.slice(environment.scoreStartIndex, environment.scoreStartIndex+environment.scoreSliceAmt).forEach((scoreInfo: Array<any>, i:number) => {
-                                const nameVal = scoreInfo[1]
-                                const scoreVal = scoreInfo[2]
-                                const scoreMsg = String(i+1) + " " + nameVal + ":    " + scoreVal
-                                curY -= environment.smallFontSize * 2
-                                this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
-//                                 console.log(environment.temp_obj)
-//                                 let temp_str = "radius, score\n"
-//                                 environment.temp_obj.forEach((val) =>{
-//                                     temp_str += String(val[0]) +"," + String(val[1]) +"\n"
-//                                 })
-//                                 console.log(temp_str)
-                            })
+//                             // todo add msg "HIGH SCORES" using environment var not hard code
+//                             this.fontService.addFont(environment.highScoresString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+//                             // todo add msg "PLAY AGAIN" using environment var not hard code
+//                             this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
+//                             let curY = environment.timerGroupPos.y
+//                             curY -= environment.largeFontSize*2
+//                             let scoresList = environment.scoreboardObject[1]
+//                             //@ts-ignore
+//                             scoresList.slice(environment.scoreStartIndex, environment.scoreStartIndex+environment.scoreSliceAmt).forEach((scoreInfo: Array<any>, i:number) => {
+//                                 const nameVal = scoreInfo[1]
+//                                 const scoreVal = scoreInfo[2]
+//                                 const scoreMsg = String(i+1) + " " + nameVal + ":    " + scoreVal
+//                                 curY -= environment.smallFontSize * 2
+//                                 this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
+// //                                 console.log(environment.temp_obj)
+// //                                 let temp_str = "radius, score\n"
+// //                                 environment.temp_obj.forEach((val) =>{
+// //                                     temp_str += String(val[0]) +"," + String(val[1]) +"\n"
+// //                                 })
+// //                                 console.log(temp_str)
+//                             })
                             environment.scoreboardObject[0] = 2
                             // new logic time of displaying last scores
-                            environment.timeStampDisplay = timestamp
+//                             environment.timeStampDisplay = timestamp
                             // new logic update scoreStartIndex
-                            environment.scoreStartIndex += environment.scoreSliceAmt
+//                             environment.scoreStartIndex += environment.scoreSliceAmt
 
                         }
 
@@ -404,7 +404,17 @@ export class CanvasCompComponent implements OnInit {
                     }else if(environment.scoreboardObject[0] == 2){
                         // todo here: basically same logic as scoreboard object post game mode 1, need to find ways to DRY this
 //                         console.log("HERE!!!")
-                        this.builderService.checkLaserKeyboardCollisions(this.scene)
+
+                        // new logic set timestamp for first time
+                        if(environment.timeStampDisplay == -1){
+                            // - 2000 to display faster
+                            environment.timeStampDisplay = timestamp - 2500
+                            // todo add msg "HIGH SCORES" using environment var not hard code
+                            this.fontService.addFont(environment.highScoresString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                            // todo add msg "PLAY AGAIN" using environment var not hard code
+                            this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
+                        }
+
 //                         let scoresList = environment.scoreboardObject[1]
                         //@ts-ignore
                         if(environment.scoreStartIndex < environment.scoreboardObject[1].length && timestamp - environment.timeStampDisplay > 3000){
@@ -443,6 +453,7 @@ export class CanvasCompComponent implements OnInit {
                             }
 
                         }
+                        this.builderService.checkLaserKeyboardCollisions(this.scene)
 
                     }else if (environment.scoreboardObject[0] == 3){
                         this.refreshPagePlayAgain()
