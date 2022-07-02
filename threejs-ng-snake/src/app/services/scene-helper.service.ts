@@ -5,6 +5,8 @@ import { TurretControls } from '../js/TurretControls'
 import { LaserRay } from '../classes/laser-ray'
 import * as THREE from 'three';
 
+import { environment } from '../environments/environment'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +27,7 @@ export class SceneHelperService {
         let ranVec = new THREE.Vector3(Math.cos(vertAngle)*Math.cos(horzAngle), Math.sin(vertAngle), Math.sin(horzAngle)*Math.cos(vertAngle))
         ranVec.normalize()
         ranVec.setLength(min_rad+Math.random()*min_rad)
+        ranVec.setLength(THREE.MathUtils.mapLinear(Math.random(), 0, 1, min_rad, min_rad*1.5))
         return ranVec
     }
 
@@ -35,8 +38,8 @@ export class SceneHelperService {
         const min_pos_radius = camera_position.length()
         const starSprite = new THREE.TextureLoader().load('assets/disc.png');
 
-        const min_star_size = .01
-        const max_star_size = .1
+        const min_star_size = .002
+        const max_star_size = .01
         for(let i = 0; i<num_stars; i++){
             let temp_vec = this.generateStarPosition(min_pos_radius)
             verts.push(temp_vec.x, temp_vec.y, temp_vec.z)
@@ -71,8 +74,8 @@ export class SceneHelperService {
         // light 2
         // todo make class variables or add names?
         {
-            const colorDir = new THREE.Color('rgb(191,208,212)');
-            const intensityDir = .6;
+            const colorDir = new THREE.Color('rgb(255,200,255)');
+            const intensityDir = .8;
             const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
             lightDir.position.set(3, 2, 3);
             lightDir.target.position.set(0, 0, 0);
@@ -89,20 +92,24 @@ export class SceneHelperService {
     public initFog(scene:THREE.Scene) : void {
         // fog
         {
-            const color = new THREE.Color('rgb(54,52,70)')
+            const color = new THREE.Color('rgb(34,32,50)')
             const near = 1;
 //             const far = 21;
-            const far = 12;
+            const far = 14;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }
     }
 
     public initCameras(scene:THREE.Scene, camera:THREE.PerspectiveCamera): void {
-        camera.position.z = 8;
-//         camera.position.z = 5;
-        camera.position.x = 0;
-        camera.position.y = 1.2;
+//         camera.position.z = 8;
+// //         camera.position.z = 5;
+//         camera.position.x = 0;
+//         camera.position.y = 1.2;
+        // todo use new environmental variable for this
+        camera.position.x = environment.cameraPos.x;
+        camera.position.y = environment.cameraPos.y;
+        camera.position.z = environment.cameraPos.z;
         camera.name = "turretCamera"
         scene.add(camera);
     }
@@ -215,8 +222,8 @@ export class SceneHelperService {
                                                 opacity: .7
                                                 })
         let reticule_sprite = new THREE.Sprite(material)
-//         reticule_sprite.scale.set(.35, .35, 1)
-        reticule_sprite.scale.set(.1, .1, 1)
+        reticule_sprite.scale.set(.075, .075, 1)
+//         reticule_sprite.scale.set(.1, .1, 1)
 
         reticule_sprite.position.copy(camera.position)
         reticule_sprite.lookAt(camera.position)
@@ -249,9 +256,12 @@ export class SceneHelperService {
         }
     }
 
-    public initLaserGroup(scene:THREE.Scene){
+    // todo new logic: generalize group creation
+//     public initLaserGroup(scene:THREE.Scene){
+    public initSceneGroup(scene:THREE.Scene, name:string){
         let laserGroup = new THREE.Group()
-        laserGroup.name = "laserGroup"
+//         laserGroup.name = "laserGroup"
+        laserGroup.name = name
         scene.add(laserGroup)
     }
 
@@ -260,7 +270,9 @@ export class SceneHelperService {
     public initLaser(scene:THREE.Scene, targetAxes:THREE.Vector3){
         let camera = scene.getObjectByName("turretCamera")
         let blueLaser = new LaserRay(camera, targetAxes)
-        let laserGroup = scene.getObjectByName("laserGroup")
+        // todo new logic use environment variable for laser group
+//         let laserGroup = scene.getObjectByName("laserGroup")
+        let laserGroup = scene.getObjectByName(environment.laserGroupName)
         if(laserGroup!=undefined){
             laserGroup.add(blueLaser.laserSprite)
         }
@@ -273,6 +285,9 @@ export class SceneHelperService {
             if(this.checked == false){
                 this.checked = true
             }
+//             if(this.checked == true && this.clicked == true){
+            // todo new logic game start
+//             if(this.checked == true && this.clicked == true && environment.gameStart == true){
             if(this.checked == true && this.clicked == true){
                 let targetAxes = new THREE.Vector3().copy(controlsTarget).sub(camera.position).normalize()
                 // create laser and add to group
@@ -284,24 +299,28 @@ export class SceneHelperService {
             }
 
         }
-        let laserGroup = scene.getObjectByName("laserGroup")
+        // todo new logic use environment variable for group name
+//         let laserGroup = scene.getObjectByName("laserGroup")
+        let laserGroup = scene.getObjectByName(environment.laserGroupName)
         if(laserGroup != undefined){
-            laserGroup.children.forEach( (blueLaser, index) => {
-                // todo : new logic add function
-                blueLaser.userData.updateLaserPosition()
-                // calculate laser distance and compare to camera, remove laser after travel distance is camera
-                //  position length or longer
-                if(camera != undefined){
-                    if(blueLaser.userData.getLaserTravelDistance(camera) >= camera.position.length()){
+            // todo new logic move this other var and increase
+            if(camera != undefined){
+                const maxLaserDist = camera.position.length() * 1.2
+                laserGroup.children.forEach( (blueLaser, index) => {
+                    // todo : new logic add function
+                    blueLaser.userData.updateLaserPosition()
+                    // calculate laser distance and compare to camera, remove laser after travel distance is camera
+                    //  position length or longer
+
+    //                     if(blueLaser.userData.getLaserTravelDistance(camera) >= camera.position.length()){
+                    if(blueLaser.userData.getLaserTravelDistance(camera) >= maxLaserDist){
                         blueLaser.userData.deleteLaser()
+                        // todo splice not necessary causes delete others
                         // @ts-ignore
-                        laserGroup.children.splice(index, 1)
+//                         laserGroup.children.splice(index, 1)
                     }
-
-                }
-
-
-            })
+                })
+            }
         }
     }
 

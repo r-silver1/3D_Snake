@@ -25,7 +25,6 @@ def check_tables():
         db_cursor = db_con.cursor()
         db_cursor.execute(db_query)
         table_names = db_cursor.fetchall()
-        print(f"names : {table_names}")
         return table_names
     except sqlite3.Error as err:
         print(f"error in check tables: {err}")
@@ -38,6 +37,23 @@ def create_table(name):
         table_qur = f""" CREATE TABLE IF NOT EXISTS {name} (
                         cookie TEXT NOT NULL PRIMARY KEY,
                         word TEXT
+                    ); """
+        resp = db_con.execute(table_qur)
+        print("CREATE RESP: ", resp.fetchall())
+
+    except sqlite3.Error as err:
+        print(f"error in create_table: {err}")
+        print(traceback.format_exc())
+
+
+# todo new logic function just for score table
+def create_score_table(name):
+    try:
+        db_con = get_db()
+        table_qur = f""" CREATE TABLE IF NOT EXISTS {name} (
+                        cookie TEXT NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        score INTEGER NOT NULL
                     ); """
         resp = db_con.execute(table_qur)
         print("CREATE RESP: ", resp.fetchall())

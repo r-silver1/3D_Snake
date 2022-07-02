@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 // import BufferGeometryUtils from '../js/BufferGeometryUtils'
-import * as BFUTILS from '../js/BufferGeometryUtils'
+// import * as BFUTILS from '../js/BufferGeometryUtils'
 
 
 export class LaserRay {
 //     private texture_uri: any = ".\\assets\\crazier_greens.png"
     private texture_uri: any = ".\\assets\\crazier_greens_2.png"
     // todo new logic: recharge time milliseconds
-    private static rechargeTime: number = 200
+    private static rechargeTime: number = 300
     private static charged: boolean = true
     private static lastShot: number = -1
 
@@ -23,7 +23,7 @@ export class LaserRay {
     constructor(camera: any, targetAxes: any){
         const topRadius = .004;
         const bottomRadius = .0005;
-        const height = .1;
+        const height = .2;
         const segments = 20;
         this.texture = new THREE.TextureLoader().load(this.texture_uri)
 //         this.laserMat = new THREE.SpriteMaterial({
@@ -32,7 +32,7 @@ export class LaserRay {
 //             blending: THREE.AdditiveBlending,
             side: THREE.DoubleSide,
             transparent: true,
-            opacity: .25
+            opacity: .75
         })
         this.laserGeo = new THREE.CylinderGeometry(topRadius, bottomRadius, height, segments)
         // move center down?

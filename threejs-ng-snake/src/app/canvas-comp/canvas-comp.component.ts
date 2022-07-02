@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+// todo new logic refresh
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FontLoader } from 'three/src/loaders/FontLoader';
@@ -7,8 +10,11 @@ import { WordApiService } from '../word-api.service';
 import { ObjBuilderService } from '../services/obj-builder.service'
 import { SceneHelperService } from '../services/scene-helper.service'
 import { FontBuilderService } from '../services/font-builder.service'
+import { ScoreboardHelperService } from '../services/scoreboard-helper.service'
 
 import { Stats } from '../js/stats'
+
+import { environment } from '../environments/environment'
 
 @Component({
     selector: 'app-canvas-comp',
@@ -36,13 +42,15 @@ export class CanvasCompComponent implements OnInit {
 
     public clock: THREE.Clock;
 
-//     // todo here all arrows: just helpers
-    private cameraHelpers: boolean = false;
     public controlArrow: any;
     public posArrow: any;
     public oldArrow: any;
     public addArrow: any;
+    //fps helper
+    public stats: any;
 
+    // todo here all arrows: just helpers
+    private cameraHelpers: boolean = false;
     // helper bool box helpers render material
     private boxHelpers: boolean = false;
     // helper bool for rotation and direction helper arrows
@@ -53,11 +61,22 @@ export class CanvasCompComponent implements OnInit {
     //
     private lightDirHelper: boolean = false;
 
-    //fps helper
-    public stats: any;
-
-
     private laserTest: boolean = false;
+
+    // todo timer
+    private lastSecondStart = 0
+    private timerElapsed = 0
+    private timerMax = 46
+    private userScorePrev = -1
+
+    // todo new logic rotation timing
+    private lastRotationStart = 0
+
+    // todo new logic refresh timing
+    private lastKeyRefresh = 0
+
+    // todo new logic game stop time
+    private gameStopTime = 0
 
     //
 //     private sceneService: any = undefined;
@@ -65,7 +84,11 @@ export class CanvasCompComponent implements OnInit {
     constructor(private wordService: WordApiService,
                 private builderService: ObjBuilderService,
                 private sceneService: SceneHelperService,
-                private fontService: FontBuilderService
+                private fontService: FontBuilderService,
+                private scoreboardService: ScoreboardHelperService,
+                // new logic refresh
+                private router: Router,
+                private location: Location
                 ) {
         this.scene = new THREE.Scene();
 //         this.sceneService = sceneService
@@ -93,8 +116,27 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initFog(this.scene)
 
         //for font
-//         this.fontService.addFont("Hello\nWorld", this.scene)
-        this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
+
+
+        // todo new logic font
+        this.sceneService.initSceneGroup(this.scene, environment.wordGroupName)
+//         this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
+        // todo no longer pass in font, rely on scene group
+        this.fontService.addFont("Asteroids 3D Demo", this.scene, environment.wordGroupName, environment.wordGroupPos, environment.largeFontSize)
+
+        // todo new logic timer font group
+        this.sceneService.initSceneGroup(this.scene, environment.timeWordGroupName)
+//         this.fontService.addFont(String(this.timerMax-1), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+
+        // todo new logic score gorup
+        this.sceneService.initSceneGroup(this.scene, environment.scoreGroupName)
+//         this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
+
+
+        // todo comment or uncomment to include start testing button
+        this.sceneService.initSceneGroup(this.scene, environment.buttonGroupName)
+        this.fontService.addFont(environment.startString, this.scene, environment.buttonGroupName, environment.buttonGroupPos, environment.smallFontSize)
+
 
         this.clock = new THREE.Clock()
 
@@ -125,18 +167,324 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.updateLaser(this.scene, controlsTarget)
 
         //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
-        const textObj = this.scene.getObjectByName('wordName');
-        /*note todo here: trying to set word based on API response; probably need to create new shape if can't find attribue to change
-        in console log*/
-        if (elapsed % 1500 == 0 && textObj!=undefined){
-            this.getWordApi()
-            // todo this shouldn't be a global probably
-            if(this.wordGet!=undefined){
-                this.scene.remove(textObj)
-                this.fontService.addFont(this.wordGet, this.scene)
+        // todo new logic modularize this some
+//         const textObj = this.scene.getObjectByName('wordName');
+        // todo new logic using groups
+
+        // todo new logic timer
+        let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
+        if(this.lastSecondStart == 0){
+            this.lastSecondStart = timestamp
+        }
+        if(this.lastRotationStart == 0){
+            this.lastRotationStart = timestamp
+        }
+        if(this.lastKeyRefresh == 0){
+            this.lastKeyRefresh = timestamp
+        }
+
+        // todo move this outside loop
+//         if(this.timerElapsed == 0){
+//             environment.gameStart = true
+//         }
+        if((elapsed-this.lastSecondStart) > 900 && timerGroupObj != undefined){
+            if(environment.gameStart == true){
+                this.timerElapsed += 1
+//                 timerGroupObj.children.forEach((child:any) => {
+//                     child.userData.deleteText()
+//                 })
+                // todo new logic splice
+                timerGroupObj.children.forEach((child:any, i:number) => {
+                    if(child.userData.deleteText != undefined){
+                        child.userData.deleteText()
+                    }
+                    // todo splice not be necessary
+                    // @ts-ignore
+//                     timerGroupObj.children.splice(i, 1)
+                })
+                timerGroupObj.children = []
+                // todo new logic
+        //                 this.fontService.addFont(this.wordGet, this.scene)
+                if(this.timerMax-this.timerElapsed != 0){
+                    this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                }
+                this.lastSecondStart = timestamp
+            }
+            if(this.timerMax - this.timerElapsed <= 0 && environment.gameStart == true){
+                environment.gameStart = false
+                environment.postGameMode = environment.modeName1
+                timerGroupObj.children.forEach((child:any) => {
+                    child.userData.deleteText()
+                })
+                timerGroupObj.children = []
+//                 this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                this.timerElapsed+=1
+
             }
 
         }
+        // todo new logic refresh keys
+//         if((timestamp-this.lastKeyRefresh) > environment.keyRefreshRate){
+        // todo new logic only need two mdoes for refresh wireframe
+//         if((environment.postGameMode == "" || environment.postGameMode == environment.modeName3 || environment.postGameMode == environment.modeName4) && (timestamp-this.lastKeyRefresh > environment.keyRefreshRate)){
+        // todo new logic exclude game mode 3 gameplay else refresh
+        if(environment.postGameMode != environment.modeName2 && (timestamp-this.lastKeyRefresh) > environment.keyRefreshRate){
+            this.lastKeyRefresh = timestamp
+            // todo new logic refresh button color
+            let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
+            if(buttonGroup != undefined){
+                buttonGroup.children.forEach( (child:any) => {
+                    if(child.userData.refreshTextWireframe != undefined){
+                        child.userData.refreshTextWireframe()
+                    }
+                })
+            }
+        }
+
+        if(environment.postGameMode != ""){
+            if(this.gameStopTime == 0){
+                this.gameStopTime = timestamp
+            }
+            // timesUp mode
+            if(environment.postGameMode == environment.modeName1){
+                if(timerGroupObj != undefined){
+                    this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                }
+                // Entry mode
+                environment.postGameMode = environment.modeName2
+            }
+
+            // todo new logic environment mode
+//             else if(timestamp - this.gameStopTime > 2000){
+            if(timestamp - this.gameStopTime > 2000){
+
+                if(environment.postGameMode == environment.modeName2){
+                    if(timerGroupObj != undefined){
+                        timerGroupObj.children.forEach((child:any, i:number)=>{
+
+                            child.userData.deleteText()
+                            // @ts-ignore
+                            // todo logic avoid whole block
+                            this.gameStopTime = -1
+                        })
+                        // todo logic add enter name group
+                        this.fontService.addFont(environment.nameEntryString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                        // create keyboard
+                        let maxChars = Math.floor(environment.keysAlphabet.length/4)
+                        let curX = environment.buttonGroupPos.x + (maxChars*.25*environment.buttonGroupPos.x)
+                        let curY = environment.buttonGroupPos.y
+
+                        // todo new logic add play again button
+                        // todo new logic using env var not "PLAY AGAIN" hardcode
+                        this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
+
+                        environment.keysAlphabet.forEach((characterVal:string, index:any) => {
+                            if(index > 0 && index % maxChars == 0){
+                                curX = environment.buttonGroupPos.x + (maxChars*.25*environment.buttonGroupPos.x)
+                                curY -= environment.xSmallFontSize * 2.5
+                            }
+                            this.fontService.addFont(characterVal, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.buttonGroupPos.x+curX, environment.buttonGroupPos.y+curY, environment.buttonGroupPos.z), environment.xSmallFontSize)
+                            curX += environment.xSmallFontSize * 2.5
+
+                        })
+                        // todo new enter button logic
+                        curY -= environment.xSmallFontSize * 2.5
+                        curX/=2
+                        // todo new logic user env var not "ENTER" hardcode
+                        this.fontService.addFont(environment.enterString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.buttonGroupPos.x+curX, environment.buttonGroupPos.y+curY, environment.buttonGroupPos.z), environment.xSmallFontSize)
+
+                        // mode 3 scoreboard
+                        environment.postGameMode = environment.modeName3
+                    }
+                }
+                if(environment.postGameMode == environment.modeName3){
+                    // todo new logic check keyboard collide
+                    this.builderService.checkLaserKeyboardCollisions(this.scene)
+                    //
+//                     let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
+                    if(timerGroupObj != undefined){
+                        // todo logic only refresh these if necessary
+                        timerGroupObj.children.forEach((child:any, i:number)=>{
+                            // todo new logic check if message beginning == NAME:
+                            if(child.userData.message != undefined && child.userData.message.substr(0, 5) == environment.nameEntryString.substr(0, 5) && child.userData.message.slice(6, child.userData.message.length) != environment.currWordEntry){
+                                if(child.userData.deleteText != undefined){
+                                    child.userData.deleteText()
+                                }
+                                // @ts-ignore
+//                                 timerGroupObj.children.splice(i, 1)
+                                this.fontService.addFont(environment.nameEntryString + environment.currWordEntry, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                                return
+                            }
+                        })
+
+                    }
+
+                    //
+
+                }
+
+                if(environment.postGameMode == environment.modeName4){
+                    let buttonGroup = this.scene.getObjectByName(environment.buttonGroupName)
+                    if(buttonGroup != undefined && buttonGroup.children.length!=0 && environment.scoreboardObject[0] != 2){
+                        buttonGroup.children.forEach( (child:any, i:number) => {
+                            if(child.userData.deleteText != undefined){
+                                child.userData.deleteText()
+                            }
+                        })
+                        // todo make new function for get scoreboard api
+                    }
+                    // todo here temporary logic might not want to use this method of first element scoreboard
+                    if(environment.scoreboardObject[0] == -1){
+                        // posting score
+                        this.scoreboardService.postScoreHelper(environment.currWordEntry, environment.userScore)
+                        environment.scoreboardObject = [-2]
+                    }else if(environment.scoreboardObject[0] == -2){
+                        // getting scoreboard
+                        this.scoreboardService.getScoreBoardHelper()
+                        if(timerGroupObj != undefined){
+                            timerGroupObj.children.forEach((child:any, i:number)=>{
+                                if(child.userData.deleteText != undefined){
+                                    child.userData.deleteText()
+                                }
+                            })
+                        }
+                        let scoreGroup = this.scene.getObjectByName(environment.scoreGroupName)
+                        if(scoreGroup != undefined){
+                            scoreGroup.children.forEach((child:any, i:number) => {
+                                if(child.userData.deleteText != undefined){
+                                    child.userData.deleteText()
+                                }
+                            })
+                        }
+                    }else if(environment.scoreboardObject[0] == 1){
+                        // this: scoreboard object [0] == 1, displaying scoreboard
+                        if(timerGroupObj != undefined){
+                            if(timerGroupObj.children.length != 0){
+                                timerGroupObj.children.forEach((child:any, i:number)=>{
+                                    if(child.userData.deleteText != undefined){
+                                        child.userData.deleteText()
+                                    }
+                                })
+                            }
+                        }
+                        // todo new logic only put in high score if length 0
+                        //@ts-ignore
+                        if(timerGroupObj.children.length == 0){
+//                             // todo add msg "HIGH SCORES" using environment var not hard code
+//                             this.fontService.addFont(environment.highScoresString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+//                             // todo add msg "PLAY AGAIN" using environment var not hard code
+//                             this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
+//                             let curY = environment.timerGroupPos.y
+//                             curY -= environment.largeFontSize*2
+//                             let scoresList = environment.scoreboardObject[1]
+//                             //@ts-ignore
+//                             scoresList.slice(environment.scoreStartIndex, environment.scoreStartIndex+environment.scoreSliceAmt).forEach((scoreInfo: Array<any>, i:number) => {
+//                                 const nameVal = scoreInfo[1]
+//                                 const scoreVal = scoreInfo[2]
+//                                 const scoreMsg = String(i+1) + " " + nameVal + ":    " + scoreVal
+//                                 curY -= environment.smallFontSize * 2
+//                                 this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
+// //                                 console.log(environment.temp_obj)
+// //                                 let temp_str = "radius, score\n"
+// //                                 environment.temp_obj.forEach((val) =>{
+// //                                     temp_str += String(val[0]) +"," + String(val[1]) +"\n"
+// //                                 })
+// //                                 console.log(temp_str)
+//                             })
+                            environment.scoreboardObject[0] = 2
+                            // new logic time of displaying last scores
+//                             environment.timeStampDisplay = timestamp
+                            // new logic update scoreStartIndex
+//                             environment.scoreStartIndex += environment.scoreSliceAmt
+
+                        }
+
+                    // todo new logic
+                    // block after here: scoreboard object 0 == 2, displaying scoreboard
+                    }else if(environment.scoreboardObject[0] == 2){
+                        // todo here: basically same logic as scoreboard object post game mode 1, need to find ways to DRY this
+//                         console.log("HERE!!!")
+
+                        // new logic set timestamp for first time
+                        if(environment.timeStampDisplay == -1){
+                            // - 2000 to display faster
+                            environment.timeStampDisplay = timestamp - 2500
+                            // todo add msg "HIGH SCORES" using environment var not hard code
+                            this.fontService.addFont(environment.highScoresString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                            // todo add msg "PLAY AGAIN" using environment var not hard code
+                            this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
+                        }
+
+//                         let scoresList = environment.scoreboardObject[1]
+                        //@ts-ignore
+                        if(environment.scoreStartIndex < environment.scoreboardObject[1].length && timestamp - environment.timeStampDisplay > 3000){
+                            if(timerGroupObj != undefined){
+                                if(timerGroupObj.children.length != 0){
+                                    timerGroupObj.children.forEach((child:any, i:number)=>{
+                                        // todo new logic avoid high score string update
+                                        if(child.userData.deleteText != undefined && child.userData.message != environment.highScoresString){
+                                            child.userData.deleteText()
+                                        }
+                                    })
+                                }
+                            }
+                            // todo new logic only put in high score if length 0
+                            //@ts-ignore
+                            // todo add msg "HIGH SCORES" using environment var not hard code
+                            let curY = environment.timerGroupPos.y
+                            curY -= environment.largeFontSize*2
+                            let scoresList = environment.scoreboardObject[1]
+                            // todo new logic try to avoid not deleting, cant check if == 0 because high scores object with 2 objects in children list
+                            //@ts-ignore
+                            if(timerGroupObj.children.length <= 2){
+                                //@ts-ignore
+                                scoresList.slice(environment.scoreStartIndex, environment.scoreStartIndex+environment.scoreSliceAmt).forEach((scoreInfo: Array<any>, i:number) => {
+                                    const nameVal = scoreInfo[1]
+                                    const scoreVal = scoreInfo[2]
+                                    // todo new logic incorporate score start index
+                                    const scoreMsg = String(i+1+environment.scoreStartIndex) + " " + nameVal + ":    " + scoreVal
+                                    curY -= environment.smallFontSize * 2
+                                    this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
+                                })
+                                // new logic time of displaying last scores
+                                environment.timeStampDisplay = timestamp
+                                // new logic update scoreStartIndex
+                                environment.scoreStartIndex += environment.scoreSliceAmt
+                            }
+
+                        }
+                        this.builderService.checkLaserKeyboardCollisions(this.scene)
+
+                    }else if (environment.scoreboardObject[0] == 3){
+                        this.refreshPagePlayAgain()
+                    }
+
+                }
+            }
+
+
+        }
+
+        let scoreGroup = this.scene.getObjectByName(environment.scoreGroupName)
+        if(scoreGroup != undefined && this.userScorePrev != environment.userScore && environment.gameStart == true){
+            this.userScorePrev = environment.userScore
+//             scoreGroup.children.forEach((child:any) => {
+//                 child.userData.deleteText()
+//             })
+//             todo new logic splice
+            scoreGroup.children.forEach((child:any, i:number) => {
+                if(child.userData.deleteText != undefined){
+                    child.userData.deleteText()
+                }
+                //@ts-ignore
+//                 scoreGroup.children.splice(i, 1)
+            })
+            scoreGroup.children = []
+            this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos, environment.largeFontSize)
+        }
+
+//         this.secondsElapsed = timestamp - this.lastSecondStart
+
 
         // logic arrow helpers
         if(this.cameraHelpers == true){
@@ -150,30 +498,37 @@ export class CanvasCompComponent implements OnInit {
         // main logic asteroids
         // todo move this to obj service, use object methods
         // todo this just test helper for movement
-        this.shapesArray.forEach((asteroid:any, index:any) => {
-            // todo : move this to a call for the asteroids group, and then loop through each
-            //   function will take in rotation,
-//             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
-            let tempPos = asteroid.position;
-            // todo make helper for translate
+        if(timestamp-this.lastRotationStart > environment.rotationFramerate){
+            this.lastRotationStart = timestamp
+            this.shapesArray.forEach((asteroid:any, index:any) => {
+                // todo : move this to a call for the asteroids group, and then loop through each
+                //   function will take in rotation,
+    //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
+                let tempPos = asteroid.position;
+                // todo make helper for translate
 
-            let elapsed_modifier = (timestamp-this.last) *.00009
-            let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
+                let elapsed_modifier = (timestamp-this.last) *.00009
+                let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
 
-            // todo should make local rotation an internal asteroid function if going to change on collision
-            asteroid.shapeObj.rotateY(rotation)
-            asteroid.shapeObj.rotateZ(rotation/5)
+                // todo should make local rotation an internal asteroid function if going to change on collision
+                asteroid.shapeObj.rotateY(rotation)
+                asteroid.shapeObj.rotateZ(rotation/5)
 
-            // set asteroid direction, also update rotation helper if necessary
-            asteroid.setAsteroidDirection()
-            // update box helper, or box helper won't change in size with rotation etc
-            asteroid.updateBoxHelper()
+                // set asteroid direction, also update rotation helper if necessary
+                asteroid.setAsteroidDirection()
+                // update box helper, or box helper won't change in size with rotation etc
+                asteroid.updateBoxHelper()
 
-            this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
+                this.builderService.checkConflicts(asteroid, this.shapesArray, index, this.scene, this.boxHelpers)
+
+            });
+        }
 
 
-        });
+
+//         if(environment.gameStart == true){
         this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
+//         }
         this.render_all();
         this.stats.update();
         requestAnimationFrame(this.animate);
@@ -181,7 +536,16 @@ export class CanvasCompComponent implements OnInit {
 //         console.log(typeof timestamp)
     }
 
-
+    refreshPagePlayAgain() : void{
+//         this.router.navigateByUrl("/refresh", { skipLocationChange: true }).then(() => {
+//             console.log(decodeURI(this.location.path()))
+//             this.router.navigate([decodeURI(this.location.path())])
+//         })
+//         location.reload()
+        window.location.reload()
+        // must set scoreboard object to avoid looping and reloading multiple times
+        environment.scoreboardObject[0] = 4
+    }
 
     getWordApi() : void {
         this.wordService.getWord().subscribe(data => {
@@ -191,6 +555,8 @@ export class CanvasCompComponent implements OnInit {
             this.wordGet = pickleWord
         })
     }
+
+    // todo new logic post word API
 
     window_set_size(): void {
         //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
@@ -242,7 +608,9 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initReticuleSprite(this.scene, this.camera, this.controls)
 
         // todo new logic grouping lasers
-        this.sceneService.initLaserGroup(this.scene)
+        // todo new logic renaming this and using generalized name
+//         this.sceneService.initLaserGroup(this.scene)
+        this.sceneService.initSceneGroup(this.scene, environment.laserGroupName)
 
         // main logic
         this.window_set_size();

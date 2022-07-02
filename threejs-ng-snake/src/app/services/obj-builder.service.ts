@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
 import { RandomShapeClass } from '../classes/random-shape-class.model'
+import { environment } from '../environments/environment'
 
 @Injectable({
     providedIn: 'root'
@@ -12,37 +13,47 @@ export class ObjBuilderService {
     // todo here take boxhelpers as param
     public initBoxes(shapesArray: any, scene:THREE.Scene, boxHelpers:boolean, directionHelpers:boolean): void {
         // min_radius: minimum size asteroids to be generated
-        const min_radius = .06
+//         const min_radius = .06
         // max_radius: maximum radius for an asteroid
 //         const max_radius = .26
-        const max_radius = .35
+//         const max_radius = .35
         // max_val: max number of asteroids to generate; min val 1
 //         const max_val = 150;
-        const max_val = 100;
-
-        for(let i = 0; i<max_val; i++){
+//         const max_val = 100;
+        // todo new logic enviro var
+//         for(let i = 0; i<max_val; i++){
+        for(let i = 0; i<environment.max_asteroids; i++){
 
 
             // blueCol/greenCol: change color of asteroid based on position in list of all asteroids
             //  the higher the index, the more intense the color
-//             const blueCol = Math.floor(this.norm_range(120, 255, 0, max_val, i));
-            const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 60, 255))
-//             const greenCol = Math.floor(this.norm_range(0, 255, 0, max_val, i));
-            const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 0, 255));
+            // todo new logic enviro var
+//             const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 60, 255))
+//             const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 0, 255));
+//             const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 60, 255))
+//             const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 0, 255));
+            // todo new change try to make smaller asteroids brigher
+            const blueCol = 255 - Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 0, 80))
+            const greenCol = 220 -Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 30, 60));
             let material = new THREE.MeshPhongMaterial({
                                      color: new THREE.Color('rgb(100,'+greenCol+','+blueCol+')'),
 //                                      side: THREE.DoubleSide
                                     side: THREE.FrontSide
                               })
 
-            let box_rad = THREE.MathUtils.mapLinear(i, 0, max_val, min_radius, max_radius)
-            let pos = this.generatePosition(max_radius)
+//             let box_rad = THREE.MathUtils.mapLinear(i, 0, max_val, min_radius, max_radius)
+            // todo new logic using environment var for radius
+            let box_rad = THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, environment.min_asteroid_radius, environment.max_asteroid_radius)
+            // todo new logic use environment var for max radius
+//             let pos = this.generatePosition(max_radius)
+            let pos = this.generatePosition(environment.max_asteroid_radius)
             // use this to change complexity of asteroids; higher values -> more triangles
 
             const minPointsBound = 9;
             const maxPointsBound = 15;
-//             const maxPoints = Math.floor(this.norm_range(minPointsBound, maxPointsBound, 0, max_val, i))
-            const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, minPointsBound, maxPointsBound))
+            // todo new logic enviro var
+//             const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, minPointsBound, maxPointsBound))
+            const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, minPointsBound, maxPointsBound))
             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
 
             // todo shapesArray will be gotten rid of
@@ -59,7 +70,10 @@ export class ObjBuilderService {
             // to find a new position free of collisions
             while(conflictCheck == true){
                 // each time, increase radius before generating position to reduce conflict likelihood
-                let new_diam = max_radius * 1.1
+//                 let new_diam = max_radius * 1.1
+                // todo new logic use environment var
+                let new_diam = environment.max_asteroid_radius * 1.1
+
                 let new_pos = this.generatePosition(new_diam)
                 // todo translate geometry: could be helper function inside shape taking pos as input
 
@@ -143,33 +157,92 @@ export class ObjBuilderService {
 
     // todo new logic here check collisions
     checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
-        let laserGroup = scene.getObjectByName("laserGroup")
-        if(laserGroup != undefined){
-            laserGroup.children.forEach( (laser, index) => {
-                for (let i = 0; i<shapesArray.length; i++){
-                    // @ts-ignore
-                    if(laser.geometry.boundingSphere != undefined){
-                        let hitCheck = shapesArray[i].checkPointConflict(laser.position)
-                        if(hitCheck == true){
-                            // new logic: break asteroid into smaller chunks
-                            this.blowUpAsteroid(shapesArray, i, scene)
-                            // delete asteroid removes from scene
-                            shapesArray[i].deleteAsteroid()
-                            shapesArray.splice(i, 1)
-                            i-=1
-                            // todo break this into different laser function
+        // todo new logic use environment file
+//         let laserGroup = scene.getObjectByName("laserGroup")
+        // todo new logic only hit this in start or mode name 2
+        if(environment.postGameMode == ""){
+            let laserGroup = scene.getObjectByName(environment.laserGroupName)
+            if(laserGroup != undefined){
+                // todo new logic button hits
+                let buttonGroup = scene.getObjectByName(environment.buttonGroupName)
+                laserGroup.children.forEach( (laser, index) => {
+                    if(environment.gameStart == true){
+                        for (let i = 0; i<shapesArray.length; i++){
                             // @ts-ignore
-//                             laser.geometry.dispose()
-//                             // @ts-ignore
-//                             laser.material.dispose()
-//                             laser.removeFromParent()
-                            // new logic delete using laser function and splice group
-                            laser.userData.deleteLaser()
-                            // @ts-ignore
-                            laserGroup.children.splice(index, 1)
+                            if(laser.geometry.boundingSphere != undefined){
+                                let hitCheck = shapesArray[i].checkPointConflict(laser.position)
+                                if(hitCheck == true){
+                                    // new logic: break asteroid into smaller chunks
+                                    this.blowUpAsteroid(shapesArray, i, scene)
+                                    // delete asteroid removes from scene
+                                    shapesArray[i].deleteAsteroid()
+                                    // todo splice necessary here because splicing array, not children object
+                                    shapesArray.splice(i, 1)
+                                    i-=1
 
+                                    // new logic delete using laser function and splice group
+                                    laser.userData.deleteLaser()
+                                    // todo new logic: no splice, avoid error deleting all lasers on hit, remove parent delete
+                                }
+                            }
                         }
                     }
+//                     if(buttonGroup != undefined && environment.postGameMode == ""){
+                    if(buttonGroup != undefined){
+                        buttonGroup.children.forEach( (child:any, i:number) => {
+                            if(child.userData.checkPointConflict != undefined){
+                                let retConf = child.userData.checkPointConflict(laser.position)
+                                if(retConf == true){
+                                    // todo use env var not "START" hardcode
+                                    if(child.userData.message == environment.startString){
+                                        environment.gameStart = true
+                                        child.userData.deleteText()
+
+                                        // @ts-ignore
+//                                             buttonGroup.children.splice(0, i)
+
+                                        laser.userData.deleteLaser()
+                                        // todo new logic: no splice, avoid error deleting all lasers on hit
+                                    }
+                                }
+                            }
+                        })
+                    }
+
+                })
+            }
+        }
+    }
+
+    checkLaserKeyboardCollisions(scene: THREE.Scene) :any {
+        let laserGroup = scene.getObjectByName(environment.laserGroupName)
+        let buttonGroup = scene.getObjectByName(environment.buttonGroupName)
+        if(laserGroup != undefined){
+            laserGroup.children.forEach( (laser, index) => {
+                if(buttonGroup != undefined){
+                    buttonGroup.children.forEach( (child:any, i:number) => {
+                        if(child.userData.checkPointConflict != undefined){
+                            let retConf = child.userData.checkPointConflict(laser.position)
+                            if(retConf == true){
+                                // todo new logic test for "ENTER message"
+                                if(child.userData.message == environment.enterString){
+                                    // after enter hit hit new environment
+                                    environment.postGameMode = environment.modeName4
+                                    return
+                                }else if(child.userData.message == environment.playAgainString){
+                                    // refresh page
+                                    environment.scoreboardObject[0] = 3
+                                    environment.postGameMode = environment.modeName4
+                                    return
+                                }
+                                // logic if length current name over max then splice first char off
+                                if(environment.currWordEntry.length >= environment.maxEntryLength){
+                                    environment.currWordEntry = environment.currWordEntry.slice(1, environment.currWordEntry.length-1)
+                                }
+                                environment.currWordEntry += child.userData.message
+                            }
+                        }
+                    })
                 }
 
             })
@@ -179,6 +252,9 @@ export class ObjBuilderService {
     blowUpAsteroid(shapesArray: any[], index: number, scene:THREE.Scene) : any {
         // get asteroid from array
         let asteroid = shapesArray[index]
+
+        // todo new logic increment user score
+        environment.userScore += parseInt(asteroid.shapeObj.userData.points)
 
         // set min and max number of asteroids generated by explosion
         let min_new_asteroids = 3
@@ -193,8 +269,8 @@ export class ObjBuilderService {
             // generate color using old values and decreasing
             let new_color = new THREE.Color(
                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.r*.95, old_color.r),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.g*.9, old_color.g),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.b*.7, old_color.b)
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.g*1.25, old_color.g),
+                THREE.MathUtils.mapLinear(Math.random(), 0, 1, old_color.b*1.4, old_color.b)
             )
 
             // generate material for new asteroid
@@ -204,42 +280,33 @@ export class ObjBuilderService {
             })
 
             // create asteroid with smaller radius than previous, between .45 and .75 previous
+            // todo use min here to avoid Nan scores
             let box_rad = THREE.MathUtils.mapLinear(i, 0, num_new_asteroids-1, asteroid.radius*.20, asteroid.radius*.40)
+            // todo new logic use environment asteroid size
+            if(box_rad >= environment.min_asteroid_radius){
+                // create new asteroid object
+                let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
 
-            // create new asteroid object
-            let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
+                // copy information on direction, current angle etc to line up with old position
+                new_asteroid_gen.thetaNow = asteroid.thetaNow
+                new_asteroid_gen.direction = asteroid.getDirection()
 
-            // copy information on direction, current angle etc to line up with old position
-//             new_asteroid_gen.thetaDif = asteroid.thetaDif
-            new_asteroid_gen.thetaNow = asteroid.thetaNow
-            new_asteroid_gen.direction = asteroid.getDirection()
+                // create a new push direction with random values but based on old
+                new_asteroid_gen.setPushDir([
+                    THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.x),
+                    THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.y),
+                    THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.z),
+                ])
 
-            // create a new push direction with random values but based on old
-//             new_asteroid_gen.pushDir = new THREE.Vector3(
-//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.x),
-//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, .1, .2+asteroid.pushDir.y),
-//                 THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.z),
-//             )
-            new_asteroid_gen.setPushDir([
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.x),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -1, 1+asteroid.pushDir.y),
-                THREE.MathUtils.mapLinear(Math.random(), 0, 1, -20, 30+asteroid.pushDir.z),
-            ])
+                // copy old position but also change position slightly to reduce overlap
+                new_asteroid_gen.shapeObj.position.copy(asteroid.shapeObj.position)
+                new_asteroid_gen.shapeObj.position.x += Math.random() * asteroid.radius
+                new_asteroid_gen.shapeObj.position.y += Math.random() * asteroid.radius
+                new_asteroid_gen.shapeObj.position.z += Math.random() * asteroid.radius
 
-//             new_asteroid_gen.pushDir = new THREE.Vector3(
-//                 Math.random(),
-//                 Math.random(),
-//                 Math.random()
-//             )
-
-            // copy old position but also change position slightly to reduce overlap
-            new_asteroid_gen.shapeObj.position.copy(asteroid.shapeObj.position)
-            new_asteroid_gen.shapeObj.position.x += Math.random() * asteroid.radius
-            new_asteroid_gen.shapeObj.position.y += Math.random() * asteroid.radius
-            new_asteroid_gen.shapeObj.position.z += Math.random() * asteroid.radius
-
-            scene.add(new_asteroid_gen.shapeObj)
-            shapesArray.push(new_asteroid_gen)
+                scene.add(new_asteroid_gen.shapeObj)
+                shapesArray.push(new_asteroid_gen)
+            }
         }
     }
 
