@@ -66,6 +66,8 @@ export class RandomShapeClass {
 //             this.shapeObj.userData.points = RandomShapeClass.maxScore - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
             // todo new logic use base score + inverse sqrt function
             this.shapeObj.userData.points = RandomShapeClass.baseScore + (Math.sqrt(RandomShapeClass.maxScore) + -(Math.sqrt(THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)+1)))
+            // todo new logic asteroid spin
+            this.shapeObj.userData.spin = (environment.max_asteroid_spin*1.1) - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, environment.min_asteroid_spin, environment.max_asteroid_spin)
 //             this.shapeObj.userData.points = THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
 
 //             this.geometry.translate(vertices[0], vertices[1], vertices[2])

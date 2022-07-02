@@ -31,10 +31,9 @@ export class CanvasCompComponent implements OnInit {
     public camera: THREE.PerspectiveCamera;
     public renderer: any;
     public start: any;
-    public last: any;
+//     public last: any;
     public controls: any;
     public wordGet: any;
-
     // THREE.AxesHelper
     public axesHelper: any;
     // THREE.GridHelper
@@ -90,75 +89,64 @@ export class CanvasCompComponent implements OnInit {
                 private router: Router,
                 private location: Location
                 ) {
+
         this.scene = new THREE.Scene();
-//         this.sceneService = sceneService
+
+        // HELPERS:
         const axesSize = 10
         const centerColor = new THREE.Color('rgb(0, 0, 255)')
         if(this.axesHelperBool == true){
-        // todo new logic axes and grid; could be modularized
-        // https://danni-three.blogspot.com/2013/09/threejs-helpers.html
             this.axesHelper = new THREE.AxesHelper(axesSize)
             const zColor = new THREE.Color('rgb(0, 50, 100)')
             this.axesHelper.setColors(centerColor, zColor, centerColor)
             this.scene.add(this.axesHelper)
         }
-
         if(this.gridHelperBool == true){
             this.gridHelper = new THREE.GridHelper(axesSize, axesSize, centerColor);
             this.scene.add(this.gridHelper)
         }
 
-
-
+        // MAIN CAMERA
         this.camera = new THREE.PerspectiveCamera(60, 800 / 600);
+        // START: USED FOR TIMING
         this.start = -1;
+        // INITIALIZE LIGHTS AND FOG
         this.sceneService.initLights(this.scene, this.lightDirHelper)
         this.sceneService.initFog(this.scene)
 
-        //for font
-
-
-        // todo new logic font
+        // INITIAL TEXT AND BUTTON OBJECTS
+        // title group
         this.sceneService.initSceneGroup(this.scene, environment.wordGroupName)
-//         this.fontService.addFont("Asteroids 3D\nDemo", this.scene)
-        // todo no longer pass in font, rely on scene group
-        this.fontService.addFont("Asteroids 3D Demo", this.scene, environment.wordGroupName, environment.wordGroupPos, environment.largeFontSize)
-
-        // todo new logic timer font group
+        this.fontService.addFont(environment.titleString, this.scene, environment.wordGroupName, environment.wordGroupPos, environment.largeFontSize)
+        // timer group
         this.sceneService.initSceneGroup(this.scene, environment.timeWordGroupName)
-//         this.fontService.addFont(String(this.timerMax-1), this.scene, environment.timeWordGroupName, environment.timerGroupPos)
-
-        // todo new logic score gorup
+        // score group
         this.sceneService.initSceneGroup(this.scene, environment.scoreGroupName)
-//         this.fontService.addFont(String(environment.userScore), this.scene, environment.scoreGroupName, environment.scoreGroupPos)
-
-
-        // todo comment or uncomment to include start testing button
+        // start button
         this.sceneService.initSceneGroup(this.scene, environment.buttonGroupName)
         this.fontService.addFont(environment.startString, this.scene, environment.buttonGroupName, environment.buttonGroupPos, environment.smallFontSize)
 
-
+        // CLOCK OBJECT FOR DELTA
         this.clock = new THREE.Clock()
 
         // necessary to enable "this" keyword to work correctly inside animate
         this.animate = this.animate.bind(this);
-
-
-
     }
 
 
     // @ts-ignore
     animate(timestamp): FrameRequestCallback {
+        // INITIALIZE TIME OBJECTS IN ANIMATION LOOP
+        // start object: used to calculate elapsed time
         if (this.start === -1){
             this.start = timestamp;
-            this.last = timestamp;
+//             this.last = timestamp;
         }
         const elapsed = timestamp - this.start;
-        // https://threejs.org/examples/?q=Controls#misc_controls_fly
+        const delta = this.clock.getDelta()
+
         // controls update: necessary for damping orbit controls
         // note: controls target, useful
-        const delta = this.clock.getDelta()
         let controlsTarget = this.controls.update(delta)
         if(controlsTarget != undefined){
             this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget)
@@ -507,12 +495,27 @@ export class CanvasCompComponent implements OnInit {
                 let tempPos = asteroid.position;
                 // todo make helper for translate
 
-                let elapsed_modifier = (timestamp-this.last) *.00009
-                let rotation = elapsed_modifier + elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
-
+//                 let elapsed_modifier = (timestamp-this.last) *.00009
+//                 console.log(timestamp-this.last)
+//                 let elapsed_modifier = (50) *.00009
+//                 let rotation = elapsed_modifier + 2*elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
+//                 let elapsed_modifier = (50) *.00009
+                // todo: find more elegant way of doing this perhaps, these values worked well
+//                 let rotation = .005 + .01*((this.shapesArray.length-index)/this.shapesArray.length)
+//                 min_asteroid_radius: .02,
+//                     max_asteroid_radius: .35,
+//                     // rotation on own axis
+//                     min_asteroid_spin: .005,
+//                     max_asteroid_spin: .015,
+//                 let rotation = (environment.max_asteroid_spin*1.1) - THREE.MathUtils.mapLinear(asteroid.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, environment.min_asteroid_spin, environment.max_asteroid_spin)
+//                 console.log(asteroid.shapeObj.userData.spin)
                 // todo should make local rotation an internal asteroid function if going to change on collision
-                asteroid.shapeObj.rotateY(rotation)
-                asteroid.shapeObj.rotateZ(rotation/5)
+//                 asteroid.shapeObj.rotateY(rotation)
+//                 asteroid.shapeObj.rotateZ(rotation/5)
+                // todo new logic here using asteroid user data spin, now set using min and max vars for radius and spin
+                asteroid.shapeObj.rotateY(asteroid.shapeObj.userData.spin)
+                asteroid.shapeObj.rotateZ(asteroid.shapeObj.userData.spin/5)
+
 
                 // set asteroid direction, also update rotation helper if necessary
                 asteroid.setAsteroidDirection()
@@ -532,7 +535,7 @@ export class CanvasCompComponent implements OnInit {
         this.render_all();
         this.stats.update();
         requestAnimationFrame(this.animate);
-        this.last = timestamp;
+//         this.last = timestamp;
 //         console.log(typeof timestamp)
     }
 

@@ -27,11 +27,14 @@ export const environment = {
     // asteroid global params
     min_asteroid_radius: .02,
     max_asteroid_radius: .35,
+    // rotation on own axis
+    min_asteroid_spin: .006,
+    max_asteroid_spin: .017,
     max_asteroids: 100,
 
     // todo testing this, limit rotation speed if faster system
     // higher values slow asteroids
-    rotationFramerate: 9,
+    rotationFramerate: 7,
     keyRefreshRate: 200,
 
     // todo new logic button group with fonts
@@ -72,6 +75,7 @@ export const environment = {
     timeStampDisplay: -1,
 
     // todo new logic avoid hardcoding strings
+    titleString: "Asteroids 3D",
     nameEntryString: "NAME: ",
     highScoresString: "HIGH SCORES",
     playAgainString: "PLAY AGAIN",
