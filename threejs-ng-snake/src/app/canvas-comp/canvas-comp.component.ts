@@ -151,15 +151,14 @@ export class CanvasCompComponent implements OnInit {
         // controls update: necessary for damping orbit controls
         // note: controls target, useful
         let controlsTarget = this.controls.update(delta)
+
+        // logic for updating controls reticule, target is a sprite
         if(controlsTarget != undefined){
             this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget)
         }
 
-        this.sceneService.updateLaser(this.scene, controlsTarget)
 
-//         let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
 
-//         if((elapsed-this.lastSecondStart) > 900 && timerGroupObj != undefined){
         if((elapsed-this.lastSecondStart) > 900 && environment.postGameMode == ""){
             let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
             if(timerGroupObj != undefined){
@@ -454,35 +453,11 @@ export class CanvasCompComponent implements OnInit {
         // todo this just test helper for movement
         if(timestamp-this.lastRotationStart > environment.rotationFramerate){
             this.lastRotationStart = timestamp
+            // spin each asteroid and rotate around center y axis
             this.shapesArray.forEach((asteroid:any, index:any) => {
-                // todo : move this to a call for the asteroids group, and then loop through each
-                //   function will take in rotation,
-    //             https://dustinpfister.github.io/2021/05/20/threejs-buffer-geometry-rotation/
-                let tempPos = asteroid.position;
-                // todo make helper for translate
-
-//                 let elapsed_modifier = (timestamp-this.last) *.00009
-//                 console.log(timestamp-this.last)
-//                 let elapsed_modifier = (50) *.00009
-//                 let rotation = elapsed_modifier + 2*elapsed_modifier*((this.shapesArray.length-index)/this.shapesArray.length)
-//                 let elapsed_modifier = (50) *.00009
-                // todo: find more elegant way of doing this perhaps, these values worked well
-//                 let rotation = .005 + .01*((this.shapesArray.length-index)/this.shapesArray.length)
-//                 min_asteroid_radius: .02,
-//                     max_asteroid_radius: .35,
-//                     // rotation on own axis
-//                     min_asteroid_spin: .005,
-//                     max_asteroid_spin: .015,
-//                 let rotation = (environment.max_asteroid_spin*1.1) - THREE.MathUtils.mapLinear(asteroid.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, environment.min_asteroid_spin, environment.max_asteroid_spin)
-//                 console.log(asteroid.shapeObj.userData.spin)
-                // todo should make local rotation an internal asteroid function if going to change on collision
-//                 asteroid.shapeObj.rotateY(rotation)
-//                 asteroid.shapeObj.rotateZ(rotation/5)
                 // todo new logic here using asteroid user data spin, now set using min and max vars for radius and spin
                 asteroid.shapeObj.rotateY(asteroid.shapeObj.userData.spin)
                 asteroid.shapeObj.rotateZ(asteroid.shapeObj.userData.spin/5)
-
-
                 // set asteroid direction, also update rotation helper if necessary
                 asteroid.setAsteroidDirection()
                 // update box helper, or box helper won't change in size with rotation etc
@@ -494,7 +469,8 @@ export class CanvasCompComponent implements OnInit {
         }
 
 
-
+        // update laser: init new, set depleted, check max distance and delete
+        this.sceneService.updateLaser(this.scene, controlsTarget)
 //         if(environment.gameStart == true){
         this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
 //         }
