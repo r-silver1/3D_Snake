@@ -140,6 +140,9 @@ export class CanvasCompComponent implements OnInit {
         // start object: used to calculate elapsed time
         if (this.start === -1){
             this.start = timestamp;
+            this.lastSecondStart = timestamp
+            this.lastRotationStart = timestamp
+            this.lastKeyRefresh = timestamp
 //             this.last = timestamp;
         }
         const elapsed = timestamp - this.start;
@@ -161,15 +164,15 @@ export class CanvasCompComponent implements OnInit {
 
         // todo new logic timer
         let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
-        if(this.lastSecondStart == 0){
-            this.lastSecondStart = timestamp
-        }
-        if(this.lastRotationStart == 0){
-            this.lastRotationStart = timestamp
-        }
-        if(this.lastKeyRefresh == 0){
-            this.lastKeyRefresh = timestamp
-        }
+//         if(this.lastSecondStart == 0){
+//             this.lastSecondStart = timestamp
+//         }
+//         if(this.lastRotationStart == 0){
+//             this.lastRotationStart = timestamp
+//         }
+//         if(this.lastKeyRefresh == 0){
+//             this.lastKeyRefresh = timestamp
+//         }
 
         // todo move this outside loop
 //         if(this.timerElapsed == 0){
