@@ -312,7 +312,9 @@ export class CanvasCompComponent implements OnInit {
                         // todo make new function for get scoreboard api
                     }
                     // todo here temporary logic might not want to use this method of first element scoreboard
-                    if(environment.scoreboardObject[0] == -1){
+                    // todo also added logic make sure button group cleared before switching, weird bug with empty name enter causing O and N keys to remain
+                    //@ts-ignore
+                    if(environment.scoreboardObject[0] == -1 && buttonGroup.children.length == 0){
                         // posting score
                         this.scoreboardService.postScoreHelper(environment.currWordEntry, environment.userScore)
                         environment.scoreboardObject = [-2]
