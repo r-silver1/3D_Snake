@@ -157,60 +157,45 @@ export class CanvasCompComponent implements OnInit {
 
         this.sceneService.updateLaser(this.scene, controlsTarget)
 
-        //     https://dustinpfister.github.io/2021/05/12/threejs-object3d-get-by-name/
-        // todo new logic modularize this some
-//         const textObj = this.scene.getObjectByName('wordName');
-        // todo new logic using groups
+//         let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
 
-        // todo new logic timer
-        let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
-//         if(this.lastSecondStart == 0){
-//             this.lastSecondStart = timestamp
-//         }
-//         if(this.lastRotationStart == 0){
-//             this.lastRotationStart = timestamp
-//         }
-//         if(this.lastKeyRefresh == 0){
-//             this.lastKeyRefresh = timestamp
-//         }
-
-        // todo move this outside loop
-//         if(this.timerElapsed == 0){
-//             environment.gameStart = true
-//         }
-        if((elapsed-this.lastSecondStart) > 900 && timerGroupObj != undefined){
-            if(environment.gameStart == true){
-                this.timerElapsed += 1
-//                 timerGroupObj.children.forEach((child:any) => {
-//                     child.userData.deleteText()
-//                 })
-                // todo new logic splice
-                timerGroupObj.children.forEach((child:any, i:number) => {
-                    if(child.userData.deleteText != undefined){
-                        child.userData.deleteText()
+//         if((elapsed-this.lastSecondStart) > 900 && timerGroupObj != undefined){
+        if((elapsed-this.lastSecondStart) > 900 && environment.postGameMode == ""){
+            let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
+            if(timerGroupObj != undefined){
+                if(environment.gameStart == true){
+                    this.timerElapsed += 1
+    //                 timerGroupObj.children.forEach((child:any) => {
+    //                     child.userData.deleteText()
+    //                 })
+                    // todo new logic splice
+                    timerGroupObj.children.forEach((child:any, i:number) => {
+                        if(child.userData.deleteText != undefined){
+                            child.userData.deleteText()
+                        }
+                        // todo splice not be necessary
+                        // @ts-ignore
+    //                     timerGroupObj.children.splice(i, 1)
+                    })
+                    timerGroupObj.children = []
+                    // todo new logic
+            //                 this.fontService.addFont(this.wordGet, this.scene)
+                    if(this.timerMax-this.timerElapsed != 0){
+                        this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                     }
-                    // todo splice not be necessary
-                    // @ts-ignore
-//                     timerGroupObj.children.splice(i, 1)
-                })
-                timerGroupObj.children = []
-                // todo new logic
-        //                 this.fontService.addFont(this.wordGet, this.scene)
-                if(this.timerMax-this.timerElapsed != 0){
-                    this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                    this.lastSecondStart = timestamp
                 }
-                this.lastSecondStart = timestamp
-            }
-            if(this.timerMax - this.timerElapsed <= 0 && environment.gameStart == true){
-                environment.gameStart = false
-                environment.postGameMode = environment.modeName1
-                timerGroupObj.children.forEach((child:any) => {
-                    child.userData.deleteText()
-                })
-                timerGroupObj.children = []
-//                 this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
-                this.timerElapsed+=1
+                if(this.timerMax - this.timerElapsed <= 0 && environment.gameStart == true){
+                    environment.gameStart = false
+                    environment.postGameMode = environment.modeName1
+                    timerGroupObj.children.forEach((child:any) => {
+                        child.userData.deleteText()
+                    })
+                    timerGroupObj.children = []
+    //                 this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos)
+                    this.timerElapsed+=1
 
+                }
             }
 
         }
@@ -238,6 +223,7 @@ export class CanvasCompComponent implements OnInit {
             }
             // timesUp mode
             if(environment.postGameMode == environment.modeName1){
+                let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
                 if(timerGroupObj != undefined){
                     this.fontService.addFont("Time's up!!", this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                 }
@@ -250,6 +236,7 @@ export class CanvasCompComponent implements OnInit {
             if(timestamp - this.gameStopTime > 2000){
 
                 if(environment.postGameMode == environment.modeName2){
+                    let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
                     if(timerGroupObj != undefined){
                         timerGroupObj.children.forEach((child:any, i:number)=>{
 
@@ -292,7 +279,7 @@ export class CanvasCompComponent implements OnInit {
                     // todo new logic check keyboard collide
                     this.builderService.checkLaserKeyboardCollisions(this.scene)
                     //
-//                     let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
+                    let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
                     if(timerGroupObj != undefined){
                         // todo logic only refresh these if necessary
                         timerGroupObj.children.forEach((child:any, i:number)=>{
@@ -332,6 +319,7 @@ export class CanvasCompComponent implements OnInit {
                     }else if(environment.scoreboardObject[0] == -2){
                         // getting scoreboard
                         this.scoreboardService.getScoreBoardHelper()
+                        let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
                         if(timerGroupObj != undefined){
                             timerGroupObj.children.forEach((child:any, i:number)=>{
                                 if(child.userData.deleteText != undefined){
@@ -349,6 +337,7 @@ export class CanvasCompComponent implements OnInit {
                         }
                     }else if(environment.scoreboardObject[0] == 1){
                         // this: scoreboard object [0] == 1, displaying scoreboard
+                        let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
                         if(timerGroupObj != undefined){
                             if(timerGroupObj.children.length != 0){
                                 timerGroupObj.children.forEach((child:any, i:number)=>{
@@ -361,42 +350,13 @@ export class CanvasCompComponent implements OnInit {
                         // todo new logic only put in high score if length 0
                         //@ts-ignore
                         if(timerGroupObj.children.length == 0){
-//                             // todo add msg "HIGH SCORES" using environment var not hard code
-//                             this.fontService.addFont(environment.highScoresString, this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
-//                             // todo add msg "PLAY AGAIN" using environment var not hard code
-//                             this.fontService.addFont(environment.playAgainString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
-//                             let curY = environment.timerGroupPos.y
-//                             curY -= environment.largeFontSize*2
-//                             let scoresList = environment.scoreboardObject[1]
-//                             //@ts-ignore
-//                             scoresList.slice(environment.scoreStartIndex, environment.scoreStartIndex+environment.scoreSliceAmt).forEach((scoreInfo: Array<any>, i:number) => {
-//                                 const nameVal = scoreInfo[1]
-//                                 const scoreVal = scoreInfo[2]
-//                                 const scoreMsg = String(i+1) + " " + nameVal + ":    " + scoreVal
-//                                 curY -= environment.smallFontSize * 2
-//                                 this.fontService.addFont(scoreMsg, this.scene, environment.timeWordGroupName, new THREE.Vector3(environment.timerGroupPos.x, environment.timerGroupPos.y+curY, environment.timerGroupPos.z), environment.smallFontSize)
-// //                                 console.log(environment.temp_obj)
-// //                                 let temp_str = "radius, score\n"
-// //                                 environment.temp_obj.forEach((val) =>{
-// //                                     temp_str += String(val[0]) +"," + String(val[1]) +"\n"
-// //                                 })
-// //                                 console.log(temp_str)
-//                             })
                             environment.scoreboardObject[0] = 2
-                            // new logic time of displaying last scores
-//                             environment.timeStampDisplay = timestamp
-                            // new logic update scoreStartIndex
-//                             environment.scoreStartIndex += environment.scoreSliceAmt
 
                         }
 
                     // todo new logic
                     // block after here: scoreboard object 0 == 2, displaying scoreboard
                     }else if(environment.scoreboardObject[0] == 2){
-                        // todo here: basically same logic as scoreboard object post game mode 1, need to find ways to DRY this
-//                         console.log("HERE!!!")
-
-                        // new logic set timestamp for first time
                         if(environment.timeStampDisplay == -1){
                             // - 2000 to display faster
                             environment.timeStampDisplay = timestamp - 2500
@@ -409,6 +369,7 @@ export class CanvasCompComponent implements OnInit {
 //                         let scoresList = environment.scoreboardObject[1]
                         //@ts-ignore
                         if(environment.scoreStartIndex < environment.scoreboardObject[1].length && timestamp - environment.timeStampDisplay > 3000){
+                            let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
                             if(timerGroupObj != undefined){
                                 if(timerGroupObj.children.length != 0){
                                     timerGroupObj.children.forEach((child:any, i:number)=>{
