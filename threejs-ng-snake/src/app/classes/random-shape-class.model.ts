@@ -41,7 +41,7 @@ export class RandomShapeClass {
     // todo here take box colors bool as param
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[],
-                maxPoints: number){
+                maxPoints: number, boxHelpersBool: boolean){
             // todo : material passed into constructor; ideal?
             this.material = material;
             // todo : material and radius : two fields to add userdata
@@ -92,7 +92,12 @@ export class RandomShapeClass {
             this.conflictHit = false;
 
             // make a box helper, passing in false boolean because no initial conflict
-            this.boxHelper = this.makeBoxHelper(false)
+            this.shapeObj.userData.boxHelpers = boxHelpersBool
+            if(boxHelpersBool){
+                this.boxHelper = this.makeBoxHelper(false)
+            }else{
+                this.boxHelper = undefined
+            }
             // also make box geometry used for conflict checking
             this.boxGeo = this.makeBoxGeo();
 
@@ -284,7 +289,9 @@ export class RandomShapeClass {
 
 
     updateBoxHelper() : void {
-        this.boxHelper.update()
+        if(this.shapeObj.userData.boxHelpers == true){
+            this.boxHelper.update()
+        }
         this.boxGeo.setFromObject(this.shapeObj, true)
     }
 
@@ -296,17 +303,21 @@ export class RandomShapeClass {
 
     // todo here reference bool box helper to make or not
     changeBoxHelperCol(checkBool: boolean) : void {
-        this.boxHelper.material.dispose()
-        this.boxHelper.geometry.dispose()
-        this.boxHelper = this.makeBoxHelper(checkBool)
+        if(this.shapeObj.userData.boxHelpers == true){
+            this.boxHelper.material.dispose()
+            this.boxHelper.geometry.dispose()
+            this.boxHelper = this.makeBoxHelper(checkBool)
+        }
         this.boxGeo = this.makeBoxGeo();
     }
 
     deleteAsteroid(){
-        this.boxHelper.material.dispose()
-        this.boxHelper.geometry.dispose()
+        if(this.shapeObj.userData.boxHelpers == true){
+            this.boxHelper.material.dispose()
+            this.boxHelper.geometry.dispose()
+            this.boxHelper.removeFromParent()
+        }
         this.shapeObj.geometry.dispose()
-        this.boxHelper.removeFromParent()
         this.shapeObj.removeFromParent()
 
     }

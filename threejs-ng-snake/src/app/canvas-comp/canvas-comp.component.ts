@@ -472,7 +472,9 @@ export class CanvasCompComponent implements OnInit {
         // update laser: init new, set depleted, check max distance and delete
         this.sceneService.updateLaser(this.scene, controlsTarget)
 //         if(environment.gameStart == true){
-        this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
+//         this.builderService.checkLaserCollisions(this.shapesArray, this.scene);
+            // todo new logic box helpers bool
+            this.builderService.checkLaserCollisions(this.shapesArray, this.scene, this.boxHelpers);
 //         }
         this.render_all();
         this.stats.update();
