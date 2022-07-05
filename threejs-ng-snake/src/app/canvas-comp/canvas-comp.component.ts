@@ -158,27 +158,18 @@ export class CanvasCompComponent implements OnInit {
         }
 
 
-
-        if((elapsed-this.lastSecondStart) > 900 && environment.postGameMode == ""){
+        // logic for timer, game going on, only update timer every second
+        if((elapsed-this.lastSecondStart) > 950 && environment.postGameMode == ""){
             let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
             if(timerGroupObj != undefined){
                 if(environment.gameStart == true){
                     this.timerElapsed += 1
-    //                 timerGroupObj.children.forEach((child:any) => {
-    //                     child.userData.deleteText()
-    //                 })
-                    // todo new logic splice
                     timerGroupObj.children.forEach((child:any, i:number) => {
                         if(child.userData.deleteText != undefined){
                             child.userData.deleteText()
                         }
-                        // todo splice not be necessary
-                        // @ts-ignore
-    //                     timerGroupObj.children.splice(i, 1)
                     })
                     timerGroupObj.children = []
-                    // todo new logic
-            //                 this.fontService.addFont(this.wordGet, this.scene)
                     if(this.timerMax-this.timerElapsed != 0){
                         this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
                     }
@@ -403,6 +394,10 @@ export class CanvasCompComponent implements OnInit {
                                 environment.timeStampDisplay = timestamp
                                 // new logic update scoreStartIndex
                                 environment.scoreStartIndex += environment.scoreSliceAmt
+                                // @ts-ignore
+                                if(environment.scoreStartIndex >= environment.scoreboardObject[1].length){
+                                    environment.scoreStartIndex = 0
+                                }
                             }
 
                         }

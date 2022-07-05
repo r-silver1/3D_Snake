@@ -13,11 +13,7 @@ export class FontBuilderService {
         this.loader = new FontLoader();
     }
 
-//     public deleteFont() : void {
-//     }
-
     // todo new logic no longer take in scene, return object
-//     public addFont(msg: string, scene:THREE.Scene, sceneGroupName: string, positionScale: THREE.Vector3) : void {
     // todo new logic size
     public addFont(msg: string, scene:THREE.Scene, sceneGroupName: string, positionScale: THREE.Vector3, size:number) : void {
 //     public addFont(msg: string) : void {
