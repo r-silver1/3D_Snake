@@ -80,7 +80,8 @@ export const environment = {
     highScoresString: "HIGH SCORES",
     playAgainString: "PLAY AGAIN",
     startString: "START",
-    enterString: "ENTER"
+    enterString: "ENTER",
+    deleteString: "DEL",
 }
 
 //         const fontUri = '..\\assets\\Gravity_Bold.json'

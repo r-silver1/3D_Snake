@@ -215,6 +215,9 @@ export class ObjBuilderService {
                                     environment.scoreboardObject[0] = 3
                                     environment.postGameMode = environment.modeName4
                                     return
+                                }else if(child.userData.message == environment.deleteString){
+                                    environment.currWordEntry = environment.currWordEntry.slice(0, environment.currWordEntry.length-1)
+                                    return
                                 }
                                 // logic if length current name over max then splice first char off
                                 if(environment.currWordEntry.length >= environment.maxEntryLength){

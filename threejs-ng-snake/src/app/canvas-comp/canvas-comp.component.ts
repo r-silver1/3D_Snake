@@ -65,7 +65,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 46
+    private timerMax = 3
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -260,6 +260,7 @@ export class CanvasCompComponent implements OnInit {
                         curX/=2
                         // todo new logic user env var not "ENTER" hardcode
                         this.fontService.addFont(environment.enterString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.buttonGroupPos.x+curX, environment.buttonGroupPos.y+curY, environment.buttonGroupPos.z), environment.xSmallFontSize)
+                        this.fontService.addFont(environment.deleteString, this.scene, environment.buttonGroupName, new THREE.Vector3(environment.buttonGroupPos.x-curX, environment.buttonGroupPos.y+curY, environment.buttonGroupPos.z), environment.xSmallFontSize)
 
                         // mode 3 scoreboard
                         environment.postGameMode = environment.modeName3
