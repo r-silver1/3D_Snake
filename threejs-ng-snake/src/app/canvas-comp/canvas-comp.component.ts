@@ -64,7 +64,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 3
+    private timerMax = 46
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -250,17 +250,6 @@ export class CanvasCompComponent implements OnInit {
         this.stats.update();
         requestAnimationFrame(this.animate);
     }
-
-//     getWordApi() : void {
-//         this.wordService.getWord().subscribe(data => {
-//             let jsonPickleStr = JSON.stringify(data);
-//             let jsonPickle = JSON.parse(jsonPickleStr);
-//             let pickleWord = jsonPickle.pickle_time
-//             this.wordGet = pickleWord
-//         })
-//     }
-
-    // todo new logic post word API
 
     window_set_size(): void {
         //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
