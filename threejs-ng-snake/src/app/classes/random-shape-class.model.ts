@@ -35,7 +35,7 @@ export class RandomShapeClass {
     static minScore = 1
     static maxScore = 20000
     // todo new logic base score to have as minimum
-    static baseScore = Math.sqrt(RandomShapeClass.maxScore)/5
+    static baseScore = Math.sqrt(RandomShapeClass.maxScore)/2
 
 
     // todo here take box colors bool as param
@@ -65,7 +65,7 @@ export class RandomShapeClass {
             // todo new logic score
 //             this.shapeObj.userData.points = RandomShapeClass.maxScore - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
             // todo new logic use base score + inverse sqrt function
-            this.shapeObj.userData.points = RandomShapeClass.baseScore + (Math.sqrt(RandomShapeClass.maxScore) + -(Math.sqrt(THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)+1)))
+            this.shapeObj.userData.points = RandomShapeClass.baseScore + 2*(Math.sqrt(RandomShapeClass.maxScore) + -(Math.sqrt(THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)+1)))
             // todo new logic asteroid spin
             this.shapeObj.userData.spin = (environment.max_asteroid_spin*1.1) - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, environment.min_asteroid_spin, environment.max_asteroid_spin)
 //             this.shapeObj.userData.points = THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)

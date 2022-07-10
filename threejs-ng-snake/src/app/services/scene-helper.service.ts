@@ -64,8 +64,8 @@ export class SceneHelperService {
     public initLights(scene:THREE.Scene, dirHelperBool:boolean) : void {
         // light
         {
-            const colorAmb = new THREE.Color('rgb(247,255,246)');
-            const intensity = .4;
+            const colorAmb = new THREE.Color('rgb(204,243,251)');
+            const intensity = .5;
             const ambLight = new THREE.AmbientLight(colorAmb, intensity);
             scene.add(ambLight);
             //           this.scene.add(ambLight);
@@ -74,7 +74,8 @@ export class SceneHelperService {
         // light 2
         // todo make class variables or add names?
         {
-            const colorDir = new THREE.Color('rgb(255,200,255)');
+//             const colorDir = new THREE.Color('rgb(255,200,255)');
+            const colorDir = new THREE.Color('rgb(243,233,155)');
             const intensityDir = .8;
             const lightDir = new THREE.DirectionalLight(colorDir, intensityDir);
             lightDir.position.set(3, 2, 3);
@@ -95,7 +96,7 @@ export class SceneHelperService {
             const color = new THREE.Color('rgb(34,32,50)')
             const near = 1;
 //             const far = 21;
-            const far = 14;
+            const far = 16;
             scene.fog = new THREE.Fog(color, near, far);
             scene.background = color;
         }

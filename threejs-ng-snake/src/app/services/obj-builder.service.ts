@@ -18,17 +18,19 @@ export class ObjBuilderService {
             // blueCol/greenCol: change color of asteroid based on position in list of all asteroids
             //  the higher the index, the more intense the color
             // todo new logic enviro var
-            const blueCol = 255 - Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 0, 80))
-            const greenCol = 220 -Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 30, 60));
+            const blueCol = 255 - Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 20, 60))
+            const greenCol = 215 -Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 20, 100));
+            const redCol = 140 - Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 20, 30));
             let material = new THREE.MeshPhongMaterial({
-                                     color: new THREE.Color('rgb(100,'+greenCol+','+blueCol+')'),
+                                     color: new THREE.Color('rgb('+redCol+','+greenCol+','+blueCol+')'),
 //                                      side: THREE.DoubleSide
                                     side: THREE.FrontSide
                               })
             // todo new logic using environment var for radius
             let box_rad = THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, environment.min_asteroid_radius, environment.max_asteroid_radius)
             // todo new logic use environment var for max radius
-            let pos = this.generatePosition(environment.max_asteroid_radius)
+//             let pos = this.generatePosition(environment.max_asteroid_radius)
+            let pos = this.generatePosition(environment.asteroid_distance_modifier)
             // use this to change complexity of asteroids; higher values -> more triangles
 
             const minPointsBound = 9;

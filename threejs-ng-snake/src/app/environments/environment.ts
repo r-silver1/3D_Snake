@@ -70,15 +70,16 @@ export const environment = {
 
     // asteroid global params
     min_asteroid_radius: .02,
-    max_asteroid_radius: .35,
+    max_asteroid_radius: .3,
+    asteroid_distance_modifier: .35,
     // rotation on own axis
     min_asteroid_spin: .006,
-    max_asteroid_spin: .017,
+    max_asteroid_spin: .02,
     max_asteroids: 100,
 
     // todo testing this, limit rotation speed if faster system
     // higher values slow asteroids
-    rotationFramerate: 7,
+    rotationFramerate: 5,
 
     // todo new logic camera pos
     cameraPos: new Vector3(0, 1.2, 8),
