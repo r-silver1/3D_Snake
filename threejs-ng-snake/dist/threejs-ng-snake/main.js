@@ -1356,14 +1356,13 @@ class CanvasCompComponent {
         if (controlsTarget != undefined) {
             this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget);
         }
-        //         console.log(elapsed % 1000)
         // logic for timer, game going on, only update timer every second
         //         if((elapsed-this.lastSecondStart) > 900 && environment.postGameMode == ""){
         //         if(((elapsed % 1000) > 0 && (elapsed % 1000) < 15) && environment.postGameMode == ""){
-        if (Math.floor(elapsed % 1000) == 0 && _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].postGameMode == "") {
+        if ((Math.floor(elapsed) % 1000 == 0 || (elapsed - this.lastSecondStart) > 1000) && _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].postGameMode == "") {
             let timerGroupObj = this.scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].timeWordGroupName);
             if (timerGroupObj != undefined) {
-                if (_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].gameStart == true) {
+                if (_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].timerStart == true) {
                     this.timerElapsed += 1;
                     timerGroupObj.children.forEach((child, i) => {
                         if (child.userData.deleteText != undefined) {
@@ -1377,6 +1376,9 @@ class CanvasCompComponent {
                         }
                     }
                     this.lastSecondStart = timestamp;
+                    if (_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].gameStart == false) {
+                        _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].gameStart = true;
+                    }
                 }
                 if (this.timerMax - this.timerElapsed <= 0 && _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].gameStart == true) {
                     _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].gameStart = false;
@@ -2002,6 +2004,7 @@ const environment = {
     // production: built in to environment threejs
     production: false,
     // gamestart: determine to display timer
+    timerStart: false,
     gameStart: false,
     // fonts for words
     fontUri: '..\\assets\\helvetiker_regular.typeface.json',
@@ -2245,7 +2248,8 @@ class ObjBuilderService {
                                 if (retConf == true) {
                                     // todo use env var not "START" hardcode
                                     if (child.userData.message == _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].startString) {
-                                        _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].gameStart = true;
+                                        //                                         environment.gameStart = true
+                                        _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].timerStart = true;
                                         child.userData.deleteText();
                                         // @ts-ignore
                                         //                                             buttonGroup.children.splice(0, i)

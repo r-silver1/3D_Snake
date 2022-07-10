@@ -9,7 +9,7 @@ export const environment = {
     // production: built in to environment threejs
     production: false,
     // gamestart: determine to display timer
-
+    timerStart: false,
     gameStart: false,
 
 

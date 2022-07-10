@@ -178,7 +178,8 @@ export class ObjBuilderService {
                                 if(retConf == true){
                                     // todo use env var not "START" hardcode
                                     if(child.userData.message == environment.startString){
-                                        environment.gameStart = true
+//                                         environment.gameStart = true
+                                        environment.timerStart = true
                                         child.userData.deleteText()
 
                                         // @ts-ignore
