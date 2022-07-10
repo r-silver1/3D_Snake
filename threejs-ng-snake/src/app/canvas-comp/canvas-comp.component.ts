@@ -154,9 +154,11 @@ export class CanvasCompComponent implements OnInit {
             this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget)
         }
 
-
+//         console.log(elapsed % 1000)
         // logic for timer, game going on, only update timer every second
-        if((elapsed-this.lastSecondStart) > 900 && environment.postGameMode == ""){
+//         if((elapsed-this.lastSecondStart) > 900 && environment.postGameMode == ""){
+//         if(((elapsed % 1000) > 0 && (elapsed % 1000) < 15) && environment.postGameMode == ""){
+        if(Math.floor(elapsed%1000) == 0 && environment.postGameMode == ""){
             let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
             if(timerGroupObj != undefined){
                 if(environment.gameStart == true){
