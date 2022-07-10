@@ -12,49 +12,33 @@ export class ObjBuilderService {
 
     // todo here take boxhelpers as param
     public initBoxes(shapesArray: any, scene:THREE.Scene, boxHelpers:boolean, directionHelpers:boolean): void {
-        // min_radius: minimum size asteroids to be generated
-//         const min_radius = .06
-        // max_radius: maximum radius for an asteroid
-//         const max_radius = .26
-//         const max_radius = .35
-        // max_val: max number of asteroids to generate; min val 1
-//         const max_val = 150;
-//         const max_val = 100;
-        // todo new logic enviro var
-//         for(let i = 0; i<max_val; i++){
         for(let i = 0; i<environment.max_asteroids; i++){
 
 
             // blueCol/greenCol: change color of asteroid based on position in list of all asteroids
             //  the higher the index, the more intense the color
             // todo new logic enviro var
-//             const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 60, 255))
-//             const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, 0, 255));
-//             const blueCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 60, 255))
-//             const greenCol = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 0, 255));
-            // todo new change try to make smaller asteroids brigher
-            const blueCol = 255 - Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 0, 80))
-            const greenCol = 220 -Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 30, 60));
+            const blueCol = 255 - Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 20, 60))
+            const greenCol = 215 -Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 20, 100));
+            const redCol = 140 - Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, 20, 30));
             let material = new THREE.MeshPhongMaterial({
-                                     color: new THREE.Color('rgb(100,'+greenCol+','+blueCol+')'),
+                                     color: new THREE.Color('rgb('+redCol+','+greenCol+','+blueCol+')'),
 //                                      side: THREE.DoubleSide
                                     side: THREE.FrontSide
                               })
-
-//             let box_rad = THREE.MathUtils.mapLinear(i, 0, max_val, min_radius, max_radius)
             // todo new logic using environment var for radius
             let box_rad = THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, environment.min_asteroid_radius, environment.max_asteroid_radius)
             // todo new logic use environment var for max radius
-//             let pos = this.generatePosition(max_radius)
-            let pos = this.generatePosition(environment.max_asteroid_radius)
+//             let pos = this.generatePosition(environment.max_asteroid_radius)
+            let pos = this.generatePosition(environment.asteroid_distance_modifier)
             // use this to change complexity of asteroids; higher values -> more triangles
 
             const minPointsBound = 9;
             const maxPointsBound = 15;
             // todo new logic enviro var
-//             const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, max_val, minPointsBound, maxPointsBound))
             const maxPoints = Math.floor(THREE.MathUtils.mapLinear(i, 0, environment.max_asteroids, minPointsBound, maxPointsBound))
-            let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
+//             let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints)
+            let newShape = new RandomShapeClass(material, box_rad, pos, maxPoints, boxHelpers)
 
             // todo shapesArray will be gotten rid of
             shapesArray.push(newShape)
@@ -70,7 +54,6 @@ export class ObjBuilderService {
             // to find a new position free of collisions
             while(conflictCheck == true){
                 // each time, increase radius before generating position to reduce conflict likelihood
-//                 let new_diam = max_radius * 1.1
                 // todo new logic use environment var
                 let new_diam = environment.max_asteroid_radius * 1.1
 
@@ -156,7 +139,7 @@ export class ObjBuilderService {
     }
 
     // todo new logic here check collisions
-    checkLaserCollisions(shapesArray: any[], scene: THREE.Scene) : any {
+    checkLaserCollisions(shapesArray: any[], scene: THREE.Scene, boxHelpers: boolean) : any {
         // todo new logic use environment file
 //         let laserGroup = scene.getObjectByName("laserGroup")
         // todo new logic only hit this in start or mode name 2
@@ -173,7 +156,7 @@ export class ObjBuilderService {
                                 let hitCheck = shapesArray[i].checkPointConflict(laser.position)
                                 if(hitCheck == true){
                                     // new logic: break asteroid into smaller chunks
-                                    this.blowUpAsteroid(shapesArray, i, scene)
+                                    this.blowUpAsteroid(shapesArray, i, scene, boxHelpers)
                                     // delete asteroid removes from scene
                                     shapesArray[i].deleteAsteroid()
                                     // todo splice necessary here because splicing array, not children object
@@ -234,6 +217,9 @@ export class ObjBuilderService {
                                     environment.scoreboardObject[0] = 3
                                     environment.postGameMode = environment.modeName4
                                     return
+                                }else if(child.userData.message == environment.deleteString){
+                                    environment.currWordEntry = environment.currWordEntry.slice(0, environment.currWordEntry.length-1)
+                                    return
                                 }
                                 // logic if length current name over max then splice first char off
                                 if(environment.currWordEntry.length >= environment.maxEntryLength){
@@ -249,7 +235,7 @@ export class ObjBuilderService {
         }
     }
 
-    blowUpAsteroid(shapesArray: any[], index: number, scene:THREE.Scene) : any {
+    blowUpAsteroid(shapesArray: any[], index: number, scene:THREE.Scene, boxHelpers: boolean) : any {
         // get asteroid from array
         let asteroid = shapesArray[index]
 
@@ -285,7 +271,9 @@ export class ObjBuilderService {
             // todo new logic use environment asteroid size
             if(box_rad >= environment.min_asteroid_radius){
                 // create new asteroid object
-                let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
+//                 let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1)
+                // todo new logic boxHelpersBool for now pass false
+                let new_asteroid_gen = new RandomShapeClass(material, box_rad, asteroid.position, asteroid.maxPoints-1, boxHelpers)
 
                 // copy information on direction, current angle etc to line up with old position
                 new_asteroid_gen.thetaNow = asteroid.thetaNow

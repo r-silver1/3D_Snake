@@ -35,13 +35,13 @@ export class RandomShapeClass {
     static minScore = 1
     static maxScore = 20000
     // todo new logic base score to have as minimum
-    static baseScore = Math.sqrt(RandomShapeClass.maxScore)/5
+    static baseScore = Math.sqrt(RandomShapeClass.maxScore)/2
 
 
     // todo here take box colors bool as param
     constructor(material: THREE.MeshPhongMaterial,
                 radius: number, position: number[],
-                maxPoints: number){
+                maxPoints: number, boxHelpersBool: boolean){
             // todo : material passed into constructor; ideal?
             this.material = material;
             // todo : material and radius : two fields to add userdata
@@ -65,7 +65,9 @@ export class RandomShapeClass {
             // todo new logic score
 //             this.shapeObj.userData.points = RandomShapeClass.maxScore - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
             // todo new logic use base score + inverse sqrt function
-            this.shapeObj.userData.points = RandomShapeClass.baseScore + (Math.sqrt(RandomShapeClass.maxScore) + -(Math.sqrt(THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)+1)))
+            this.shapeObj.userData.points = RandomShapeClass.baseScore + 2*(Math.sqrt(RandomShapeClass.maxScore) + -(Math.sqrt(THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)+1)))
+            // todo new logic asteroid spin
+            this.shapeObj.userData.spin = (environment.max_asteroid_spin*1.1) - THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, environment.min_asteroid_spin, environment.max_asteroid_spin)
 //             this.shapeObj.userData.points = THREE.MathUtils.mapLinear(this.radius, environment.min_asteroid_radius, environment.max_asteroid_radius, RandomShapeClass.minScore, RandomShapeClass.maxScore)
 
 //             this.geometry.translate(vertices[0], vertices[1], vertices[2])
@@ -90,7 +92,12 @@ export class RandomShapeClass {
             this.conflictHit = false;
 
             // make a box helper, passing in false boolean because no initial conflict
-            this.boxHelper = this.makeBoxHelper(false)
+            this.shapeObj.userData.boxHelpers = boxHelpersBool
+            if(boxHelpersBool){
+                this.boxHelper = this.makeBoxHelper(false)
+            }else{
+                this.boxHelper = undefined
+            }
             // also make box geometry used for conflict checking
             this.boxGeo = this.makeBoxGeo();
 
@@ -282,7 +289,9 @@ export class RandomShapeClass {
 
 
     updateBoxHelper() : void {
-        this.boxHelper.update()
+        if(this.shapeObj.userData.boxHelpers == true){
+            this.boxHelper.update()
+        }
         this.boxGeo.setFromObject(this.shapeObj, true)
     }
 
@@ -294,17 +303,21 @@ export class RandomShapeClass {
 
     // todo here reference bool box helper to make or not
     changeBoxHelperCol(checkBool: boolean) : void {
-        this.boxHelper.material.dispose()
-        this.boxHelper.geometry.dispose()
-        this.boxHelper = this.makeBoxHelper(checkBool)
+        if(this.shapeObj.userData.boxHelpers == true){
+            this.boxHelper.material.dispose()
+            this.boxHelper.geometry.dispose()
+            this.boxHelper = this.makeBoxHelper(checkBool)
+        }
         this.boxGeo = this.makeBoxGeo();
     }
 
     deleteAsteroid(){
-        this.boxHelper.material.dispose()
-        this.boxHelper.geometry.dispose()
+        if(this.shapeObj.userData.boxHelpers == true){
+            this.boxHelper.material.dispose()
+            this.boxHelper.geometry.dispose()
+            this.boxHelper.removeFromParent()
+        }
         this.shapeObj.geometry.dispose()
-        this.boxHelper.removeFromParent()
         this.shapeObj.removeFromParent()
 
     }

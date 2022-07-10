@@ -9,7 +9,10 @@ export const environment = {
     // production: built in to environment threejs
     production: false,
     // gamestart: determine to display timer
+
     gameStart: false,
+
+
     // fonts for words
     fontUri: '..\\assets\\helvetiker_regular.typeface.json',
     // wordtest group: demo name on top, asteroid demo title
@@ -24,24 +27,12 @@ export const environment = {
     scoreGroupPos: new Vector3(-.25,1.4,0),
     // laser group
     laserGroupName: "laserGroup",
-    // asteroid global params
-    min_asteroid_radius: .02,
-    max_asteroid_radius: .35,
-    max_asteroids: 100,
-
-    // todo testing this, limit rotation speed if faster system
-    // higher values slow asteroids
-    rotationFramerate: 9,
     keyRefreshRate: 200,
-
     // todo new logic button group with fonts
     buttonGroupName: "buttonGroup",
-//     buttonGroupPos: new Vector3(-.25, .25, 5),
+    //     buttonGroupPos: new Vector3(-.25, .25, 5),
     // todo new logic moving keys closer and smaller
     buttonGroupPos: new Vector3(-.25, .35, 6),
-
-    // .5 under timer
-//     nameDisplayPos: new Vector3(-.25,-1,0),
 
     // post_game_mode : avoid if statements using environment
     // Undefined, TimesUp, Entry, Scoreboard
@@ -59,9 +50,6 @@ export const environment = {
     smallFontSize: .2,
     xSmallFontSize: .1,
 
-    // todo new logic camera pos
-    cameraPos: new Vector3(0, 1.2, 8),
-
     // todo new logic currWord
     currWordEntry: "",
     maxEntryLength: 8,
@@ -72,11 +60,37 @@ export const environment = {
     timeStampDisplay: -1,
 
     // todo new logic avoid hardcoding strings
+    titleString: "Asteroids 3D",
     nameEntryString: "NAME: ",
     highScoresString: "HIGH SCORES",
     playAgainString: "PLAY AGAIN",
     startString: "START",
-    enterString: "ENTER"
+    enterString: "ENTER",
+    deleteString: "DEL",
+
+    // asteroid global params
+    min_asteroid_radius: .02,
+    max_asteroid_radius: .3,
+    asteroid_distance_modifier: .35,
+    // rotation on own axis
+    min_asteroid_spin: .006,
+    max_asteroid_spin: .02,
+    max_asteroids: 100,
+
+    // todo testing this, limit rotation speed if faster system
+    // higher values slow asteroids
+    rotationFramerate: 5,
+
+    // todo new logic camera pos
+    cameraPos: new Vector3(0, 1.2, 8),
+
+    // todo new logic move post-game vars here
+    gameStopTime: 0,
+    // scoreboard service
+    scoreboard_post_url: 'http://localhost:5000/scoreboard_api/post_score',
+    scoreboard_get_url: 'http://localhost:5000/scoreboard_api/get_scoreboard'
+
+
 }
 
 //         const fontUri = '..\\assets\\Gravity_Bold.json'
