@@ -10,7 +10,8 @@ export class ScoreboardHelperService {
   constructor(private httpClient: HttpClient) { }
 
   private getScoreBoard(){
-    return this.httpClient.get('http://localhost:5000/scoreboard_api/get_scoreboard', {
+//     return this.httpClient.get('http://localhost:5000/scoreboard_api/get_scoreboard', {
+    return this.httpClient.get(environment.scoreboard_get_url, {
     //     return this.httpClient.get('http://localhost:8081/pickle-api', {
         withCredentials: true,
         headers: new HttpHeaders({
@@ -39,7 +40,8 @@ export class ScoreboardHelperService {
 //             'charset': 'UTF-8'
 //         })
 //     });
-    return this.httpClient.post('http://localhost:5000/scoreboard_api/post_score', {
+//     return this.httpClient.post('http://localhost:5000/scoreboard_api/post_score', {
+    return this.httpClient.post(environment.scoreboard_post_url, {
     //     return this.httpClient.get('http://localhost:8081/pickle-api', {
         nameVal: name,
         scoreVal: score

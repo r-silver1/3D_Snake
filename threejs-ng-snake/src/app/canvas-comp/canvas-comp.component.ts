@@ -64,7 +64,7 @@ export class CanvasCompComponent implements OnInit {
     // todo timer
     private lastSecondStart = 0
     private timerElapsed = 0
-    private timerMax = 46
+    private timerMax = 3
     private userScorePrev = -1
 
     // todo new logic rotation timing
@@ -121,7 +121,7 @@ export class CanvasCompComponent implements OnInit {
         this.sceneService.initSceneGroup(this.scene, environment.scoreGroupName)
         // start button
         this.sceneService.initSceneGroup(this.scene, environment.buttonGroupName)
-        this.fontService.addFont(environment.startString, this.scene, environment.buttonGroupName, environment.buttonGroupPos, environment.smallFontSize)
+        this.fontService.addFont(environment.startString, this.scene, environment.buttonGroupName, environment.buttonGroupPos, environment.xSmallFontSize)
 
         // CLOCK OBJECT FOR DELTA
         this.clock = new THREE.Clock()

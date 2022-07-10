@@ -87,6 +87,8 @@ export const environment = {
     // todo new logic move post-game vars here
     gameStopTime: 0,
     // scoreboard service
+    scoreboard_post_url: 'http://localhost:5000/scoreboard_api/post_score',
+    scoreboard_get_url: 'http://localhost:5000/scoreboard_api/get_scoreboard'
 
 
 }
