@@ -254,17 +254,21 @@ export class CanvasCompComponent implements OnInit {
     window_set_size(): void {
         //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
         const pixelRatio = window.devicePixelRatio;
-        // @ts-ignore
-        const HEIGHT = document.getElementById('mainCanvas').clientHeight * pixelRatio;
-        // @ts-ignore
-        const WIDTH = document.getElementById('mainCanvas').clientWidth * pixelRatio;
+//         // @ts-ignore
+//         const HEIGHT = document.getElementById('mainCanvas').clientHeight * pixelRatio;
+//         // @ts-ignore
+//         const WIDTH = document.getElementById('mainCanvas').clientWidth * pixelRatio;
+        const HEIGHT = window.innerHeight*.8
+        const WIDTH = window.innerWidth*.9
         this.renderer.setSize(WIDTH, HEIGHT);
         this.camera.aspect = WIDTH / HEIGHT;
         this.camera.updateProjectionMatrix();
+        this.controls.handleResize()
     }
 
     window_size_listener(): void {
         window.addEventListener('resize', () => {
+            console.log("in size listener")
             this.window_set_size();
         });
     }

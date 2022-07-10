@@ -120,7 +120,8 @@ export class SceneHelperService {
         //         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
         //         https://threejs.org/docs/#examples/en/controls/OrbitControls
         //first person controls and configuration
-        let controls = new TurretControls(camera, domElement)
+//         let controls = new TurretControls(camera, domElement)
+        let controls = new TurretControls(camera, document)
         controls.lookSpeed =.35
         controls.constrainVertical = true;
         controls.verticalMin = 1*Math.PI/8
