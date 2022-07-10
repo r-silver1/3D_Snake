@@ -5,10 +5,26 @@ from session_wrapper.session_id import session_id_handler
 
 with current_app.app_context():
     from db_dao.word_db import check_tables, close_connection, create_table, \
-        drop_table, insert_row, get_table, commit_db, get_one_row, update_row, \
-        delete_row, create_score_table
+    drop_table, insert_row, get_table, commit_db, get_one_row, update_row, \
+    delete_row, create_score_table, backup_db, restore_db
 
 scoreboard_api_blueprint = Blueprint('scoreboard_api', __name__, url_prefix="/scoreboard_api")
+
+
+@scoreboard_api_blueprint.route('/backup_scoreboard')
+@session_id_handler
+def backup_scoreboard():
+    if request.method == "GET":
+        ret_val = backup_db()
+        return jsonify({"msg": ret_val})
+
+
+@scoreboard_api_blueprint.route('/restore_scoreboard')
+@session_id_handler
+def restore_scoreboard():
+    if request.method == "GET":
+        ret_val = restore_db()
+        return jsonify({"msg": ret_val})
 
 
 @scoreboard_api_blueprint.route('/delete_scoreboard')

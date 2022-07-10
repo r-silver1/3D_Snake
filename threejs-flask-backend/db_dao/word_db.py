@@ -3,6 +3,7 @@ import sqlite3
 from flask import g
 from flask import current_app as app
 import traceback
+import io
 
 # have to use path relative to setup.py?
 __DB_PATH__ = "./tables/word_table.db"
@@ -15,6 +16,26 @@ def get_db():
     if db_con is None:
         db_con = g._database = sqlite3.connect(__DB_PATH__)
     return db_con
+
+
+def backup_db():
+    db_con = get_db()
+    with io.open('./tables/backup_high_scores.sql', 'w') as f:
+        for row in db_con.iterdump():
+            f.write(f"{row}\n")
+    return "left backup"
+
+
+def restore_db():
+    db_con = get_db()
+    db_cur = db_con.cursor()
+    with io.open('./tables/backup_high_scores.sql', 'r') as f:
+        str_trans = """"""
+        for row in f:
+            # str_trans += str(row)+"\n"
+            resp = db_cur.execute(row)
+            str_trans += str(resp.fetchall()) + "\n"
+        print(str_trans)
 
 
 def check_tables():
@@ -70,6 +91,11 @@ def drop_table(name):
         db_cur = db_con.cursor()
         resp = db_cur.execute(drop_qur)
         print("DROP RESP:", resp.fetchall())
+
+    #     todo new logic delete word always
+        drop_qur = f"""DROP TABLE IF EXISTS WORDS"""
+        db_cur = db_con.cursor()
+        resp = db_cur.execute(drop_qur)
 
     except sqlite3.Error as err:
         print(f"error in drop table: {err}")
