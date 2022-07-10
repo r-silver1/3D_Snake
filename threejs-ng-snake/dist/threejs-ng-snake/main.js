@@ -1444,16 +1444,20 @@ class CanvasCompComponent {
     window_set_size() {
         //https://r105.threejsfundamentals.org/threejs/lessons/threejs-responsive.html
         const pixelRatio = window.devicePixelRatio;
-        // @ts-ignore
-        const HEIGHT = document.getElementById('mainCanvas').clientHeight * pixelRatio;
-        // @ts-ignore
-        const WIDTH = document.getElementById('mainCanvas').clientWidth * pixelRatio;
+        //         // @ts-ignore
+        //         const HEIGHT = document.getElementById('mainCanvas').clientHeight * pixelRatio;
+        //         // @ts-ignore
+        //         const WIDTH = document.getElementById('mainCanvas').clientWidth * pixelRatio;
+        const HEIGHT = window.innerHeight * .8;
+        const WIDTH = window.innerWidth * .9;
         this.renderer.setSize(WIDTH, HEIGHT);
         this.camera.aspect = WIDTH / HEIGHT;
         this.camera.updateProjectionMatrix();
+        this.controls.handleResize();
     }
     window_size_listener() {
         window.addEventListener('resize', () => {
+            console.log("in size listener");
             this.window_set_size();
         });
     }
@@ -1667,7 +1671,8 @@ class SceneHelperService {
         //         https://en.threejs-university.com/2021/09/16/easily-moving-the-three-js-camera-with-orbitcontrols-and-mapcontrols/
         //         https://threejs.org/docs/#examples/en/controls/OrbitControls
         //first person controls and configuration
-        let controls = new _js_TurretControls__WEBPACK_IMPORTED_MODULE_0__["TurretControls"](camera, domElement);
+        //         let controls = new TurretControls(camera, domElement)
+        let controls = new _js_TurretControls__WEBPACK_IMPORTED_MODULE_0__["TurretControls"](camera, document);
         controls.lookSpeed = .35;
         controls.constrainVertical = true;
         controls.verticalMin = 1 * Math.PI / 8;

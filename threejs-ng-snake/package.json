@@ -8,8 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev": "lite-server --baseDir=\"dist/threejs-ng-snake\""
-
+    "dev": "lite-server --baseDir=\"dist/threejs-ng-snake\"",
+    "prebuild": "rimraf dist"
   },
   "private": true,
   "dependencies": {
@@ -24,6 +24,7 @@
     "bootstrap": "^5.1.1",
     "jquery": "^3.6.0",
     "popper.js": "^1.16.1",
+    "rimraf": "^3.0.2",
     "rxjs": "~6.6.0",
     "three": "^0.132.2",
     "tslib": "^2.0.0",
