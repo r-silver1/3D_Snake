@@ -156,7 +156,7 @@ export class CanvasCompComponent implements OnInit {
 
 
         // logic for timer, game going on, only update timer every second
-        if((elapsed-this.lastSecondStart) > 950 && environment.postGameMode == ""){
+        if((elapsed-this.lastSecondStart) > 900 && environment.postGameMode == ""){
             let timerGroupObj = this.scene.getObjectByName(environment.timeWordGroupName)
             if(timerGroupObj != undefined){
                 if(environment.gameStart == true){
@@ -166,9 +166,11 @@ export class CanvasCompComponent implements OnInit {
                             child.userData.deleteText()
                         }
                     })
-                    timerGroupObj.children = []
-                    if(this.timerMax-this.timerElapsed != 0){
-                        this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+//                     timerGroupObj.children = []
+                    if(timerGroupObj.children.length == 0){
+                        if(this.timerMax-this.timerElapsed != 0){
+                            this.fontService.addFont(String(this.timerMax-this.timerElapsed), this.scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
+                        }
                     }
                     this.lastSecondStart = timestamp
                 }

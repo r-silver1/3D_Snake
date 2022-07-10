@@ -1357,7 +1357,7 @@ class CanvasCompComponent {
             this.sceneService.updateReticuleSprite(this.scene, this.camera, controlsTarget);
         }
         // logic for timer, game going on, only update timer every second
-        if ((elapsed - this.lastSecondStart) > 950 && _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].postGameMode == "") {
+        if ((elapsed - this.lastSecondStart) > 900 && _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].postGameMode == "") {
             let timerGroupObj = this.scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].timeWordGroupName);
             if (timerGroupObj != undefined) {
                 if (_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].gameStart == true) {
@@ -1367,9 +1367,11 @@ class CanvasCompComponent {
                             child.userData.deleteText();
                         }
                     });
-                    timerGroupObj.children = [];
-                    if (this.timerMax - this.timerElapsed != 0) {
-                        this.fontService.addFont(String(this.timerMax - this.timerElapsed), this.scene, _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].timeWordGroupName, _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].timerGroupPos, _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].largeFontSize);
+                    //                     timerGroupObj.children = []
+                    if (timerGroupObj.children.length == 0) {
+                        if (this.timerMax - this.timerElapsed != 0) {
+                            this.fontService.addFont(String(this.timerMax - this.timerElapsed), this.scene, _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].timeWordGroupName, _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].timerGroupPos, _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].largeFontSize);
+                        }
                     }
                     this.lastSecondStart = timestamp;
                 }
