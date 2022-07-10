@@ -260,6 +260,11 @@ export class CanvasCompComponent implements OnInit {
 //         const WIDTH = document.getElementById('mainCanvas').clientWidth * pixelRatio;
         const HEIGHT = window.innerHeight*.8
         const WIDTH = window.innerWidth*.9
+        console.log("in resize!!")
+        console.log(HEIGHT)
+        console.log(WIDTH)
+        console.log("window")
+        console.log(window)
         this.renderer.setSize(WIDTH, HEIGHT);
         this.camera.aspect = WIDTH / HEIGHT;
         this.camera.updateProjectionMatrix();
