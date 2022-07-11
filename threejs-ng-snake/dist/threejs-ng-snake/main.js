@@ -722,7 +722,7 @@ class PostGameHelperService {
         let buttonGroup = scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupName);
         if (buttonGroup != undefined && buttonGroup.children.length != 0 && _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreboardObject[0] != 2) {
             buttonGroup.children.forEach((child, i) => {
-                if (child.userData.deleteText != undefined) {
+                if (child.userData.deleteText != undefined && child.userData.message != _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].playAgainString) {
                     child.userData.deleteText();
                 }
             });
@@ -731,7 +731,7 @@ class PostGameHelperService {
         // todo here temporary logic might not want to use this method of first element scoreboard
         // todo also added logic make sure button group cleared before switching, weird bug with empty name enter causing O and N keys to remain
         //@ts-ignore
-        if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreboardObject[0] == -1 && buttonGroup.children.length == 0) {
+        if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreboardObject[0] == -1 && buttonGroup.children.length <= 2) {
             // post score and set scoreboard object [0] -2
             this.scoreBoardPostLogic(scoreboardService);
         }
@@ -761,22 +761,22 @@ class PostGameHelperService {
     getScoreBoardLogic(scene, scoreboardService) {
         // getting scoreboard
         scoreboardService.getScoreBoardHelper();
-        let timerGroupObj = scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeWordGroupName);
-        if (timerGroupObj != undefined) {
-            timerGroupObj.children.forEach((child, i) => {
-                if (child.userData.deleteText != undefined) {
-                    child.userData.deleteText();
-                }
-            });
-        }
-        let scoreGroup = scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreGroupName);
-        if (scoreGroup != undefined) {
-            scoreGroup.children.forEach((child, i) => {
-                if (child.userData.deleteText != undefined) {
-                    child.userData.deleteText();
-                }
-            });
-        }
+        //         let timerGroupObj = scene.getObjectByName(environment.timeWordGroupName)
+        //         if(timerGroupObj != undefined){
+        //             timerGroupObj.children.forEach((child:any, i:number)=>{
+        //                 if(child.userData.deleteText != undefined){
+        //                     child.userData.deleteText()
+        //                 }
+        //             })
+        //         }
+        //         let scoreGroup = scene.getObjectByName(environment.scoreGroupName)
+        //         if(scoreGroup != undefined){
+        //             scoreGroup.children.forEach((child:any, i:number) => {
+        //                 if(child.userData.deleteText != undefined){
+        //                     child.userData.deleteText()
+        //                 }
+        //             })
+        //         }
     }
     deleteOldTextLogic(scene) {
         // this: scoreboard object [0] == 1, displaying scoreboard
@@ -784,7 +784,7 @@ class PostGameHelperService {
         if (timerGroupObj != undefined) {
             if (timerGroupObj.children.length != 0) {
                 timerGroupObj.children.forEach((child, i) => {
-                    if (child.userData.deleteText != undefined) {
+                    if (child.userData.deleteText != undefined && child.userData.message != _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].highScoresString) {
                         child.userData.deleteText();
                     }
                 });
@@ -792,7 +792,8 @@ class PostGameHelperService {
         }
         // todo new logic only put in high score if length 0
         //@ts-ignore
-        if (timerGroupObj.children.length == 0) {
+        //         if(timerGroupObj.children.length == 0){
+        if (timerGroupObj.children.length <= 2) {
             _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreboardObject[0] = 2;
         }
     }
@@ -805,9 +806,15 @@ class PostGameHelperService {
             _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay = timestamp - 2500;
             // todo add msg "HIGH SCORES" using environment var not hard code
             fontService.addFont(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].highScoresString, scene, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeWordGroupName, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].largeFontSize);
-            // todo add msg "PLAY AGAIN" using environment var not hard code
-            fontService.addFont(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].playAgainString, scene, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupName, new three__WEBPACK_IMPORTED_MODULE_0__["Vector3"](_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos.x - _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].smallFontSize * 7, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos.y + _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].smallFontSize * 2, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupPos.z * .85), _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].xSmallFontSize * .80);
+            //             // todo add msg "PLAY AGAIN" using environment var not hard code
+            //             fontService.addFont(environment.playAgainString, scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
         }
+        //         let buttonGroupObj = scene.getObjectByName(environment.buttonGroupName)
+        //         //@ts-ignore
+        //         if(buttonGroupObj.children.length == 0){
+        //             // todo add msg "PLAY AGAIN" using environment var not hard code
+        //             fontService.addFont(environment.playAgainString, scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
+        //         }
         //                         let scoresList = environment.scoreboardObject[1]
         //@ts-ignore
         //         if(timerGroupObj.children.length > 0 && timerGroupObj.children.length <= 2){
@@ -833,6 +840,12 @@ class PostGameHelperService {
             // todo new logic try to avoid not deleting, cant check if == 0 because high scores object with 2 objects in children list
             //@ts-ignore
             if (timerGroupObj.children.length <= 2) {
+                //                 let buttonGroupObj = scene.getObjectByName(environment.buttonGroupName)
+                //                 //@ts-ignore
+                //                 if(buttonGroupObj.children.length == 0){
+                //                     // todo add msg "PLAY AGAIN" using environment var not hard code
+                //                     fontService.addFont(environment.playAgainString, scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
+                //                 }
                 //@ts-ignore
                 scoresList.slice(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex + _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreSliceAmt).forEach((scoreInfo, i) => {
                     const nameVal = scoreInfo[1];
