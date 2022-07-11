@@ -829,6 +829,16 @@ class PostGameHelperService {
             //@ts-ignore
             if (timerGroupObj.children.length <= 2) {
                 //@ts-ignore
+                if (timerGroupObj.children.length == 0) {
+                    fontService.addFont(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].highScoresString, scene, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeWordGroupName, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].largeFontSize);
+                    // todo add msg "PLAY AGAIN" using environment var not hard code
+                }
+                let buttonGroupObj = scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupName);
+                //@ts-ignore
+                if (buttonGroupObj.children.length == 0) {
+                    fontService.addFont(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].playAgainString, scene, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupName, new three__WEBPACK_IMPORTED_MODULE_0__["Vector3"](_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos.x - _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].smallFontSize * 7, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos.y + _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].smallFontSize * 2, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupPos.z * .85), _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].xSmallFontSize * .80);
+                }
+                //@ts-ignore
                 scoresList.slice(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex + _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreSliceAmt).forEach((scoreInfo, i) => {
                     const nameVal = scoreInfo[1];
                     const scoreVal = scoreInfo[2];
