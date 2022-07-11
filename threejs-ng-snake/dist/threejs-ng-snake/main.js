@@ -2075,7 +2075,7 @@ const environment = {
     max_asteroids: 100,
     // todo testing this, limit rotation speed if faster system
     // higher values slow asteroids
-    rotationFramerate: 5,
+    rotationFramerate: 7,
     // todo new logic camera pos
     cameraPos: new three__WEBPACK_IMPORTED_MODULE_0__["Vector3"](0, 1.2, 8),
     // todo new logic move post-game vars here

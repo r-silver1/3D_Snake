@@ -79,7 +79,7 @@ export const environment = {
 
     // todo testing this, limit rotation speed if faster system
     // higher values slow asteroids
-    rotationFramerate: 5,
+    rotationFramerate: 7,
 
     // todo new logic camera pos
     cameraPos: new Vector3(0, 1.2, 8),
