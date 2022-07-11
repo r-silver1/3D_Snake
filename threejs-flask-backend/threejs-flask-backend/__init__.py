@@ -144,4 +144,4 @@ def time_api():
 # python threejs-flask-backend\__init__.py
 if __name__ == "__main__":
     # app.run(host="0.0.0.0")
-    serve(app, host='0.0.0.0', port=5000, threads=1)
+    serve(app, host='0.0.0.0', port=3004, threads=1)
