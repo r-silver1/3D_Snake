@@ -797,7 +797,10 @@ class PostGameHelperService {
         }
     }
     displayAndUpdateScores(scene, builderService, fontService, timestamp) {
-        if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay == -1) {
+        let timerGroupObj = scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeWordGroupName);
+        //         if(environment.timeStampDisplay == -1){
+        //@ts-ignore
+        if (timerGroupObj.children.length == 0 || _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay == -1) {
             // - 2000 to display faster
             _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay = timestamp - 2500;
             // todo add msg "HIGH SCORES" using environment var not hard code
@@ -807,8 +810,10 @@ class PostGameHelperService {
         }
         //                         let scoresList = environment.scoreboardObject[1]
         //@ts-ignore
+        //         if(timerGroupObj.children.length > 0 && timerGroupObj.children.length <= 2){
+        //@ts-ignore
         if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex < _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreboardObject[1].length && timestamp - _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay > 3000) {
-            let timerGroupObj = scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeWordGroupName);
+            //                 let timerGroupObj = scene.getObjectByName(environment.timeWordGroupName)
             if (timerGroupObj != undefined) {
                 if (timerGroupObj.children.length != 0) {
                     timerGroupObj.children.forEach((child, i) => {
@@ -829,16 +834,6 @@ class PostGameHelperService {
             //@ts-ignore
             if (timerGroupObj.children.length <= 2) {
                 //@ts-ignore
-                if (timerGroupObj.children.length == 0) {
-                    fontService.addFont(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].highScoresString, scene, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeWordGroupName, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].largeFontSize);
-                    // todo add msg "PLAY AGAIN" using environment var not hard code
-                }
-                let buttonGroupObj = scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupName);
-                //@ts-ignore
-                if (buttonGroupObj.children.length == 0) {
-                    fontService.addFont(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].playAgainString, scene, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupName, new three__WEBPACK_IMPORTED_MODULE_0__["Vector3"](_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos.x - _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].smallFontSize * 7, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos.y + _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].smallFontSize * 2, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].buttonGroupPos.z * .85), _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].xSmallFontSize * .80);
-                }
-                //@ts-ignore
                 scoresList.slice(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex + _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreSliceAmt).forEach((scoreInfo, i) => {
                     const nameVal = scoreInfo[1];
                     const scoreVal = scoreInfo[2];
@@ -853,7 +848,6 @@ class PostGameHelperService {
                 _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex += _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreSliceAmt;
                 // @ts-ignore
                 if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex >= _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreboardObject[1].length) {
-                    //
                     _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex = 0;
                 }
             }
@@ -2081,8 +2075,8 @@ const environment = {
     // todo new logic move post-game vars here
     gameStopTime: 0,
     // scoreboard service
-    //     scoreboard_post_url: 'http://localhost:5000/scoreboard_api/post_score',
-    //     scoreboard_get_url: 'http://localhost:5000/scoreboard_api/get_scoreboard'
+    //     scoreboard_post_url: 'http://localhost:3004/scoreboard_api/post_score',
+    //     scoreboard_get_url: 'http://localhost:3004/scoreboard_api/get_scoreboard'
     scoreboard_post_url: 'http://gamesapi.robertsilver.codes/scoreboard_api/post_score',
     scoreboard_get_url: 'http://gamesapi.robertsilver.codes/scoreboard_api/get_scoreboard'
 };

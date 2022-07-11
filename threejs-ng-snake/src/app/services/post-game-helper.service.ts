@@ -190,7 +190,10 @@ export class PostGameHelperService {
     }
 
     private displayAndUpdateScores(scene:THREE.Scene, builderService:any, fontService:any, timestamp:number){
-        if(environment.timeStampDisplay == -1){
+        let timerGroupObj = scene.getObjectByName(environment.timeWordGroupName)
+//         if(environment.timeStampDisplay == -1){
+        //@ts-ignore
+        if(timerGroupObj.children.length == 0 || environment.timeStampDisplay == -1){
             // - 2000 to display faster
             environment.timeStampDisplay = timestamp - 2500
             // todo add msg "HIGH SCORES" using environment var not hard code
@@ -201,8 +204,10 @@ export class PostGameHelperService {
 
     //                         let scoresList = environment.scoreboardObject[1]
         //@ts-ignore
+//         if(timerGroupObj.children.length > 0 && timerGroupObj.children.length <= 2){
+        //@ts-ignore
         if(environment.scoreStartIndex < environment.scoreboardObject[1].length && timestamp - environment.timeStampDisplay > 3000){
-            let timerGroupObj = scene.getObjectByName(environment.timeWordGroupName)
+//                 let timerGroupObj = scene.getObjectByName(environment.timeWordGroupName)
             if(timerGroupObj != undefined){
                 if(timerGroupObj.children.length != 0){
                     timerGroupObj.children.forEach((child:any, i:number)=>{
@@ -223,16 +228,6 @@ export class PostGameHelperService {
             //@ts-ignore
             if(timerGroupObj.children.length <= 2){
                 //@ts-ignore
-                if(timerGroupObj.children.length == 0){
-                    fontService.addFont(environment.highScoresString, scene, environment.timeWordGroupName, environment.timerGroupPos, environment.largeFontSize)
-                            // todo add msg "PLAY AGAIN" using environment var not hard code
-                }
-                let buttonGroupObj = scene.getObjectByName(environment.buttonGroupName)
-                //@ts-ignore
-                if(buttonGroupObj.children.length == 0){
-                    fontService.addFont(environment.playAgainString, scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
-                }
-                //@ts-ignore
                 scoresList.slice(environment.scoreStartIndex, environment.scoreStartIndex+environment.scoreSliceAmt).forEach((scoreInfo: Array<any>, i:number) => {
                     const nameVal = scoreInfo[1]
                     const scoreVal = scoreInfo[2]
@@ -247,7 +242,6 @@ export class PostGameHelperService {
                 environment.scoreStartIndex += environment.scoreSliceAmt
                 // @ts-ignore
                 if(environment.scoreStartIndex >= environment.scoreboardObject[1].length){
-                    //
                     environment.scoreStartIndex = 0
                 }
             }
