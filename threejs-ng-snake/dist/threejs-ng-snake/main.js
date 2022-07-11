@@ -799,27 +799,18 @@ class PostGameHelperService {
     }
     displayAndUpdateScores(scene, builderService, fontService, timestamp) {
         let timerGroupObj = scene.getObjectByName(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeWordGroupName);
-        //         if(environment.timeStampDisplay == -1){
         //@ts-ignore
         if (timerGroupObj.children.length == 0 || _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay == -1) {
             // - 2000 to display faster
-            _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay = timestamp - 2500;
+            _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay = timestamp;
+            _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay -= 2000;
             // todo add msg "HIGH SCORES" using environment var not hard code
             fontService.addFont(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].highScoresString, scene, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeWordGroupName, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timerGroupPos, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].largeFontSize);
             //             // todo add msg "PLAY AGAIN" using environment var not hard code
             //             fontService.addFont(environment.playAgainString, scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
         }
-        //         let buttonGroupObj = scene.getObjectByName(environment.buttonGroupName)
-        //         //@ts-ignore
-        //         if(buttonGroupObj.children.length == 0){
-        //             // todo add msg "PLAY AGAIN" using environment var not hard code
-        //             fontService.addFont(environment.playAgainString, scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
-        //         }
-        //                         let scoresList = environment.scoreboardObject[1]
         //@ts-ignore
-        //         if(timerGroupObj.children.length > 0 && timerGroupObj.children.length <= 2){
-        //@ts-ignore
-        if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex < _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreboardObject[1].length && timestamp - _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay > 3000) {
+        if (_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex < _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreboardObject[1].length && timestamp - _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].timeStampDisplay > 4000) {
             //                 let timerGroupObj = scene.getObjectByName(environment.timeWordGroupName)
             if (timerGroupObj != undefined) {
                 if (timerGroupObj.children.length != 0) {
@@ -840,12 +831,6 @@ class PostGameHelperService {
             // todo new logic try to avoid not deleting, cant check if == 0 because high scores object with 2 objects in children list
             //@ts-ignore
             if (timerGroupObj.children.length <= 2) {
-                //                 let buttonGroupObj = scene.getObjectByName(environment.buttonGroupName)
-                //                 //@ts-ignore
-                //                 if(buttonGroupObj.children.length == 0){
-                //                     // todo add msg "PLAY AGAIN" using environment var not hard code
-                //                     fontService.addFont(environment.playAgainString, scene, environment.buttonGroupName, new THREE.Vector3(environment.timerGroupPos.x - environment.smallFontSize*7, environment.timerGroupPos.y + environment.smallFontSize*2, environment.buttonGroupPos.z*.85), environment.xSmallFontSize*.80)
-                //                 }
                 //@ts-ignore
                 scoresList.slice(_environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex, _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreStartIndex + _environments_environment__WEBPACK_IMPORTED_MODULE_1__["environment"].scoreSliceAmt).forEach((scoreInfo, i) => {
                     const nameVal = scoreInfo[1];
