@@ -2071,8 +2071,10 @@ const environment = {
     // todo new logic move post-game vars here
     gameStopTime: 0,
     // scoreboard service
-    scoreboard_post_url: 'http://localhost:5000/scoreboard_api/post_score',
-    scoreboard_get_url: 'http://localhost:5000/scoreboard_api/get_scoreboard'
+    //     scoreboard_post_url: 'http://localhost:5000/scoreboard_api/post_score',
+    //     scoreboard_get_url: 'http://localhost:5000/scoreboard_api/get_scoreboard'
+    scoreboard_post_url: 'http://gamesapi.robertsilver.codes/scoreboard_api/post_score',
+    scoreboard_get_url: 'http://gamesapi.robertsilver.codes/scoreboard_api/get_scoreboard'
 };
 //         const fontUri = '..\\assets\\Gravity_Bold.json'
 
